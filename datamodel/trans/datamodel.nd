@@ -1,0 +1,38 @@
+module datamodel
+
+imports
+	include/WebDSL
+
+namespaces
+	Entity ExtendedEntity Function Property 
+	
+properties
+	parent			of Entity: ID
+	ancestor		of Entity: List(ID)
+
+binding rules
+
+	Entity(name, par, _):
+		defines Entity name
+			of parent par
+			of type SimpleSort(par)								
+		scopes Function, Property
+	
+	ExtendEntity(name, _):
+		defines non-unique ExtendedEntity name
+		imports Function, Property from Entity name
+		// imports Function, Property into Entity name
+	
+	SessionEntity(name, _):
+		defines Entity name
+			of type SimpleSort(par)
+		defines Variable name of type SimpleSort(name)
+
+	// constraint: SimpleSort(name) is a session entity	
+	ExtendSessionEntity(name, _):
+		defines non-unique ExtendedEntity name
+		imports Function, Property from Entity name
+		// imports Function, Property into Entity name
+
+	
+	

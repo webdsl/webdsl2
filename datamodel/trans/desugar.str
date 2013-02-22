@@ -1,0 +1,8 @@
+module trans/desugar
+
+imports
+	include/WebDSL
+	
+rules
+	datamodel-desugar:
+		EntityNoSuper(en, mbrs) -> Entity(en, "Entity", mbrs) 

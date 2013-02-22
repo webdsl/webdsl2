@@ -1,0 +1,8 @@
+module desugar
+
+imports
+	include/WebDSL
+	datamodel/trans/desugar
+	
+strategies
+	desugar-all = topdown(try(datamodel-desugar))

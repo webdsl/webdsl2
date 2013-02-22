@@ -15,15 +15,16 @@ imports
   check
   generate
   refactor
+  desugar
 
 rules // Analysis
   
 	// Analyzes the current program, returning a tuple with the analyzed AST, errors, warnings, notes and
 	// files that should be re-analyzed.
   analyze:
-    (ast, path, project-path) -> (ast'', errors, warnings, notes, filesToAnalyze')
+    (ast, path, project-path) -> (<debug(!"AST'   ")> ast'', errors, warnings, notes, filesToAnalyze')
     with
-      ast'                    := <id> ast; // Optional AST desugaring
+      ast'                    := <desugar-all> ast; // Optional AST desugaring
       (ast'', filesToAnalyze) := <analyze-top(|<language>)> (ast', path, project-path);
       index-transaction(
 	      errors                := <collect-all(constraint-error, conc)> ast'';
@@ -115,7 +116,7 @@ rules // Debugging
     with
       editor-init;
       filename := <guarantee-extension(|"analyzed.aterm")> path;
-      result   := <analyze-top(|<language>)> (selected, path, project-path)   
+      result   := ast  
       
   // Prints the entries in the index of the current file.
   debug-index-show-current-file:
