@@ -1,13 +1,110 @@
 module WebDSL
 
-imports Common
+imports
+  WebDSL-Lexical
+  WebDSL-UI
+  WebDSL-Ajax
+  WebDSL-Action
+  WebDSL-DataModel
+  WebDSL-DataValidation
+  WebDSL-AccessControl
+  WebDSL-XML
+  WebDSL-JavaScript
+  WebDSL-Regex
+  WebDSL-Enums
+  WebDSL-Derive
+  WebDSL-Native
+  WebDSL-Dispatch
+  WebDSL-Exception
+  WebDSL-Type
+  WebDSL-Test
+  WebDSL-TimeInterval
+  WebDSL-Service
+  WebDSL-Search
+  WebDSL-Recommend
+  WebDSL-Prefetch
+
+hiddens
+  context-free start-symbols
+    Unit
 
 exports
 
-  context-free start-symbols
-  
-    Start
+  sorts
+    Id QId Int ModuleName SectionHeader Float FloatDigits ExponentPart
+    SignedInteger String UNDEFINED Eof
+
 
   context-free syntax
-  
-    -> Start {"Dummy"}
+    Id         -> QId
+    QId "." Id -> QId {cons("Qualified")}
+    Keyword    -> Id {reject} %% (not rejected as HQL or styling keyword)
+
+  context-free syntax %% Types
+    SimpleSort -> Sort
+    GenericSort -> Sort
+    RefSort -> Sort
+    ListSort -> Sort
+    SetSort -> Sort
+    FunctionSort -> Sort
+
+    Id                     -> SimpleSort {cons("SimpleSort")}
+    Id "<" {Sort ","}+ ">" -> GenericSort {cons("GenericSort")}
+    "Ref" "<" Sort ">" -> RefSort {cons("RefSort")}
+    "Ref" "<" Sort ">" -> GenericSort {reject}
+
+    %% List type '[Type]' and Set type '{Type}' notation
+    "[" Sort "]" -> ListSort {ast("GenericSort(\"List\",[<1>])")}
+    "{" Sort "}" -> SetSort  {ast("GenericSort(\"Set\",[<1>])")}
+
+    %% function type; optionally specify (named) args and return type
+    "function" FunctionSortParams FunctionSortReturn -> FunctionSort {cons("FunctionSort")}
+    -> FunctionSortParams {ast("[]")}
+    "(" {FunctionSortParam ","}* ")" -> FunctionSortParams {ast("<1>")}
+    Sort -> FunctionSortParam {cons("UnnamedArg")}
+    Id ":" Sort -> FunctionSortParam {cons("Arg")}
+    -> FunctionSortReturn {ast("SimpleSort(\"Void\")")}
+    ":" Sort -> FunctionSortReturn {ast("<1>")}
+     "function" -> SimpleSort {reject}
+
+
+    Id ":" Sort            -> FormalArg {cons("Arg")}
+
+exports
+
+  sorts Application Module Unit
+
+  syntax
+
+    "section" <SectionName-CF> <LAYOUT?-CF> <Definition*-CF> -> <Section-CF> {cons("Section")}
+
+  context-free syntax
+
+    "application" QId Definition+ Section* -> Application {cons("ApplicationDefs")}
+    "application" QId Section*      -> Application {cons("Application")}
+
+    "description" "{" Word* "}"     -> Description {cons("Description")}
+
+    "note" "{" Word* "}"            -> Description {cons("Note")}
+
+    Description                   -> Definition
+    %%Description                   -> Definition {prefer}
+
+    "module" ModuleName Section*  -> Module {cons("Module")}
+    "module" ModuleName Definition+ Section*  -> Module {cons("ModuleDefs")}
+
+    "imports" ModuleName          -> Definition {cons("Imports")}
+
+    Application                   -> Unit
+    Module                        -> Unit
+
+exports
+
+  sorts Action Statements Statement Exp
+
+  context-free syntax
+
+    Action		       	        -> Definition
+    Statement*		   	        -> Statements
+    NativeClassDeclaration      -> Definition
+

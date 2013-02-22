@@ -1,0 +1,90 @@
+module WebDSL-DataModel
+
+imports
+  WebDSL-Action
+  WebDSL-Lexical
+
+exports
+
+  context-free syntax
+
+    "globals" "{" GlobalsDef* "}"                        -> Definition {prefer,cons("GlobalsDefinition"),deprecated("'globals{ }' block is no longer necessary around global variables and functions")}
+
+    "entity" Id ":" Id "{" EntityBodyDeclaration* "}"       -> Entity {cons("Entity")}
+    "entity" Id "{" EntityBodyDeclaration* "}"              -> Entity {cons("EntityNoSuper")}
+    "session" Id "{" EntityBodyDeclaration* "}"             -> Entity {cons("SessionEntity")}
+    Property -> EntityBodyDeclaration
+    Function -> EntityBodyDeclaration
+    StaticEntityFunction -> EntityBodyDeclaration
+    "cache" -> EntityBodyDeclaration {cons("CachedEntity")}
+
+    Entity                                   		     -> Definition
+
+    "extend" "entity" Id "{" EntityBodyDeclaration* "}"	 -> Definition {cons("ExtendEntity")}
+    "extend" "session" Id "{" EntityBodyDeclaration* "}"   -> Definition {cons("ExtendSessionEntity")}
+
+  context-free restrictions
+    "cache" -/- [a-zA-Z0-9\_] %% prevent ambiguity between CachedEntity and a property id beginning with cache
+
+exports
+
+  sorts Entity Property Sort Annotation
+
+  context-free syntax
+
+    "var" Id ":" Sort 	       -> GlobalVarDecl {cons("GlobalVarDecl")} %% not allowed, global vars need an initializer, still parsed to give clear error message from analysis
+    "var" Id ":" Sort ":=" Exp -> GlobalVarDecl {cons("GlobalVarDeclInit")}
+    "var" Id ":=" Exp          -> GlobalVarDecl {cons("GlobalVarDeclInitInferred")}
+    "var" Id ":" Sort ";" 	       -> GlobalVarDecl {cons("GlobalVarDecl"),deprecated("remove ';' from global variable declaration")}
+    "var" Id ":" Sort ":=" Exp ";" -> GlobalVarDecl {cons("GlobalVarDeclInit"),deprecated("remove ';' from global variable declaration")}
+    "var" Id ":=" Exp ";"          -> GlobalVarDecl {cons("GlobalVarDeclInitInferred"),deprecated("remove ';' from global variable declaration")}
+
+    "request" GlobalVarDecl    -> Definition {cons("RequestScope")}
+    GlobalVarDecl              -> GlobalsDef
+    Function                   -> GlobalsDef
+    GlobalsDef                 -> Definition
+    InitAction                 -> Definition
+
+exports
+
+  sorts Property Annotation
+
+  context-free syntax
+
+    Id PropKind Sort "(" {Annotation ","}* ")" -> Property {cons("Property")}
+    Id PropKind Sort                           -> Property {cons("PropertyNoAnno")}
+
+    Id PropKind Sort "(" {Annotation ","}* ")" ":=" Exp -> Property {cons("DerivedProperty")}
+    Id PropKind Sort ":=" Exp                           -> Property {cons("DerivedPropertyNoAnno")}
+
+
+    "::" -> PropKind {cons("Simple")}
+    "->" -> PropKind {cons("Ref")}
+    "<>" -> PropKind {cons("Comp")}
+    ":"  -> PropKind {cons("AnyProp")}
+
+  sorts Sort
+
+  context-free syntax
+
+%% explicit syntax makes the annotations highlighted as keyword in the editor
+%% removed generic SingleParamAnno due to http://yellowgrass.org/issue/StrategoXT/825
+
+    Id                           -> Annotation {cons("SimpleAnno")}
+    "inverse" "=" Id "." Id      -> Annotation {cons("InverseAnno")}
+    %%fallback for code completion:
+    "inverse" "=" Id             -> Annotation {cons("IncompleteInverseAnno")}
+    "inverseSlave" "=" Id "." Id -> Annotation {cons("InverseSlaveAnno")}
+    "inline" "(" {Id ","}* ")"   -> Annotation {cons("InlineAnno")}
+    "select" "=" Id              -> Annotation {cons("SelectAnno")}
+    "not null"                   -> Annotation {cons("NotNullAnno")}
+    "not empty"                  -> Annotation {cons("NotEmptyAnno")}
+    "allowed" "=" Exp            -> Annotation {cons("AllowedAnno")}
+    "default" "=" Exp            -> Annotation {cons("DefaultAnno")}
+    "length" "=" Int             -> Annotation {cons("LengthAnno")}
+    "format" "=" String          -> Annotation {cons("FormatAnno")}
+    "index" "(" ")"              -> Annotation {cons("IndexAnno")}
+    "index" "(" Int ")"          -> Annotation {cons("IndexAnno")}
+    "collation" "(" Id ")"       -> Annotation {cons("CollationAnno")}
+    "iderror" "=" String         -> Annotation {cons("IdErrorAnno")}
+    "idemptyerror" "=" String    -> Annotation {cons("IdEmptyErrorAnno")}
