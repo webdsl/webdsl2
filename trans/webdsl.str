@@ -22,7 +22,7 @@ rules // Analysis
 	// Analyzes the current program, returning a tuple with the analyzed AST, errors, warnings, notes and
 	// files that should be re-analyzed.
   analyze:
-    (ast, path, project-path) -> (<debug(!"AST'   ")> ast'', errors, warnings, notes, filesToAnalyze')
+    (ast, path, project-path) -> (ast'', errors, warnings, notes, filesToAnalyze')
     with
       ast'                    := <desugar-all> ast; // Optional AST desugaring
       (ast'', filesToAnalyze) := <analyze-top(|<language>)> (ast', path, project-path);

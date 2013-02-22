@@ -7,9 +7,14 @@ namespaces
 	Entity ExtendedEntity Function Property 
 	
 properties
-	parent			of Entity: ID
-	ancestor		of Entity: List(ID)
-
+	parent						of Entity: ID
+	ancestor					of Entity: List(ID)
+	issession					of Entity: Term
+	
+	kind							of Property: Term
+	isderived					of Property: Term
+	annotations				of Property: List(Term)
+	
 binding rules
 
 	Entity(name, par, _):
@@ -26,7 +31,9 @@ binding rules
 	SessionEntity(name, _):
 		defines Entity name
 			of type SimpleSort(par)
-		defines Variable name of type SimpleSort(name)
+		defines Variable name
+			of type SimpleSort(name)
+			of issession SessionEntity()
 
 	// constraint: SimpleSort(name) is a session entity	
 	ExtendSessionEntity(name, _):
@@ -34,5 +41,18 @@ binding rules
 		imports Function, Property from Entity name
 		// imports Function, Property into Entity name
 
+	Property(name, knd, ty, annos):
+		defines Property name
+			of type ty
+			of kind knd
+			of annotations annos // TODO: should we just store the entire AST for property definition?
+	
+	DerivedProperty(name, knd, ty, annos, _):
+		defines Property name
+			of type ty
+			of kind knd
+			of annotations annos
+			of isderived Derived()
+		
 	
 	

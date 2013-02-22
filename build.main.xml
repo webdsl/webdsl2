@@ -4,7 +4,7 @@
         
         <!-- Key input modules -->
         <property name="sdfmodule" value="WebDSL"/>
-        <property name="metasdfmodule" value="Stratego-WebDSL"/>
+        <property name="metasdfmodule" value="StrategoWebDSL"/>
         <property name="esvmodule" value="WebDSL"/>
         <property name="strmodule" value="webdsl"/>
     

@@ -5,4 +5,12 @@ imports
 	
 rules
 	datamodel-desugar:
-		EntityNoSuper(en, mbrs) -> Entity(en, "Entity", mbrs) 
+		EntityNoSuper(en, mbrs) -> Entity(en, "Entity", mbrs)
+		
+	datamodel-desugar:
+		PropertyNoAnno(pn, refmod, type) -> Property(pn, refmod, type, [])
+
+	datamodel-desugar:
+		DerivedPropertyNoAnno(pn, refmod, type, expr) -> DerivedProperty(pn, refmod, type, [], expr)
+		
+		
