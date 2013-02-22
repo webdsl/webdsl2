@@ -14,8 +14,6 @@ imports
   WebDSL-Enums
   WebDSL-Derive
   WebDSL-Native
-  WebDSL-Dispatch
-  WebDSL-Exception
   WebDSL-Type
   WebDSL-Test
   WebDSL-TimeInterval

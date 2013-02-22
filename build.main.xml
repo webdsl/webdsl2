@@ -17,8 +17,32 @@
         <property name="build" location="bin"/>
         <property name="dist" location="bin/dist"/>
         
+	    <property name="datamodel.dir" location="datamodel"/>
+	    <property name="function.dir" location="function"/>
+	    <property name="ui.dir" location="ui"/>
+	    <property name="accesscontrol.dir" location="accesscontrol"/>
+	    <property name="datavalidation.dir" location="datavalidation"/>
+	    <property name="prefetch.dir" location="prefetch"/>
+	    <property name="search.dir" location="search"/>
+	    <property name="service.dir" location="service"/>
+	    <property name="recommend.dir" location="recommend"/>
+	    <property name="task.dir" location="task"/>
+	    <property name="test.dir" location="test"/>
+	
         <!-- Imports -->
-        <property name="build.sdf.imports" value=""/>
+        <property name="build.sdf.imports" value="
+        	           -I &quot;${datamodel.dir}&quot;/syntax
+        	           -I &quot;${function.dir}&quot;/syntax
+        	           -I &quot;${ui.dir}&quot;/syntax
+        	           -I &quot;${accesscontrol.dir}&quot;/syntax
+        	           -I &quot;${datavalidation.dir}&quot;/syntax
+        	           -I &quot;${prefetch.dir}&quot;/syntax
+        	           -I &quot;${search.dir}&quot;/syntax
+        	           -I &quot;${service.dir}&quot;/syntax
+        	           -I &quot;${recommend.dir}&quot;/syntax
+        	           -I &quot;${task.dir}&quot;/syntax
+        	           -I &quot;${test.dir}&quot;/syntax
+        	            "/>
         <property name="build.stratego.args" value="
                         --library
                         -I &quot;${trans}&quot;
