@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?eclipse version="3.0"?>
+
+<plugin>
+       <extension point="org.eclipse.imp.runtime.languageDescription">
+          <language extensions="app" description="WebDSL" language="WebDSL" derivedFrom="DynamicRoot" validator="org.webdsl.core.WebDSLValidator" validatorClass="org.webdsl.core.WebDSLValidator"></language>
+       </extension>
+       <extension id="org.webdsl.core.parser" name="WebDSL Parser" point="org.eclipse.imp.runtime.parser">
+          <parser class="org.webdsl.core.WebDSLParseController" language="WebDSL">
+          </parser>
+       </extension>    
+    </plugin>
