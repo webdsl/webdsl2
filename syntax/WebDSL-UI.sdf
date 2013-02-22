@@ -51,7 +51,7 @@ exports
        "{" TemplateElement* "}"             -> TemplateDefinition {cons("DefineTemplate")}
 
     %%"define" Modifier*
-    %%   Id UNDEFINED*
+    %%   Id EmptyList
     %%   "{" TemplateElement* "}"             -> TemplateDefinition {cons("Define")}
 
     "page"                                  -> Modifier {cons("Page")}
@@ -173,10 +173,10 @@ exports
   %%
 
     %% deprecated
-    "navigate" "(" PageCall ")" UNDEFINED* "{" TemplateElement* "}" -> TemplateElement {cons("NavigateCall"), prefer}
+    "navigate" "(" PageCall ")" EmptyList "{" TemplateElement* "}" -> TemplateElement {cons("NavigateCall"), prefer}
     "navigate" "(" PageCall ")" "[" {PropertyAssignment ","}* "]" "{" TemplateElement* "}" -> TemplateElement {cons("NavigateCall"), prefer}
 
-    "navigate" PageCall UNDEFINED* "{" TemplateElement* "}" -> TemplateElement {cons("NavigateCall"), prefer}
+    "navigate" PageCall EmptyList "{" TemplateElement* "}" -> TemplateElement {cons("NavigateCall"), prefer}
     "navigate" PageCall "[" {PropertyAssignment ","}* "]" "{" TemplateElement* "}" -> TemplateElement {cons("NavigateCall"), prefer}
 
     Id "(" {Exp ","}* ")"  -> PageCall {cons("PageCall")}
@@ -185,26 +185,26 @@ exports
     "navigate" -> TemplateCallId {reject}
 
   %%
-
+    -> EmptyList {ast("[]")}
     %% deprecated
-    "action" "(" Exp "," ActionCallOrInline ")" UNDEFINED* -> TemplateElement {cons("Submit"), prefer}
+    "action" "(" Exp "," ActionCallOrInline ")" EmptyList -> TemplateElement {cons("Submit"), prefer}
     "action" "(" Exp "," ActionCallOrInline ")" "[" {PropertyAssignment ","}* "]" -> TemplateElement {cons("Submit"), prefer}
-    "actionLink" "(" Exp "," ActionCallOrInline ")" UNDEFINED* -> TemplateElement {cons("SubmitLink"), prefer}
+    "actionLink" "(" Exp "," ActionCallOrInline ")" EmptyList -> TemplateElement {cons("SubmitLink"), prefer}
     "actionLink" "(" Exp "," ActionCallOrInline ")" "[" {PropertyAssignment ","}* "]" -> TemplateElement {cons("SubmitLink"), prefer}
 
-    "submit" "(" Exp "," ActionCallOrInline ")" UNDEFINED* -> TemplateElement {cons("Submit"), prefer}
+    "submit" "(" Exp "," ActionCallOrInline ")" EmptyList -> TemplateElement {cons("Submit"), prefer}
     "submit" "(" Exp "," ActionCallOrInline ")" "[" {PropertyAssignment ","}* "]" -> TemplateElement {cons("Submit"), prefer}
-    "submitlink" "(" Exp "," ActionCallOrInline ")" UNDEFINED* -> TemplateElement {cons("SubmitLink"), prefer}
+    "submitlink" "(" Exp "," ActionCallOrInline ")" EmptyList -> TemplateElement {cons("SubmitLink"), prefer}
     "submitlink" "(" Exp "," ActionCallOrInline ")" "[" {PropertyAssignment ","}* "]" -> TemplateElement {cons("SubmitLink"), prefer}
 
-    "submit"     ActionCallOrInline UNDEFINED*                        "{" TemplateElement* "}" -> TemplateElement {cons("SubmitElem"), prefer}
+    "submit"     ActionCallOrInline EmptyList                        "{" TemplateElement* "}" -> TemplateElement {cons("SubmitElem"), prefer}
     "submit"     ActionCallOrInline "[" {PropertyAssignment ","}* "]" "{" TemplateElement* "}" -> TemplateElement {cons("SubmitElem"), prefer}
-    "submitlink" ActionCallOrInline UNDEFINED*                        "{" TemplateElement* "}" -> TemplateElement {cons("SubmitLinkElem"), prefer}
+    "submitlink" ActionCallOrInline EmptyList                        "{" TemplateElement* "}" -> TemplateElement {cons("SubmitLinkElem"), prefer}
     "submitlink" ActionCallOrInline "[" {PropertyAssignment ","}* "]" "{" TemplateElement* "}" -> TemplateElement {cons("SubmitLinkElem"), prefer}
 
-    "downloadlink" ActionCallOrInline UNDEFINED*                        "{" TemplateElement* "}" -> TemplateElement {cons("DownloadLink"), prefer}
+    "downloadlink" ActionCallOrInline EmptyList                        "{" TemplateElement* "}" -> TemplateElement {cons("DownloadLink"), prefer}
     "downloadlink" ActionCallOrInline "[" {PropertyAssignment ","}* "]" "{" TemplateElement* "}" -> TemplateElement {cons("DownloadLink"), prefer}
-    "outputimage" ActionCallOrInline UNDEFINED*                        "{" TemplateElement* "}" -> TemplateElement {cons("OutputImage"), prefer}
+    "outputimage" ActionCallOrInline EmptyList                        "{" TemplateElement* "}" -> TemplateElement {cons("OutputImage"), prefer}
     "outputimage" ActionCallOrInline "[" {PropertyAssignment ","}* "]" "{" TemplateElement* "}" -> TemplateElement {cons("OutputImage"), prefer}
 
     ActionCall -> ActionCallOrInline

@@ -3,11 +3,13 @@ module WebDSL-Action
 imports
   WebDSL-Lexical
   MixHQL[HQL]
+  WebDSL-Type
 
 exports
 
   context-free syntax
-  
+
+    Keyword    -> Id {reject} %% (not rejected as HQL or styling keyword)  
     "function" -> Keyword
     "return"   -> Keyword
 

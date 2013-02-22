@@ -1,5 +1,8 @@
 module WebDSL-Dispatch
 
+imports
+  WebDSL-Type
+
 exports
 
   sorts DispatchEntry DispatchBody DispatchArg

@@ -1,5 +1,9 @@
 module WebDSL-Test
 
+imports
+  WebDSL-Lexical
+  WebDSL-Action
+
 exports
 
 context-free syntax

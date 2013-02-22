@@ -1,5 +1,9 @@
 module WebDSL-Ajax
 
+imports 
+  WebDSL-Lexical
+  WebDSL-UI
+
 exports
 
   sorts Statement Exp InlineTemplate AjaxStatement

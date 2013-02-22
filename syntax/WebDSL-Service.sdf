@@ -1,5 +1,10 @@
 module WebDSL-Service
 
+imports
+  WebDSL-Lexical
+  WebDSL-Action
+  WebDSL-Type
+
 exports
 
   context-free syntax

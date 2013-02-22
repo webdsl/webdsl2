@@ -1,5 +1,7 @@
 module WebDSL-Regex
 
+imports
+  WebDSL-Lexical
 
 exports
 %%d  context-free start-symbols
