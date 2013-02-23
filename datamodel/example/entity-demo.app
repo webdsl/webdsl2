@@ -16,3 +16,7 @@ extend entity Ent1 { }
 session sessentity { }
 
 extend session sessentity { }
+
+enum Foo {
+	Bar("hello")
+}

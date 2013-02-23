@@ -1,4 +1,4 @@
-module datamodel
+module datamodel/trans/datamodel
 
 imports
 	include/WebDSL
@@ -26,12 +26,14 @@ binding rules
 		defines Entity name
 			of parent par
 			of type SimpleSort(par)								
-		scopes Function, Property
+		scopes Property, Function, ExtendedFunction
 	
 	ExtendEntity(name, _):
 		defines non-unique ExtendedEntity name
-		imports Function, Property from Entity name
-		// imports Function, Property into Entity name
+		refers to Entity name // TODO do we want this reference ?
+		scopes Property, Function, ExtendedFunction
+		imports Property, Function, ExtendedFunction from Entity name
+		imports Property, Function, ExtendedFunction into Entity name
 	
 	SessionEntity(name, _):
 		defines Entity name
@@ -39,12 +41,15 @@ binding rules
 		defines Variable name
 			of type SimpleSort(name)
 			of issession SessionEntity()
+		scopes Property, Function, ExtendedFunction
 
 	// constraint: SimpleSort(name) is a session entity	
 	ExtendSessionEntity(name, _):
 		defines non-unique ExtendedEntity name
-		imports Function, Property from Entity name
-		// imports Function, Property into Entity name
+		refers to Entity name of issession SessionEntity() // TODO: should we enforce this issession here?
+		scopes Property, Function, ExtendedFunction
+		imports Property, Function, ExtendedFunction from Entity name
+		imports Property, Function, ExtendedFunction into Entity name
 
 	Property(name, knd, ty, annos):
 		defines Property name
@@ -66,6 +71,3 @@ binding rules
 	EnumValue(name, _):
 		defines EnumValue name
 
-
-	
-	

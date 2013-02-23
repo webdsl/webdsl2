@@ -1,0 +1,46 @@
+module function/trans/function
+
+imports
+	include/WebDSL
+
+namespaces
+	Function
+	ExtendedFunction
+	Variable
+	
+properties
+	
+	isstatic	of Function: Term
+
+binding rules
+	
+	Function(name, ps, _, _):
+		defines Function name
+			of type (pts, name)
+		where ps has type pts
+		scopes Variable
+	
+	ExtendedFunction(name, ps, _, _):
+		defines non-unique ExtendedFunction name
+			of type (pts, name)
+		where ps has type pts
+		// TODO: how do we do this?
+		scopes Variable
+		refers to Function name in Entity foobar // entity function
+			otherwise
+		refers to Function name // static global function
+	
+	StaticEntityFunction(name, ps, _, _):
+		defines Function name
+			of type (pts, name)
+			of isstatic Static()
+		where ps has type pts
+		scopes Variable
+	
+	Arg(name, ty):
+		defines Variable name of type ty
+	
+	// TODO: handle anonymous functions?
+	
+	
+	
