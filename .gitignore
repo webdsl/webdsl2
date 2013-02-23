@@ -13,6 +13,9 @@ include/webdsl.rtree
 include/webdsl.ctree
 include/webdsl.ctree.dep
 include/webdsl.jar
+include/StrategoWebDSL-Permissive.def
+include/StrategoWebDSL.def
+include/StrategoWebDSL.tbl
 editor/java/trans
 editor/WebDSL-*.generated.esv
 syntax/WebDSL*.generated.esv

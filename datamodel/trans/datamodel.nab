@@ -4,9 +4,14 @@ imports
 	include/WebDSL
 
 namespaces
-	Entity ExtendedEntity Function Property 
+	Entity
+	ExtendedEntity
+	Property
+	Enum
+	EnumValue
 	
 properties
+
 	parent						of Entity: ID
 	ancestor					of Entity: List(ID)
 	issession					of Entity: Term
@@ -51,8 +56,16 @@ binding rules
 		defines Property name
 			of type ty
 			of kind knd
-			of annotations annos
+			of annotations annos // TODO: should we just store the entire AST for property definition?
 			of isderived Derived()
-		
+	
+	Enum(name, _):
+		defines Enum name
+		scopes EnumValue
+	
+	EnumValue(name, _):
+		defines EnumValue name
+
+
 	
 	
