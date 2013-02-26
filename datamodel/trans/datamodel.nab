@@ -26,14 +26,14 @@ binding rules
 		defines Entity name
 			of parent par
 			of type SimpleSort(par)								
-		scopes Property, Function, ExtendedFunction
+		scopes Property, EntityFunction, ExtendedEntityFunction
 	
 	ExtendEntity(name, _):
 		defines non-unique ExtendedEntity name
 		refers to Entity name // TODO do we want this reference ?
 		scopes Property, Function, ExtendedFunction
-		imports Property, Function, ExtendedFunction from Entity name
-		imports Property, Function, ExtendedFunction into Entity name
+		imports Property, EntityFunction, ExtendedEntityFunction from Entity name
+		imports Property, EntityFunction, ExtendedEntityFunction into Entity name
 	
 	SessionEntity(name, _):
 		defines Entity name
@@ -41,7 +41,7 @@ binding rules
 		defines Variable name
 			of type SimpleSort(name)
 			of issession SessionEntity()
-		scopes Property, Function, ExtendedFunction
+		scopes Property, EntityFunction, ExtendedEntityFunction
 
 	// constraint: SimpleSort(name) is a session entity	
 	ExtendSessionEntity(name, _):

@@ -14,8 +14,10 @@ exports
     "entity" Id ":" Id "{" EntityBodyDeclaration* "}"       -> Entity {cons("Entity")}
     "entity" Id "{" EntityBodyDeclaration* "}"              -> Entity {cons("EntityNoSuper")}
     "session" Id "{" EntityBodyDeclaration* "}"             -> Entity {cons("SessionEntity")}
+    
+    Function -> EntityFunction {cons("EntityFunction")}
     Property -> EntityBodyDeclaration
-    Function -> EntityBodyDeclaration
+    EntityFunction -> EntityBodyDeclaration
     StaticEntityFunction -> EntityBodyDeclaration
     "cache" -> EntityBodyDeclaration {cons("CachedEntity")}
 
@@ -42,7 +44,6 @@ exports
 
     "request" GlobalVarDecl    -> Definition {cons("RequestScope")}
     GlobalVarDecl              -> GlobalsDef
-    Function                   -> GlobalsDef
     GlobalsDef                 -> Definition
     InitAction                 -> Definition
 

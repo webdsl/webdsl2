@@ -4,8 +4,10 @@ imports
 	include/WebDSL
 
 namespaces
-	Function
-	ExtendedFunction
+	GlobalFunction
+	ExtendedGlobalFunction
+	EntityFunction
+	ExtendedEntityFunction
 	Variable
 	
 properties
@@ -14,31 +16,42 @@ properties
 
 binding rules
 	
-	Function(name, ps, _, _):
-		defines Function name
+	EntityFunction(Function(name, ps, _, _)):
+		defines EntityFunction name
 			of type (pts, name)
 		where ps has type pts
 		scopes Variable
 	
-	ExtendedFunction(name, ps, _, _):
-		defines non-unique ExtendedFunction name
+	EntityFunction(ExtendedFunction(name, ps, _, _)):
+		defines non-unique ExtendedEntityFunction name
 			of type (pts, name)
 		where ps has type pts
-		// TODO: how do we do this?
 		scopes Variable
-		refers to Function name in Entity foobar // entity function
-			otherwise
-		refers to Function name // static global function
+		refers to EntityFunction name
 	
 	StaticEntityFunction(name, ps, _, _):
-		defines Function name
+		defines EntityFunction name
 			of type (pts, name)
 			of isstatic Static()
 		where ps has type pts
 		scopes Variable
 	
+	GlobalFunction(Function(name, ps, _, _)):
+		defines GlobalFunction name
+			of type (pts, name)
+		where ps has type pts
+		scopes Variable
+	
+	GlobalFunction(ExtendedFunction(name, ps, _, _)):
+		defines non-unique ExtendedGlobalFunction name
+			of type (pts, name)
+		where ps has type pts
+		scopes Variable
+		refers to GlobalFunction name
+	
 	Arg(name, ty):
 		defines Variable name of type ty
+	
 	
 	// TODO: handle anonymous functions?
 	

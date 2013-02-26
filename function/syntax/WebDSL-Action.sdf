@@ -12,8 +12,11 @@ exports
     Keyword    -> Id {reject} %% (not rejected as HQL or styling keyword)  
     "function" -> Keyword
     "return"   -> Keyword
+    GlobalFunction   -> GlobalsDef
 
   context-free syntax %% Functions
+
+		Function -> GlobalFunction {cons("GlobalFunction")}
 
     "function" Id "(" {FormalArg ","}* ")" FunctionReturn Block -> Function {cons("Function")}
         
