@@ -9,6 +9,7 @@ namespaces
 	Property
 	Enum
 	EnumValue
+	ModuleVariable
 	
 properties
 
@@ -71,3 +72,13 @@ binding rules
 	EnumValue(name, _):
 		defines EnumValue name
 
+		// var declaration * 3
+	GlobalVarDecl(name, ty):
+		defines ModuleVariable name of type ty
+	
+	GlobalVarDeclInit(name, ty, _):
+		defines ModuleVariable name of type ty
+	
+	GlobalVarDeclInitInferred(name, expr):
+		defines ModuleVariable name of type ty
+		where expr has type ty
