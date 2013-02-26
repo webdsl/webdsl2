@@ -1,0 +1,37 @@
+module trans/desugar
+
+imports
+	include/WebDSL
+
+rules
+
+	ui-desugar :
+		Define(mods, name, fargs, targs, elems) -> DefinePage(mods, name, fargs, targs, elems)
+		where <fetch(?Page())> mods
+
+	ui-desugar :
+		Define(mods, name, fargs, targs, elems)-> DefineTemplate(mods, name, fargs, targs, elems)
+		where not(<fetch(?Page())> mods)
+
+rules
+
+	ui-desugar :
+		TemplateCallNoArgs(name) -> TemplateCall(name, [], [], TemplateBody([]))
+
+	ui-desugar :
+		TemplateCallNoBody(name, args) -> TemplateCall(name, args, [], TemplateBody([]))
+
+	ui-desugar :
+		TemplateCallNoAssigns(name, args, body) -> TemplateCall(name, args, [], body)
+
+	ui-desugar :
+		TemplateCallPropsNoBody(name, args, passigns) -> TemplateCall(name, args, passigns, TemplateBody([]))
+
+	ui-desugar :
+		TemplateCallProps(name, passigns) -> TemplateCall(name, [], passigns, TemplateBody([]))
+
+	ui-desugar :
+		TemplateCallPropsNoArgs(name, passigns, body) -> TemplateCall(name, [], passigns, body)
+
+	ui-desugar :
+		TemplateCallBody(name, body) -> TemplateCall(name, [], [], body)

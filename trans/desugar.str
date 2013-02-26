@@ -3,6 +3,7 @@ module desugar
 imports
 	include/WebDSL
 	datamodel/trans/desugar
+	ui/trans/desugar
 	
 strategies
-	desugar-all = topdown(try(datamodel-desugar))
+	desugar-all = topdown(try(datamodel-desugar <+ ui-desugar))
