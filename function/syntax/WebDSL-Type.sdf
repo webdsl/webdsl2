@@ -16,8 +16,6 @@ exports
 		VoidSort -> Sort
     GenericSort -> Sort
     RefSort -> Sort
-    ListSort -> Sort
-    SetSort -> Sort
     FunctionSort -> Sort
 		
     Id                     -> SimpleSort {cons("SimpleSort")}
@@ -26,25 +24,12 @@ exports
     "Ref" "<" Sort ">" -> GenericSort {reject}
 
     %% List type '[Type]' and Set type '{Type}' notation
-    "[" Sort "]" -> ListSort {ast("GenericSort(\"List\",[<1>])")}
-    "{" Sort "}" -> SetSort  {ast("GenericSort(\"Set\",[<1>])")}
+    "[" Sort "]" -> GenericSort {ast("GenericSort(\"List\",[<1>])")}
+    "{" Sort "}" -> GenericSort  {ast("GenericSort(\"Set\",[<1>])")}
 
 		-> VoidSort				{ast("Void")}
 
 		"function" "(" {Sort ","}* ")" FunctionReturn -> FunctionSort {"FunctionSort"}
-		
-    %% function type; optionally specify (named) args and return type
-    %% "function" FunctionSortParams FunctionSortReturn -> FunctionSort {cons("FunctionSort")}
-    %% -> FunctionSortParams {ast("[]")}
-    %% "(" {FunctionSortParam ","}* ")" -> FunctionSortParams {ast("<1>")}
-    %% Sort -> FunctionSortParam {cons("UnnamedArg")}
-    %% Id ":" Sort -> FunctionSortParam {cons("Arg")}
-    %% -> FunctionSortReturn {ast("SimpleSort(\"Void\")")}
-    %% ":" Sort -> FunctionSortReturn {ast("<1>")}
-    %%  "function" -> SimpleSort {reject}
-
-
-    Id ":" Sort            -> FormalArg {cons("Arg")}
 
   context-free syntax
   

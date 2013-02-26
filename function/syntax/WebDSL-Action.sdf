@@ -26,6 +26,7 @@ exports
 		VoidSort																											-> FunctionReturn	{"SimpleSort"}
     ":" Sort																											-> FunctionReturn	{bracket}
 
+    Id ":" Sort																										-> FormalArg {cons("Arg")}
     
   context-free syntax %% closure
     FunctionExp																										-> Exp
@@ -140,9 +141,9 @@ exports %% Expression language
     "List" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedListCreation"), prefer}
     "Set" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedSetCreation"), prefer}
 
-		Id "(" "*" "," {Exp ","}* ")"								-> FunctionCall {"PartialCall"}
-    Id "(" {Exp ","}* ")"											-> FunctionCall {"Call"}
-    Exp "." FunctionCall											-> FunctionCall {"QualifiedCall", prefer} 
+		Id "(" "*" "," {Exp ","}* ")"							-> FunctionCall {"PartialCall"}
+    Id "(" {Exp ","}* ")"											-> FunctionCall {"ThisCall"}
+    Exp "." Id "(" {Exp ","}* ")"							-> FunctionCall {"Call"} 
     "!" "(" {Exp ","}* ")"										-> FunctionCall {reject}
 		FunctionCall															-> Exp
 
