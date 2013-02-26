@@ -60,7 +60,6 @@ exports
 
   context-free syntax
 
-    Action		       	        -> Definition
     Statement*		   	        -> Statements
     NativeClassDeclaration      -> Definition
 

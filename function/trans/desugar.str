@@ -1,0 +1,10 @@
+module trans/desugar
+
+imports
+	include/WebDSL
+	
+rules
+
+	function-desugar:
+		GlobalFunction(|[ function x( farg* ) : srt { stat* } ]|) -> 
+			GlobalFunction(|[ static function x( farg* ) : srt { stat* } ]|)

@@ -7,46 +7,41 @@ imports
 
 exports
 
-  context-free syntax
+  lexical syntax
 
     Keyword    -> Id {reject} %% (not rejected as HQL or styling keyword)  
     "function" -> Keyword
     "return"   -> Keyword
-    GlobalFunction   -> GlobalsDef
 
-  context-free syntax %% Functions
+  context-free syntax %% function definition
 
-		Function -> GlobalFunction {cons("GlobalFunction")}
-
-    "function" Id "(" {FormalArg ","}* ")" FunctionReturn Block -> Function {cons("Function")}
-        
-    -> FunctionReturn {ast("SimpleSort(\"Void\")")}
-    ":" Sort -> FunctionReturn {ast("<1>")}
-
-    "extend" Function -> Function {cons("ExtendFunction")}
+    Function																											-> GlobalsDef			{"GlobalFunction"}
+		
+    FunctionKind Id "(" {FormalArg ","}* ")" FunctionReturn Block	-> Function 			{cons("Function")}
+    "extend" Function																							-> Function				{cons("ExtendFunction")}
     
-  %% static entity function
+    "function"																										-> FunctionKind		{"Dynamic"}
+    "static" "function"																						-> FunctionKind		{"Static"}
+    
+		VoidSort																											-> FunctionReturn	{"SimpleSort"}
+    ":" Sort																											-> FunctionReturn	{bracket}
 
-    "static" "function" Id "(" {FormalArg ","}* ")" ReturnType Block -> StaticEntityFunction {cons("StaticEntityFunction")}
+    
+  context-free syntax %% closure
+    FunctionExp																										-> Exp
+    
+    "function" "(" {FormalArg ","}* ")" FunctionReturn Block			-> FunctionExp	{"FunctionExp"}
   
-    ":" Sort -> ReturnType{cons("ReturnType")}
-    -> ReturnType {ast("ReturnType(SimpleSort(\"Void\"))")}
+  context-free syntax %% function reference expression
+  	FunctionRef -> Exp
+  	"function" "." Id "(" {Sort ","}* ")" FunctionReturn					-> FunctionRef	{"FunctionRef"}
   
-  context-free syntax %% inline anonymous functions/closures
+    %%  UNDONE: what's the use of this?
+    %% FunctionRef "(" {Exp ","}* ")" -> Exp {cons("FunctionRefCall")}
     
-    FunctionExp -> Exp
-    "function" FunctionExpParams FunctionReturn Block -> FunctionExp {cons("FunctionExp")}
-    -> FunctionExpParams {ast("[]")}
-    "(" {FormalArg ","}* ")" -> FunctionExpParams {ast("<1>")}
-    
-    %% reference to a function, something to help desugar lifted function exp
-    FunctionRef -> Exp
-    "function." Id "(" {Sort ","}* ")" FunctionReturn -> FunctionRef {cons("FunctionRef")}
-    
-    
-    FunctionRef "(" {Exp ","}* ")" -> Exp {cons("FunctionRefCall")}
-    FunctionRef "(" "*" "," {Exp ","}* ")" -> Exp {cons("FunctionRefCallPartial")}
-   
+    %% UNDONE: what's the use of this? Partial application now handled as function call
+    %% FunctionRef "(" "*" "," {Exp ","}* ")" -> Exp {cons("FunctionRefCallPartial")}
+  
   context-free syntax
     "{" Statements "}" 		-> Block {cons("Block")}
     Block              		-> Statement
@@ -145,10 +140,11 @@ exports %% Expression language
     "List" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedListCreation"), prefer}
     "Set" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedSetCreation"), prefer}
 
-    Id "(" {Exp ","}* ")"  -> Exp {cons("ThisCall")}
-    "!" "(" {Exp ","}* ")"  -> Exp {reject}
-
-    Exp "." Id "(" {Exp ","}* ")"  -> Exp {cons("Call")}
+		Id "(" "*" "," {Exp ","}* ")"								-> FunctionCall {"PartialCall"}
+    Id "(" {Exp ","}* ")"											-> FunctionCall {"Call"}
+    Exp "." FunctionCall											-> FunctionCall {"QualifiedCall", prefer} 
+    "!" "(" {Exp ","}* ")"										-> FunctionCall {reject}
+		FunctionCall															-> Exp
 
     Exp "is" "a" Sort      -> Exp {cons("IsA")}
     Exp "as" Sort          -> Exp {cons("Cast"), avoid} %% avoid, to give hql query AsAlias more priority, 'from Page as p' should make the 'as p' part of the query

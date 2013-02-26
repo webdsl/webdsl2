@@ -18,7 +18,7 @@ properties
 	
 	kind							of Property: Term
 	isderived					of Property: Term
-	annotations				of Property: List(Term)
+	annotations				of Property: List(Annotation)
 	
 binding rules
 

@@ -12,48 +12,44 @@ namespaces
 	
 properties
 	
-	isstatic	of Function: Term
-
+	kind	of EntityFunction						: FunctionKind
+	kind	of ExtendedEntityFunction		: FunctionKind
+	kind	of GlobalFunction						: FunctionKind
+	kind	of ExtendedGlobalFunction		: FunctionKind
+	
 binding rules
 	
-	EntityFunction(Function(name, ps, _, _)):
-		defines EntityFunction name
-			of type (pts, name)
-		where ps has type pts
+	EntityFunction(Function(knd, name, args, ret-ty, _)):
+		defines non-unique EntityFunction name
+			of type FunctionSort(args-ty, ret-ty)
+			of kind knd
+		where args has type args-ty
 		scopes Variable
 	
-	EntityFunction(ExtendedFunction(name, ps, _, _)):
+	EntityFunction(ExtendedFunction(knd, name, args, ret-ty, _)):
 		defines non-unique ExtendedEntityFunction name
-			of type (pts, name)
-		where ps has type pts
+			of type FunctionSort(args-ty, ret-ty)
+			of kind knd
 		scopes Variable
 		refers to EntityFunction name
+			of type FunctionSort(args-ty, ret-ty)
+			of kind knd 
+		where args has type args-ty
 	
-	StaticEntityFunction(name, ps, _, _):
-		defines EntityFunction name
-			of type (pts, name)
-			of isstatic Static()
-		where ps has type pts
+	GlobalFunction(Function(name, args, ret-ty, _)):
+		defines non-unique GlobalFunction name
+			of type FunctionSort(args-ty, ret-ty)
+		where args has type args-ty
 		scopes Variable
 	
-	GlobalFunction(Function(name, ps, _, _)):
-		defines GlobalFunction name
-			of type (pts, name)
-		where ps has type pts
-		scopes Variable
-	
-	GlobalFunction(ExtendedFunction(name, ps, _, _)):
+	GlobalFunction(ExtendedFunction(name, args, ret-ty, _)):
 		defines non-unique ExtendedGlobalFunction name
-			of type (pts, name)
-		where ps has type pts
+			of type FunctionSort(args-ty, ret-ty)
+		where args has type args-ty
 		scopes Variable
 		refers to GlobalFunction name
 	
 	Arg(name, ty):
-		defines Variable name of type ty
-	
-	
-	// TODO: handle anonymous functions?
-	
+		defines Variable name of type ty	
 	
 	

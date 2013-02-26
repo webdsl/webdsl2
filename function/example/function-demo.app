@@ -2,8 +2,16 @@ module function/example/function-demo
 
 entity Ent1 {
 
-	extend function fun() {
-		
+	foo : String := "hello"
+	
+	extend function fun(a : function(String,String):Foo) {
+		var x := function(a : String, b : String): String {return a; };
+		var y := function.bar(String,String,String):String;
+		// var y := function(a : String, b : String): String {return a; } ("foo");
+		x("foog");
+		a("foog");
+		y(*, "foo", "bar");
+		b.y(*, "foo", "bar");
 	}
 	
 	function fun() : Ent1 {
@@ -11,9 +19,7 @@ entity Ent1 {
 	}
 	
 	function fun(a : Int, b : Ent1) : Ent1 {
-		function : Int {
-			return null;
-		}.foo;
+
 		return null;
 	}
 	
@@ -23,7 +29,12 @@ entity Ent1 {
 	
 }
 
+session Sess {
+	
+}
+
 function foo() : Int {
+	x("foog");
 	return 0;
 }
 

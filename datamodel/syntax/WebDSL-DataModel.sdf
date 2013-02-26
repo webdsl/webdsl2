@@ -15,10 +15,8 @@ exports
     "entity" Id "{" EntityBodyDeclaration* "}"              -> Entity {cons("EntityNoSuper")}
     "session" Id "{" EntityBodyDeclaration* "}"             -> Entity {cons("SessionEntity")}
     
-    Function -> EntityFunction {cons("EntityFunction")}
     Property -> EntityBodyDeclaration
-    EntityFunction -> EntityBodyDeclaration
-    StaticEntityFunction -> EntityBodyDeclaration
+    Function -> EntityBodyDeclaration {cons("EntityFunction")}
     "cache" -> EntityBodyDeclaration {cons("CachedEntity")}
 
     Entity                                   		     -> Definition
