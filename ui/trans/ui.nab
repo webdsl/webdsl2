@@ -1,0 +1,22 @@
+module datamodel/trans/datamodel
+
+imports
+	include/WebDSL
+
+namespaces
+	Page
+	Template
+
+binding rules
+
+	DefinePage(mods, name, args, targs, elems):
+		defines Page name
+			of type (name, argtypes)
+		where args has type argtypes
+		scopes Variable
+
+	DefineTemplate(mods, name, args, targs, elems):
+		defines Template name
+			of type (name, argtypes)
+		where args has type argtypes
+		scopes Variable
