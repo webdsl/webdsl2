@@ -8,3 +8,7 @@ rules
 	function-desugar:
 		GlobalFunction(|[ function x( farg* ) : srt { stat* } ]|) -> 
 			GlobalFunction(|[ static function x( farg* ) : srt { stat* } ]|)
+	
+	function-desugar:
+		|[ if (exp) block ]| -> |[ if (exp) block else { }]|
+

@@ -4,8 +4,8 @@ imports
 	include/WebDSL
 
 namespaces
-	GlobalFunction
-	ExtendedGlobalFunction
+	ModuleFunction
+	ExtendedModuleFunction
 	EntityFunction
 	ExtendedEntityFunction
 	Variable
@@ -14,10 +14,10 @@ properties
 	
 	kind	of EntityFunction						: FunctionKind
 	kind	of ExtendedEntityFunction		: FunctionKind
-	kind	of GlobalFunction						: FunctionKind
-	kind	of ExtendedGlobalFunction		: FunctionKind
+	kind	of ModuleFunction						: FunctionKind
+	kind	of ExtendedModuleFunction		: FunctionKind
 	
-binding rules
+binding rules // function declarations
 	
 	EntityFunction(Function(knd, name, args, ret-ty, _)):
 		defines non-unique EntityFunction name
@@ -36,20 +36,114 @@ binding rules
 			of kind knd 
 		where args has type args-ty
 	
-	GlobalFunction(Function(name, args, ret-ty, _)):
-		defines non-unique GlobalFunction name
+	ModuleFunction(Function(name, args, ret-ty, _)):
+		defines non-unique ModuleFunction name
 			of type FunctionSort(args-ty, ret-ty)
 		where args has type args-ty
 		scopes Variable
 	
-	GlobalFunction(ExtendedFunction(name, args, ret-ty, _)):
-		defines non-unique ExtendedGlobalFunction name
+	ModuleFunction(ExtendedFunction(name, args, ret-ty, _)):
+		defines non-unique ExtendedModuleFunction name
 			of type FunctionSort(args-ty, ret-ty)
 		where args has type args-ty
 		scopes Variable
-		refers to GlobalFunction name
+		refers to ModuleFunction name
 	
 	Arg(name, ty):
 		defines Variable name of type ty	
+
+binding rules // type declarations
+
+	// TODO
+
+binding rules // expressions
+	
+	// sort reference (simple, generic, ref)
+	SimpleSort(s):
+		refers to Entity s
+	
+	GenericSort(base, _):
+		refers to Entity base // otherwise to BuiltInSorts "List" | "Set" ??
+	
+	RefSort(s):
+		refers to Entity s // otherwise to BuiltInSorts "List" | "Set" ??
+	
+	// var declaration * 3
+	VarDecl(name, ty):
+		defines Variable name of type ty
+	
+	VarDeclInit(name, ty, _):
+		defines Variable name of type ty
+	
+	VarDeclInitInferred(name, expr):
+		defines Variable name of type ty
+		where expr has type ty
+		
+	// var ref
+	Var(name):
+		refers to Variable name
+
+	// global var ref
+	GlobalVar(name):
+		refers to ModuleVariable name
+	
+	// scope escape var ref
+	ExternalScopeVar(name):
+		refers to Property name
+		otherwise
+		refers to ModuleVariable name
 	
 	
+	// function call (partial) * 3 
+	// XXX: type-check is responsibility of type system.
+	ThisCall(name, _):
+		refers to EntityFunction name
+		otherwise
+		refers to ModuleFunction name
+	
+	PartialCall(name, _):
+		refers to ModuleFunction name
+	
+	Call(parent-expr, member-name, _):
+		refers to EntityFunction member-name in Entity parent
+		where parent-expr has type parent
+	
+	// if
+	If(_, _, _):
+		scopes Variable
+	
+	// case
+	CaseAlt(_):
+		scopes Variable
+	
+	CaseDefault(_):
+		scopes Variable
+	
+	// while
+	WhileStmt(_, _):
+		scopes Variable
+		
+	
+	// TODO
+	
+	// for
+	// list comprehensions (forexp)
+	
+	// goto page
+	// validate ???
+	// validatetemplate
+	// rendertemplate
+	// sendemail, email, renderemail
+	
+	// externalscope
+	
+	
+	// HQL queries and HQL-WebDSL boundaries
+	// 
+	
+	
+	
+	
+	
+	
+
