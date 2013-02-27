@@ -12,24 +12,21 @@ exports
     QId "." Id -> QId {cons("Qualified")}
 
   context-free syntax %% Types
-    SimpleSort -> Sort
-		VoidSort -> Sort
-    GenericSort -> Sort
-    RefSort -> Sort
-    FunctionSort -> Sort
+		SimpleSort																		-> Sort
+		GenericSort																		-> Sort
+		RefSort																				-> Sort
+		FunctionSort																	-> Sort
 		
-    Id                     -> SimpleSort {cons("SimpleSort")}
-    Id "<" Sort ">" -> GenericSort {cons("GenericSort")}
-    "Ref" "<" Sort ">" -> RefSort {cons("RefSort")}
-    "Ref" "<" Sort ">" -> GenericSort {reject}
+    Id																						-> SimpleSort			{"SimpleSort"}
+    Id "<" Sort ">"																-> GenericSort		{"GenericSort"}
+    "Ref" "<" Sort ">"														-> RefSort				{"RefSort"}
+    "Ref" "<" Sort ">"														-> GenericSort		{reject}
 
     %% List type '[Type]' and Set type '{Type}' notation
-    "[" Sort "]" -> GenericSort {ast("GenericSort(\"List\",[<1>])")}
-    "{" Sort "}" -> GenericSort  {ast("GenericSort(\"Set\",[<1>])")}
+    "[" Sort "]"																	-> GenericSort		{ast("GenericSort(\"List\",[<1>])")}
+    "{" Sort "}"																	-> GenericSort		{ast("GenericSort(\"Set\",[<1>])")}
 
-		-> VoidSort				{ast("Void")}
-
-		"function" "(" {Sort ","}* ")" FunctionReturn -> FunctionSort {"FunctionSort"}
+		"function" "(" {Sort ","}* ")" FunctionReturn	-> FunctionSort		{"FunctionSort"}
 
   context-free syntax
   
@@ -42,15 +39,16 @@ exports
     %%  Will also need to cope with input/output decode/encode.
     %%
 
-    "type" Id "{" TypeProperty* "}" -> Definition {cons("TypeDef")}
+    "type" Id "{" TypeProperty* "}"								-> Definition			{"TypeDef"}
     
-    Annotation -> TypeProperty {cons("TypeDefAnno")}
+    Annotation																		-> TypeProperty		{"TypeDefAnno"}
     
-    NativeClassFunction -> TypeProperty
+    NativeClassFunction														-> TypeProperty
+    
     %%solve ambiguities
-    "static" -> TypeProperty {reject}
+    "static"																			-> TypeProperty		{reject}
     
-    QId "as" NativeClassFunction -> TypeProperty{cons("NativeClassFunctionFromStatic")}
+    QId "as" NativeClassFunction									-> TypeProperty		{"NativeClassFunctionFromStatic"}
     
     
     

@@ -22,6 +22,7 @@ exports
     "function"																										-> FunctionKind		{"Dynamic"}
     "static" "function"																						-> FunctionKind		{"Static"}
     
+    																															-> VoidSort				{"Void"}
 		VoidSort																											-> FunctionReturn	{"SimpleSort"}
     ":" Sort																											-> FunctionReturn	{bracket}
 
@@ -36,12 +37,8 @@ exports
   	FunctionRef -> Exp
   	"function" "." Id "(" {Sort ","}* ")" FunctionReturn					-> FunctionRef	{"FunctionRef"}
   
-    %%  UNDONE: what's the use of this?
-    %% FunctionRef "(" {Exp ","}* ")" -> Exp {cons("FunctionRefCall")}
+    FunctionRef "(" {Exp ","}* ")" -> Exp {cons("FunctionRefCall")}
     
-    %% UNDONE: what's the use of this? Partial application now handled as function call
-    %% FunctionRef "(" "*" "," {Exp ","}* ")" -> Exp {cons("FunctionRefCallPartial")}
-  
   context-free syntax
     "{" Statements "}" 		-> Block {cons("Block")}
     Block              		-> Statement
@@ -140,14 +137,14 @@ exports %% Expression language
     "List" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedListCreation"), prefer}
     "Set" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedSetCreation"), prefer}
 
-		"_"																				-> FunctionArg	{"Wld"}
-		Exp																				-> FunctionArg
+		%% "_"																				-> FunctionCallArg	{"Wld"}
+		%% Exp																				-> FunctionCallArg	{avoid}
+		%% 
+		%% Id "(" {FunctionCallArg ","}* ")"					-> Exp	{"PartialCall"}
 		
-		Id "(" {FunctionArg ","}* ")"							-> FunctionCall {"PartialCall"}
-    Id "(" {Exp ","}* ")"											-> FunctionCall {"ThisCall", prefer}
-    Exp "." Id "(" {Exp ","}* ")"							-> FunctionCall {"Call", prefer} 
-    "!" "(" {Exp ","}* ")"										-> FunctionCall {reject}
-		FunctionCall															-> Exp
+		Id "(" {Exp ","}* ")"											-> Exp	{"ThisCall"}
+		Exp "." Id "(" {Exp ","}* ")"							-> Exp	{"Call"}
+    "!" "(" {Exp ","}* ")"										-> Exp	{reject}
 
     Exp "is" "a" Sort      -> Exp {cons("IsA")}
     Exp "as" Sort          -> Exp {cons("Cast"), avoid} %% avoid, to give hql query AsAlias more priority, 'from Page as p' should make the 'as p' part of the query
