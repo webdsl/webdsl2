@@ -30,7 +30,7 @@ binding rules // function declarations
 		where args has type args-ty
 		scopes Variable
 	
-	EntityFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
+	EntityFunction(ExtendFunction(Function(_, name, args, ret-ty, _))):
 		scopes Variable
 		defines non-unique ExtendedEntityFunction name
 			of type FunctionSort(args-ty, ret-ty)
@@ -41,13 +41,13 @@ binding rules // function declarations
 			of kind knd 
 		where args has type args-ty
 	
-	GlobalFunction(Function(name, args, ret-ty, _)):
+	GlobalFunction(Function(_, name, args, ret-ty, _)):
 		defines non-unique ModuleFunction name
 			of type FunctionSort(args-ty, ret-ty)
 		where args has type args-ty
 		scopes Variable
 	
-	GlobalFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
+	GlobalFunction(ExtendFunction(Function(_, name, args, ret-ty, _))):
 		defines non-unique ExtendedModuleFunction name
 			of type FunctionSort(args-ty, ret-ty)
 		where args has type args-ty
@@ -86,6 +86,8 @@ binding rules // expressions
 	// var ref
 	Var(name):
 		refers to Variable name
+			otherwise
+		refers to ModuleVariable name
 
 	// global var ref
 	GlobalVar(name):
@@ -94,7 +96,7 @@ binding rules // expressions
 	// scope escape var ref
 	ExternalScopeVar(name):
 		refers to Property name
-		otherwise
+			otherwise
 		refers to ModuleVariable name
 	
 	// function call (partial) * 3 

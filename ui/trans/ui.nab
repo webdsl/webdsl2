@@ -1,6 +1,7 @@
-module datamodel/trans/datamodel
+module ui/trans/ui
 
 imports
+	lib/nbl/-
 	include/WebDSL
 	function/trans/function
 	

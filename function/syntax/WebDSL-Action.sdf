@@ -159,24 +159,28 @@ exports %% Expression language
     "in" -/- [a-zA-Z0-9\_] %% there must be whitespace after the 'in' keyword for collection test
 
   context-free syntax
-    Exp "==" Exp           -> Exp {cons("Eq"), left}
-    Exp "!=" Exp           -> Exp {cons("NotEq"), left}
-    Exp ">" Exp           -> Exp {cons("LargerThan"), left}
-    Exp ">=" Exp           -> Exp {cons("LargerThanOrEqual"), left}
-    Exp "<" Exp           -> Exp {cons("SmallerThan"), left}
-    Exp "<=" Exp           -> Exp {cons("SmallerThanOrEqual"), left}
+    Exp "==" Exp																					-> Exp	{"Eq", left}
+    Exp "!=" Exp																					-> Exp	{"NotEq", left}
+    Exp ">" Exp																						-> Exp	{"LargerThan", left}
+    Exp ">=" Exp																					-> Exp	{"LargerThanOrEqual", left}
+    Exp "<" Exp																						-> Exp	{"SmallerThan", left}
+    Exp "<=" Exp																					-> Exp	{"SmallerThanOrEqual", left}
+    Exp "&&" Exp																					-> Exp	{"And", assoc}
+    Exp "||" Exp																					-> Exp	{"Or", assoc}
+    Exp "*" Exp																						-> Exp	{"Mul",assoc}
+    Exp "/" Exp																						-> Exp	{"Div",assoc}
+    Exp "%" Exp																						-> Exp	{"Mod",assoc}
+    Exp "+" Exp																						-> Exp	{"Add",assoc}
+    Exp "-" Exp																						-> Exp	{"Sub",assoc}
+    
+    "!" Exp																								-> Exp	{"Not"}
+    "(" Exp ")"																						-> Exp	{bracket}
 
-    "true"                 -> Exp {prefer,cons("True")}
-    "false"                -> Exp {prefer,cons("False")}
+		BooleanLit																						-> Exp
+		"true"																								-> BooleanLit {"True",prefer}
+		"false"																								-> BooleanLit {"False",prefer}
 
-    "null"                 -> Exp {prefer,cons("Null")}
-
-    Exp "&&" Exp          -> Exp {cons("And"), assoc}
-    Exp "||" Exp           -> Exp {cons("Or"), assoc}
-    "!" Exp              -> Exp {cons("Not")}
-
-    "(" Exp ")"            -> Exp {bracket}
-
+    "null"																								-> Exp {"Null",prefer}
 
     "[" Exp "for" "(" Id ":" Sort "in" Exp Filter ")" "]" -> ForExp {cons("ForExp")}
     "[" Exp "for" "(" Id ":" Sort "in" Exp ")" "]"        -> ForExp {cons("ForExpNoFilter")}
@@ -188,11 +192,7 @@ exports %% Expression language
     "Or"  ForExp                                          -> Exp {cons("OrForExp")}
 
 
-    Exp "*" Exp  -> Exp {cons("Mul"),assoc}
-    Exp "/" Exp  -> Exp {cons("Div"),assoc}
-    Exp "%" Exp  -> Exp {cons("Mod"),assoc}
-    Exp "+" Exp  -> Exp {cons("Add"),assoc}
-    Exp "-" Exp  -> Exp {cons("Sub"),assoc}
+
 
 context-free priorities
   {left:

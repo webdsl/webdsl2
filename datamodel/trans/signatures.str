@@ -1,0 +1,7 @@
+module datamodel/trans/signatures
+
+signature
+	constructors
+		String: String -> String
+		EnumValue: String * String -> String
+

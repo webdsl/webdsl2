@@ -3,6 +3,8 @@ module datamodel/trans/datamodel
 imports
 	lib/nbl/-
 	include/WebDSL
+	function/trans/function
+	datamodel/trans/signatures
 
 namespaces
 	Entity
@@ -16,55 +18,40 @@ properties
 
 	parent						of Entity: ID
 	ancestor					of Entity: List(ID)
-	issession					of Entity: Term
+	kind							of Entity: EntityKind
 	
-	kind							of Property: Term
-	isderived					of Property: Term
+	propkind					of Property: Term
+	derived						of Property: BooleanLit
 	annotations				of Property: List(Annotation)
 	
 binding rules
 
-	Entity(name, par, _):
+	Entity(knd, name, par, _):
 		defines Entity name
 			of parent par
-			of type SimpleSort(par)								
+			of kind knd
 		scopes Property, EntityFunction, ExtendedEntityFunction
 	
-	ExtendEntity(name, _):
-		defines non-unique ExtendedEntity name
-		refers to Entity name // TODO do we want this reference ?
-		scopes Property, Function, ExtendedFunction
+	ExtendEntity(knd, name, _):
+		defines non-unique ExtendedEntity name of kind knd
+		refers to Entity name of kind knd
+		scopes Property, EntityFunction, ExtendedEntityFunction
 		imports Property, EntityFunction, ExtendedEntityFunction from Entity name
 		imports Property, EntityFunction, ExtendedEntityFunction into Entity name
-	
-	SessionEntity(name, _):
-		defines Entity name
-			of type SimpleSort(par)
-		defines Variable name
-			of type SimpleSort(name)
-			of issession SessionEntity()
-		scopes Property, EntityFunction, ExtendedEntityFunction
-
-	// constraint: SimpleSort(name) is a session entity	
-	ExtendSessionEntity(name, _):
-		defines non-unique ExtendedEntity name
-		refers to Entity name of issession SessionEntity() // TODO: should we enforce this issession here?
-		scopes Property, Function, ExtendedFunction
-		imports Property, Function, ExtendedFunction from Entity name
-		imports Property, Function, ExtendedFunction into Entity name
 
 	Property(name, knd, ty, annos):
 		defines Property name
 			of type ty
-			of kind knd
-			of annotations annos // TODO: should we just store the entire AST for property definition?
-	
-	DerivedProperty(name, knd, ty, annos, _):
+			of propkind knd
+			of annotations annos
+			of derived False()
+				
+	DerivedProperty(name, knd, ty, annos, expr):
 		defines Property name
 			of type ty
-			of kind knd
-			of annotations annos // TODO: should we just store the entire AST for property definition?
-			of isderived Derived()
+			of propkind knd
+			of annotations annos
+			of derived True()
 	
 	Enum(name, _):
 		defines Enum name
@@ -86,6 +73,6 @@ binding rules
 
 binding rules // annotation
 
-	InverseAnno(parent, member):
-		refers to Property member in Entity parent
+	InverseAnno(par, member):
+		refers to Property member in Entity par
 

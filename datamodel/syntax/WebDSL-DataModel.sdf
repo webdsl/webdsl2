@@ -9,20 +9,21 @@ exports
 
   context-free syntax
 
-    "globals" "{" GlobalsDef* "}"                        -> Definition {prefer,cons("GlobalsDefinition"),deprecated("'globals{ }' block is no longer necessary around global variables and functions")}
+    "globals" "{" GlobalsDef* "}"														-> Definition	{prefer,cons("GlobalsDefinition"),deprecated("'globals{ }' block is no longer necessary around global variables and functions")}
 
-    "entity" Id ":" Id "{" EntityBodyDeclaration* "}"       -> Entity {cons("Entity")}
-    "entity" Id "{" EntityBodyDeclaration* "}"              -> Entity {cons("EntityNoSuper")}
-    "session" Id "{" EntityBodyDeclaration* "}"             -> Entity {cons("SessionEntity")}
-    
+		EntityKind Id ":" Id "{" EntityBodyDeclaration* "}"			-> Entity			{"Entity"}
+		EntityKind Id "{" EntityBodyDeclaration* "}"						-> Entity			{"EntityNoSuper"}
+    "extend" EntityKind Id "{" EntityBodyDeclaration* "}"		-> Definition {"ExtendEntity"}
+
+		"entity"																								-> EntityKind	{"EntityKind"}
+		"session"																								-> EntityKind	{"SessionKind"}
+
     Property -> EntityBodyDeclaration
     Function -> EntityBodyDeclaration {cons("EntityFunction")}
     "cache" -> EntityBodyDeclaration {cons("CachedEntity")}
 
     Entity                                   		     -> Definition
 
-    "extend" "entity" Id "{" EntityBodyDeclaration* "}"	 -> Definition {cons("ExtendEntity")}
-    "extend" "session" Id "{" EntityBodyDeclaration* "}"   -> Definition {cons("ExtendSessionEntity")}
 
   context-free restrictions
     "cache" -/- [a-zA-Z0-9\_] %% prevent ambiguity between CachedEntity and a property id beginning with cache

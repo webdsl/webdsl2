@@ -2,15 +2,19 @@ module trans/desugar
 
 imports
 	include/WebDSL
+	lib/editor-common.generated
 	
 rules
+
 	datamodel-desugar:
-		|[ entity str { ebd* } ]| -> |[ entity str : Entity { ebd* }]|
+		|[ entity x { ebd* } ]| -> |[ entity x : Entity { ebd* } ]|
 	
 	datamodel-desugar:
-		PropertyNoAnno(pn, refmod, type) -> Property(pn, refmod, type, [])
+		|[ session x { ebd* } ]| -> |[ session x : Session { ebd* } ]|
 	
 	datamodel-desugar:
-		DerivedPropertyNoAnno(pn, refmod, type, expr) -> DerivedProperty(pn, refmod, type, [], expr)
-		
+		|[ x0 k0 srt0 ]| -> |[ x0 k0 srt0 () ]|
+	
+	datamodel-desugar:
+		|[ x0 k0 srt0 := e0]| -> |[ x0 k0 srt0 () := e0]|		
 		

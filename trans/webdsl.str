@@ -27,7 +27,7 @@ rules // Analysis
   analyze:
     (ast, path, project-path) -> (ast'', errors, warnings, notes, filesToAnalyze')
     with
-      ast'                    := <desugar-all> ast; // Optional AST desugaring
+      ast'                    := <origin-track-forced(desugar-all)> ast; // Optional AST desugaring
       (ast'', filesToAnalyze) := <analyze-top(|<language>)> (ast', path, project-path);
       index-transaction(
 	      errors                := <collect-all(constraint-error, conc)> ast'';
