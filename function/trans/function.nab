@@ -76,13 +76,13 @@ binding rules // expressions
 	
 	// var declaration * 3
 	VarDecl(name, ty):
-		defines Variable name of type ty
+		defines Variable name of type ty in subsequent scope
 	
 	VarDeclInit(name, ty, _):
-		defines Variable name of type ty
+		defines Variable name of type ty in subsequent scope
 	
 	VarDeclInitInferred(name, expr):
-		defines Variable name of type ty
+		defines Variable name of type ty in subsequent scope
 		where expr has type ty
 		
 	// var ref
