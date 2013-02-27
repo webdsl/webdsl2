@@ -4,15 +4,18 @@ imports
 	include/WebDSL
 	
 rules
+	function-desugar=fail
 
 	function-desugar:
-		GlobalFunction(|[ function x( farg* ) : srt { stat* } ]|) -> 
+		GlobalFunction(|[ function x( farg* ) : srt { stat* } ]|) ->
 			GlobalFunction(|[ static function x( farg* ) : srt { stat* } ]|)
 	
 	function-desugar:
 		|[ if (e) block ]| -> |[ if (e) block else { }]|
 	
 	function-desugar:
-		// |[ [ e0 | x : srt in e1 ] ]| -> ForExp(e0, x, srt, e1, None())
-		|[ [ e0 | x : srt in e1 ] ]| -> |[ [ e0 | x : srt in e1 where true ] ]| 
+		|[ [ e0 | x : srt in e1 ] ]| -> |[ [ e0 | x : srt in e1 where true ] ]|
+	
+	function-desugar:
+		Void() -> "Void"
 	

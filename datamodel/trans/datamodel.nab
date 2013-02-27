@@ -1,6 +1,7 @@
 module datamodel/trans/datamodel
 
 imports
+	lib/nbl/-
 	include/WebDSL
 
 namespaces
@@ -82,3 +83,9 @@ binding rules
 	GlobalVarDeclInitInferred(name, expr):
 		defines ModuleVariable name of type ty
 		where expr has type ty
+
+binding rules // annotation
+
+	InverseAnno(parent, member):
+		refers to Property member in Entity parent
+

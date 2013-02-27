@@ -16,7 +16,7 @@ entity Ent1 {
 		x := "foo";
 		a("foog");
 		b.a("foog");
-		var yy:=y(_, _, "foo", "bar");
+		// var yy:=y(_, _, "foo", "bar");
 		yy("a","b","c");
 		yy("a","b");
 		for(x : String in from Exp){
@@ -24,6 +24,9 @@ entity Ent1 {
 		}
 		var x := [ e.prop | e : Entity in from Entity];
 		goto lala();
+		rendertemplate(demo);
+		sendemail(sendQueuedEmail(queuedEmail));
+		validatetemplate(elements());
 	}
 	
 	function fun() : Ent1 {

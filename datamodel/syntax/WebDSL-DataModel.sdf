@@ -71,9 +71,11 @@ exports
 %% removed generic SingleParamAnno due to http://yellowgrass.org/issue/StrategoXT/825
 
     Id                           -> Annotation {cons("SimpleAnno")}
-    "inverse" "=" Id "." Id      -> Annotation {cons("InverseAnno")}
+    
+    "inverse" "=" Sort "." Id     -> Annotation {cons("InverseAnno")}
+    
     %%fallback for code completion:
-    "inverse" "=" Id             -> Annotation {cons("IncompleteInverseAnno")}
+    "inverse" "=" Sort           -> Annotation {cons("IncompleteInverseAnno")}
     "inverseSlave" "=" Id "." Id -> Annotation {cons("InverseSlaveAnno")}
     "inline" "(" {Id ","}* ")"   -> Annotation {cons("InlineAnno")}
     "select" "=" Id              -> Annotation {cons("SelectAnno")}
@@ -88,3 +90,4 @@ exports
     "collation" "(" Id ")"       -> Annotation {cons("CollationAnno")}
     "iderror" "=" String         -> Annotation {cons("IdErrorAnno")}
     "idemptyerror" "=" String    -> Annotation {cons("IdEmptyErrorAnno")}
+

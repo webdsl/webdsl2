@@ -2,12 +2,12 @@ module datamodel/trans/datamodel
 
 imports
 	include/WebDSL
-
+	function/trans/function
+	
 namespaces
 	Page
 	Template
 	TemplateFunction
-	Variable
 
 binding rules
 

@@ -105,9 +105,9 @@ binding rules // expressions
 		refers to ModuleFunction name of type FunctionSort(args-ty, _)
 		where args has type args-ty 
 	
-	PartialCall(name, args):
-		refers to ModuleFunction name of type FunctionSort(args-ty, _)
-		where args has type args-ty 
+	// PartialCall(name, args):
+	// 	refers to ModuleFunction name of type FunctionSort(args-ty, _)
+	// 	where args has type args-ty 
 	
 	Call(parent-expr, member-name, args):
 		refers to EntityFunction member-name of type FunctionSort(args-ty, _) in Entity parent
