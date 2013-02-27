@@ -30,6 +30,7 @@ binding rules
 		defines Entity name
 			of parent par
 			of kind knd
+		refers to Entity name
 		scopes Property, EntityFunction, ExtendedEntityFunction
 	
 	ExtendEntity(knd, name, _):

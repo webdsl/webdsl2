@@ -9,14 +9,14 @@ exports
 
   context-free syntax
 
-    "globals" "{" GlobalsDef* "}"														-> Definition	{prefer,cons("GlobalsDefinition"),deprecated("'globals{ }' block is no longer necessary around global variables and functions")}
+    "globals" "{" GlobalsDef* "}"																		-> Definition	{prefer,cons("GlobalsDefinition"),deprecated("'globals{ }' block is no longer necessary around global variables and functions")}
+		
+		EntityKind Id ":" SimpleSort "{" EntityBodyDeclaration* "}"			-> Entity			{"Entity"}
+		EntityKind Id "{" EntityBodyDeclaration* "}"										-> Entity			{"EntityNoSuper"}
+    "extend" EntityKind SimpleSort "{" EntityBodyDeclaration* "}"		-> Definition {"ExtendEntity"}
 
-		EntityKind Id ":" Id "{" EntityBodyDeclaration* "}"			-> Entity			{"Entity"}
-		EntityKind Id "{" EntityBodyDeclaration* "}"						-> Entity			{"EntityNoSuper"}
-    "extend" EntityKind Id "{" EntityBodyDeclaration* "}"		-> Definition {"ExtendEntity"}
-
-		"entity"																								-> EntityKind	{"EntityKind"}
-		"session"																								-> EntityKind	{"SessionKind"}
+		"entity"																												-> EntityKind	{"EntityKind"}
+		"session"																												-> EntityKind	{"SessionKind"}
 
     Property -> EntityBodyDeclaration
     Function -> EntityBodyDeclaration {cons("EntityFunction")}

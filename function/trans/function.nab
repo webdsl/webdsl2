@@ -62,7 +62,9 @@ binding rules // expressions
 	// sort reference (simple, generic, ref)
 	SimpleSort(s):
 		refers to Entity s
-		otherwise
+			otherwise
+		refers to Enum s
+			otherwise
 		refers to Type s
 	
 	// TODO: refers to Base base-ty 
@@ -86,6 +88,8 @@ binding rules // expressions
 	// var ref
 	Var(name):
 		refers to Variable name
+			otherwise
+		refers to Property name
 			otherwise
 		refers to ModuleVariable name
 

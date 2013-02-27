@@ -1,0 +1,12 @@
+module names
+
+imports
+	include/WebDSL
+	datamodel/trans/datamodel
+  function/trans/function
+	ui/trans/ui
+	
+namespaces
+	
+binding rules
+

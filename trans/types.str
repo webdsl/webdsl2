@@ -1,0 +1,9 @@
+module trans/types
+
+imports
+	lib/editor-common.generated
+
+rules
+	type-of = fail
+	
+	print-type = pp-webdsl-string
