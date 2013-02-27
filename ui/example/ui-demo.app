@@ -16,6 +16,31 @@ module test
 		testcall()[]{}
 	}
 
+	page navigate(){
+		navigate testnav() { "go" }
+		navigate (testnav()) { "go" }
+		navigate testnav() []{ "go" }
+		navigate (testnav())[] { "go" }
+	}
+
+	page action(s:String){
+		action foo(i:Int){
+			log(s+i);
+		}
+		submit foo(){ }
+		submitlink foo(){ }
+	}
+
+	entity User{
+		name : String
+	}
+	page forvariants(){
+		for(u:User){ output(u) }
+		for(u:User in User.all()){ output(u) }
+		for(u in from User){ output(u) }
+		for(i:Int from 0 to 10){ output(i) }
+	}
+
 	page pagetest(i:Int, s:String){
 		var j := 1
 		output(i)

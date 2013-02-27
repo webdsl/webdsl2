@@ -6,17 +6,53 @@ imports
 namespaces
 	Page
 	Template
+	TemplateFunction
+	Variable
 
 binding rules
 
-	DefinePage(mods, name, args, targs, elems):
+	DefinePage(mods, name, fargs, targs, elems):
 		defines Page name
-			of type (name, argtypes)
-		where args has type argtypes
+			of type PageSort(fargtypes)
+		where fargs has type fargtypes
 		scopes Variable
 
-	DefineTemplate(mods, name, args, targs, elems):
+	DefineTemplate(mods, name, fargs, targs, elems):
 		defines Template name
-			of type (name, argtypes)
-		where args has type argtypes
+			of type TemplateSort(fargtypes)
+		where fargs has type fargtypes
 		scopes Variable
+
+	PageCall(name, args):
+		refers to Page name
+
+	// TODO handle overloading: conforms to signature + find most specific match
+	TemplateCall(name, args, attrs, body):
+		refers to Template name of type TemplateSort(argtypes)
+		where args has type argtypes
+
+
+	Action(_, name, fargs, block):
+		defines TemplateFunction name
+			of type FunctionSort(fargtypes, SimpleSort("Void"))
+		where fargs has type fargtypes
+		scopes Variable
+
+	ActionCall(name, args):
+		refers to TemplateFunction name of type FunctionSort(argtypes, SimpleSort("Void"))
+		where args has type argtypes
+
+
+	// variable declarations inside template for loop disallowed in current implementation, no 'scopes Variable' needed
+	ForAll(name, type, _, block, _):
+		defines Variable name of type type in block
+
+	For(name, type, _, _, block, _):
+		defines Variable name of type type in block
+
+	ForCount(name, _, _, block, _):
+		defines Variable name of type SimpleSort("Int") in block
+
+	ForInferred(name, expr, _, block, _):
+		defines Variable name of type type in block
+		where expr has type type
