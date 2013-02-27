@@ -19,7 +19,7 @@ exports
     FunctionSort -> Sort
 		
     Id                     -> SimpleSort {cons("SimpleSort")}
-    Id "<" {Sort ","}+ ">" -> GenericSort {cons("GenericSort")}
+    Id "<" Sort ">" -> GenericSort {cons("GenericSort")}
     "Ref" "<" Sort ">" -> RefSort {cons("RefSort")}
     "Ref" "<" Sort ">" -> GenericSort {reject}
 

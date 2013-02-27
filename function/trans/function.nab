@@ -2,7 +2,8 @@ module function/trans/function
 
 imports
 	include/WebDSL
-
+	datamodel/trans/datamodel
+	
 namespaces
 	ModuleFunction
 	ExtendedModuleFunction
@@ -62,8 +63,9 @@ binding rules // expressions
 	SimpleSort(s):
 		refers to Entity s
 	
-	GenericSort(base, _):
-		refers to Entity base // otherwise to BuiltInSorts "List" | "Set" ??
+	// TODO: refers to Base base-ty 
+	// GenericSort(base-ty, param-ty):
+	// 	refers to Entity param-ty
 	
 	RefSort(s):
 		refers to Entity s // otherwise to BuiltInSorts "List" | "Set" ??
@@ -95,48 +97,46 @@ binding rules // expressions
 	
 	
 	// function call (partial) * 3 
-	// XXX: type-check is responsibility of type system.
-	ThisCall(name, _):
-		refers to EntityFunction name
+	ThisCall(name, args):
+		refers to EntityFunction name of type FunctionSort(args-ty, ())
+		where args has type args-ty 
 		otherwise
-		refers to ModuleFunction name
+		refers to ModuleFunction name of type FunctionSort(args-ty, ())
+		where args has type args-ty 
 	
-	PartialCall(name, _):
-		refers to ModuleFunction name
+	PartialCall(name, args):
+		refers to ModuleFunction name of type FunctionSort(args-ty, ())
+		where args has type args-ty 
 	
-	Call(parent-expr, member-name, _):
-		refers to EntityFunction member-name in Entity parent
+	Call(parent-expr, member-name, args):
+		refers to EntityFunction member-name of type FunctionSort(args-ty, ()) in Entity parent
 		where parent-expr has type parent
+		where args has type args-ty
 	
-	// if
-	If(_, _, _):
+	Block(_):
 		scopes Variable
 	
-	// case
-	CaseAlt(_):
-		scopes Variable
+	ForStmt(name, ty, _, _, block):
+		defines Variable name of type ty in block
 	
-	CaseDefault(_):
-		scopes Variable
+	ForStmtInferred(name, expr, _, block):
+		defines Variable name of type ty in block
+		where expr has type ty
 	
-	// while
-	WhileStmt(_, _):
-		scopes Variable
-		
+	ForAllStmt(name, ty, _, block):
+		defines Variable name of type ty in block
 	
-	// TODO
+	ForCountStmt(name, _, _, block):
+		defines Variable name of type SimpleSort("Int") in block
 	
-	// for
-	// list comprehensions (forexp)
+	ForExp(sexpr, name, ty, expr, filter):
+		defines Variable name of type ty in sexpr, expr, filter
 	
-	// goto page
-	// validate ???
+	// XXX: These should be handled in their respective sub-languages 
 	// validatetemplate
 	// rendertemplate
 	// sendemail, email, renderemail
-	
-	// externalscope
-	
+	// goto page
 	
 	// HQL queries and HQL-WebDSL boundaries
 	// 

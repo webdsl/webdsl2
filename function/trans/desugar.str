@@ -10,5 +10,9 @@ rules
 			GlobalFunction(|[ static function x( farg* ) : srt { stat* } ]|)
 	
 	function-desugar:
-		|[ if (exp) block ]| -> |[ if (exp) block else { }]|
-
+		|[ if (e) block ]| -> |[ if (e) block else { }]|
+	
+	function-desugar:
+		// |[ [ e0 | x : srt in e1 ] ]| -> ForExp(e0, x, srt, e1, None())
+		|[ [ e0 | x : srt in e1 ] ]| -> |[ [ e0 | x : srt in e1 where true ] ]| 
+	

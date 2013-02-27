@@ -12,13 +12,11 @@ exports
     Keyword    -> Id {reject} %% (not rejected as HQL or styling keyword)  
     "function" -> Keyword
     "return"   -> Keyword
-
+	
   context-free syntax %% function definition
-
     Function																											-> GlobalsDef			{"GlobalFunction"}
 		
-    FunctionKind Id "(" {FormalArg ","}* ")" FunctionReturn Block	-> Function 			{cons("Function")}
-    "extend" Function																							-> Function				{cons("ExtendFunction")}
+    "extend" Function																							-> Function				{"ExtendFunction"}
     
     "function"																										-> FunctionKind		{"Dynamic"}
     "static" "function"																						-> FunctionKind		{"Static"}
@@ -141,9 +139,12 @@ exports %% Expression language
     "List" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedListCreation"), prefer}
     "Set" "<" Sort ">" "(" {Exp ","}* ")" -> Exp {cons("TypedSetCreation"), prefer}
 
-		Id "(" "*" "," {Exp ","}* ")"							-> FunctionCall {"PartialCall"}
-    Id "(" {Exp ","}* ")"											-> FunctionCall {"ThisCall"}
-    Exp "." Id "(" {Exp ","}* ")"							-> FunctionCall {"Call"} 
+		"_"																				-> FunctionArg	{"Wld"}
+		Exp																				-> FunctionArg
+		
+		Id "(" {FunctionArg ","}* ")"							-> FunctionCall {"PartialCall"}
+    Id "(" {Exp ","}* ")"											-> FunctionCall {"ThisCall", prefer}
+    Exp "." Id "(" {Exp ","}* ")"							-> FunctionCall {"Call", prefer} 
     "!" "(" {Exp ","}* ")"										-> FunctionCall {reject}
 		FunctionCall															-> Exp
 

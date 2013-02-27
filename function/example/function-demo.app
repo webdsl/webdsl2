@@ -1,10 +1,11 @@
 module function/example/function-demo
 
 entity Ent1 {
-
+	num : Int
 	foo : String := "hello"
-	foo -> List<Foo,Bar>
+	foo -> List<Foo>
 	foo -> [Foo]
+	foo -> {Foo}
 	
 	extend function fun(a : function(String,String):Foo) {
 		var a : String;
@@ -12,12 +13,17 @@ entity Ent1 {
 		var c := "foo";
 		var x := function(a : String, b : String): String {return a; };
 		var y := function.bar(String,String,String):String;
-		// var y := function(a : String, b : String): String {return a; } ("foo");
 		x := "foo";
-		x("foog");
 		a("foog");
-		y(*, "foo", "bar");
-		b.y(*, "foo", "bar");
+		b.a("foog");
+		var yy:=y(_, _, "foo", "bar");
+		yy("a","b","c");
+		yy("a","b");
+		for(x : String in from Exp){
+			
+		}
+		var x := [ e.prop | e : Entity in from Entity];
+		goto lala();
 	}
 	
 	function fun() : Ent1 {
