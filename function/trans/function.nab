@@ -1,6 +1,7 @@
 module function/trans/function
 
 imports
+	lib/nbl/-
 	include/WebDSL
 	datamodel/trans/datamodel
 	
@@ -10,6 +11,8 @@ namespaces
 	EntityFunction
 	ExtendedEntityFunction
 	Variable
+	Type
+	TypeFunction
 	
 properties
 	
@@ -27,23 +30,24 @@ binding rules // function declarations
 		where args has type args-ty
 		scopes Variable
 	
-	EntityFunction(ExtendedFunction(knd, name, args, ret-ty, _)):
+	EntityFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
+		scopes Variable
 		defines non-unique ExtendedEntityFunction name
 			of type FunctionSort(args-ty, ret-ty)
 			of kind knd
-		scopes Variable
+		where args has type args-ty
 		refers to EntityFunction name
 			of type FunctionSort(args-ty, ret-ty)
 			of kind knd 
 		where args has type args-ty
 	
-	ModuleFunction(Function(name, args, ret-ty, _)):
+	GlobalFunction(Function(name, args, ret-ty, _)):
 		defines non-unique ModuleFunction name
 			of type FunctionSort(args-ty, ret-ty)
 		where args has type args-ty
 		scopes Variable
 	
-	ModuleFunction(ExtendedFunction(name, args, ret-ty, _)):
+	GlobalFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
 		defines non-unique ExtendedModuleFunction name
 			of type FunctionSort(args-ty, ret-ty)
 		where args has type args-ty
@@ -51,17 +55,15 @@ binding rules // function declarations
 		refers to ModuleFunction name
 	
 	Arg(name, ty):
-		defines Variable name of type ty	
-
-binding rules // type declarations
-
-	// TODO
-
+		defines Variable name of type ty
+		
 binding rules // expressions
 	
 	// sort reference (simple, generic, ref)
 	SimpleSort(s):
 		refers to Entity s
+		otherwise
+		refers to Type s
 	
 	// TODO: refers to Base base-ty 
 	// GenericSort(base-ty, param-ty):
@@ -95,24 +97,27 @@ binding rules // expressions
 		otherwise
 		refers to ModuleVariable name
 	
-	
 	// function call (partial) * 3 
 	ThisCall(name, args):
-		refers to EntityFunction name of type FunctionSort(args-ty, ())
+		refers to EntityFunction name of type FunctionSort(args-ty, _)
 		where args has type args-ty 
-		otherwise
-		refers to ModuleFunction name of type FunctionSort(args-ty, ())
+			otherwise
+		refers to ModuleFunction name of type FunctionSort(args-ty, _)
 		where args has type args-ty 
 	
 	PartialCall(name, args):
-		refers to ModuleFunction name of type FunctionSort(args-ty, ())
+		refers to ModuleFunction name of type FunctionSort(args-ty, _)
 		where args has type args-ty 
 	
 	Call(parent-expr, member-name, args):
-		refers to EntityFunction member-name of type FunctionSort(args-ty, ()) in Entity parent
+		refers to EntityFunction member-name of type FunctionSort(args-ty, _) in Entity parent
 		where parent-expr has type parent
 		where args has type args-ty
-	
+			otherwise
+		refers to TypeFunction member-name of type FunctionSort(args-ty, _) in Type parent
+		where parent-expr has type parent
+		where args has type args-ty
+		
 	Block(_):
 		scopes Variable
 	
@@ -131,15 +136,38 @@ binding rules // expressions
 	
 	ForExp(sexpr, name, ty, expr, filter):
 		defines Variable name of type ty in sexpr, expr, filter
+
+	FieldAccess(parent, member):
+		refers to Property member in Entity parent-ty
+		where parent has type parent-ty
+
+binding rules // type declarations
+
+	TypeDef(name, _):
+		defines Type name
+		scopes TypeFunction
+
+	// TODO
+
+binding rules // native classes
+
+	// TODO
+
+binding rules // HQL queries
+
+	// HQL queries and HQL-WebDSL boundaries
+	// 
+
+
+
 	
-	// XXX: These should be handled in their respective sub-languages 
+	// TODO: These should be handled in their respective sub-languages
+	 
 	// validatetemplate
 	// rendertemplate
 	// sendemail, email, renderemail
 	// goto page
 	
-	// HQL queries and HQL-WebDSL boundaries
-	// 
 	
 	
 	

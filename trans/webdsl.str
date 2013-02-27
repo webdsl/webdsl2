@@ -16,6 +16,9 @@ imports
   generate
   refactor
   desugar
+  
+  // names
+  function/trans/function
 
 rules // Analysis
   

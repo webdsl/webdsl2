@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <project name="WebDSL" default="all">
-        
-        <!-- Key input modules -->
-        <property name="sdfmodule" value="WebDSL"/>
-        <property name="metasdfmodule" value="StrategoWebDSL"/>
-        <property name="esvmodule" value="WebDSL"/>
-        <property name="strmodule" value="webdsl"/>
-    
-        <!-- Project directories -->
-        <property name="trans" location="trans"/>
-        <property name="src-gen" location="editor/java"/>
-        <property name="syntax" location="syntax"/>
-        <property name="include" location="include"/>
-        <property name="lib" location="lib"/>
-        <property name="build" location="bin"/>
-        <property name="dist" location="bin/dist"/>
-        
-	    <property name="datamodel.dir" location="datamodel"/>
-	    <property name="function.dir" location="function"/>
-	    <property name="ui.dir" location="ui"/>
-	    <property name="accesscontrol.dir" location="accesscontrol"/>
-	    <property name="datavalidation.dir" location="datavalidation"/>
-	    <property name="prefetch.dir" location="prefetch"/>
-	    <property name="search.dir" location="search"/>
-	    <property name="service.dir" location="service"/>
-	    <property name="recommend.dir" location="recommend"/>
-	    <property name="task.dir" location="task"/>
-	    <property name="test.dir" location="test"/>
-	
-        <!-- Imports -->
-        <property name="build.sdf.imports" value="
+
+	<!-- Key input modules -->
+	<property name="sdfmodule" value="WebDSL" />
+	<property name="metasdfmodule" value="StrategoWebDSL" />
+	<property name="esvmodule" value="WebDSL" />
+	<property name="strmodule" value="webdsl" />
+
+	<!-- Project directories -->
+	<property name="trans" location="trans" />
+	<property name="src-gen" location="editor/java" />
+	<property name="syntax" location="syntax" />
+	<property name="include" location="include" />
+	<property name="lib" location="lib" />
+	<property name="build" location="bin" />
+	<property name="dist" location="bin/dist" />
+
+	<property name="datamodel.dir" location="datamodel" />
+	<property name="function.dir" location="function" />
+	<property name="ui.dir" location="ui" />
+	<property name="accesscontrol.dir" location="accesscontrol" />
+	<property name="datavalidation.dir" location="datavalidation" />
+	<property name="prefetch.dir" location="prefetch" />
+	<property name="search.dir" location="search" />
+	<property name="service.dir" location="service" />
+	<property name="recommend.dir" location="recommend" />
+	<property name="task.dir" location="task" />
+	<property name="test.dir" location="test" />
+
+	<!-- Imports -->
+	<property name="build.sdf.imports"
+	          value="
         	           -I &quot;${datamodel.dir}&quot;/syntax
         	           -I &quot;${function.dir}&quot;/syntax
         	           -I &quot;${ui.dir}&quot;/syntax
@@ -42,28 +43,60 @@
         	           -I &quot;${recommend.dir}&quot;/syntax
         	           -I &quot;${task.dir}&quot;/syntax
         	           -I &quot;${test.dir}&quot;/syntax
-        	            "/>
-        <property name="build.stratego.args" value="
+        	            " />
+	<property name="build.stratego.args"
+	          value="
                         --library
                         -I &quot;${trans}&quot;
                         -I &quot;${basedir}&quot;
-                        -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel"/>
-        
-        <!-- Optional: external .def and .jar locations
+                        -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel" />
+
+	<!-- Optional: external .def and .jar locations
         <property name="externaldef" location="syntax/${sdfmodule}.def"/>
         <property name="externaljar" value="../lib.jar"/>
         <property name="externaljarflags" value="-la org.lib"/>
         -->
-    
-        <!-- Environment configuration for command-line builds -->
-        <condition property="build.strategoxt.sdf" value="${eclipse.spoofaximp.nativeprefix}" else="">
-            <isset property="eclipse.spoofaximp.nativeprefix"/>
-        </condition>
-        <property name="build.strategoxt.stratego" location="${user.home}/.nix-profile/bin"/>
-    		
-    		<!-- used for building inside of Eclipse -->
-        <import file="build.generated.xml"/>   
-    
-        <!-- Main target -->
-        <target name="all" depends="spoofaximp.default.ctree"/>
-    </project>
+
+	<!-- Environment configuration for command-line builds -->
+	<condition property="build.strategoxt.sdf" value="${eclipse.spoofaximp.nativeprefix}" else="">
+		<isset property="eclipse.spoofaximp.nativeprefix" />
+	</condition>
+	<property name="build.strategoxt.stratego" location="${user.home}/.nix-profile/bin" />
+
+	<!-- used for building inside of Eclipse -->
+	<import file="build.generated.xml" />
+
+	<!-- Main target -->
+	<target name="all" depends="link-lib-files, copy-lib-files, spoofaximp.default.ctree" />
+	<target name="os-detection">
+		<condition property="isWin">
+			<os family="windows" />
+		</condition>
+	</target>
+
+	<target name="copy-lib-files" if="isWin" depends="os-detection">
+		<!-- Copy NBL libraries, Ant is stupid and cannot link on Windows :( -->
+		<copy todir="${basedir}/lib/nbl">
+			<fileset dir="${basedir}/../runtime-libraries/org.spoofax.meta.runtime.libraries/nbl/" includes="**" />
+		</copy>
+		<copy todir="${basedir}/lib/index">
+			<fileset dir="${basedir}/../runtime-libraries/org.spoofax.meta.runtime.libraries/index/" includes="**" />
+		</copy>
+		<copy todir="${basedir}/lib/task">
+			<fileset dir="${basedir}/../runtime-libraries/org.spoofax.meta.runtime.libraries/task/" includes="**" />
+		</copy>
+	</target>
+
+	<target name="link-lib-files" unless="isWin" depends="os-detection">
+		<!-- Link to NBL libraries. -->
+		<symlink resource="${basedir}/../runtime-libraries/org.spoofax.meta.runtime.libraries/nbl/"
+		         link="${basedir}/lib/nbl"
+		         overwrite="true" />
+		<symlink resource="${basedir}/../runtime-libraries/org.spoofax.meta.runtime.libraries/index/"
+		         link="${basedir}/lib/index"
+		         overwrite="true" />
+		<symlink resource="${basedir}/../runtime-libraries/org.spoofax.meta.runtime.libraries/task/"
+		         link="${basedir}/lib/task"
+		         overwrite="true" />
+	</target>
+</project>
