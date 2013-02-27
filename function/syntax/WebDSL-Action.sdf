@@ -15,7 +15,8 @@ exports
 	
   context-free syntax %% function definition
     Function																											-> GlobalsDef			{"GlobalFunction"}
-		
+    
+		FunctionKind Id "(" {FormalArg ","}* ")" FunctionReturn Block	-> Function				{"Function"}
     "extend" Function																							-> Function				{"ExtendFunction"}
     
     "function"																										-> FunctionKind		{"Dynamic"}
