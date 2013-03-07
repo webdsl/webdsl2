@@ -1,5 +1,12 @@
 module ui/trans/ui
 
+  author Danny Groenewegen
+  author Vlad Vergu
+  author Guido Wachsmuth
+  
+  version 0.1
+  status under development
+  
 imports
 	lib/nbl/-
 	include/WebDSL
@@ -27,24 +34,30 @@ binding rules
 	PageCall(name, args):
 		refers to Page name
 
-	// TODO handle overloading: conforms to signature + find most specific match
+  discuss Guido Wachsmuth, Vlad Vergu, Danny Groenewegen --
+    This is the current way to express conformance and best match.
+  --
 	TemplateCall(name, args, attrs, body):
-		refers to Template name of type TemplateSort(argtypes)
+		refers to best Template name of conformant type TemplateSort(argtypes)
 		where args has type argtypes
-
 
 	Action(_, name, fargs, block):
 		defines TemplateFunction name
 			of type FunctionSort(fargtypes, SimpleSort("Void"))
-		where fargs has type fargtypes
+		  where fargs has type fargtypes
 		scopes Variable
 
 	ActionCall(name, args):
 		refers to TemplateFunction name of type FunctionSort(argtypes, SimpleSort("Void"))
 		where args has type argtypes
 
-
-	// variable declarations inside template for loop disallowed in current implementation, no 'scopes Variable' needed
+	discuss Guido Wachsmuth, Vlad Vergu --
+    The current implementation disallows variable declarations inside template for loops.
+    That is why no 'scopes Variable' is needed.
+    
+    This was stated in a comment before. 
+    However, 'defines ... in block' introduces a scope for variables in block anyway.
+	--
 	ForAll(name, type, _, block, _):
 		defines Variable name of type type in block
 

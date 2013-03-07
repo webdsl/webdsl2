@@ -1,5 +1,11 @@
 module function/trans/function
 
+  author Danny Groenewegen
+  author Vlad Vergu
+  
+  version 0.1
+  status under development
+   
 imports
 	lib/nbl/-
 	include/WebDSL
@@ -67,10 +73,11 @@ binding rules // expressions
 			otherwise
 		refers to Type s
 	
-	// TODO: refers to Base base-ty 
-	// GenericSort(base-ty, param-ty):
-	// 	refers to Entity param-ty
-	
+	todo -- 
+    refers to Base base-ty 
+	  GenericSort(base-ty, param-ty):
+	 	refers to Entity param-ty
+	--
 	RefSort(s):
 		refers to Entity s // otherwise to BuiltInSorts "List" | "Set" ??
 	
