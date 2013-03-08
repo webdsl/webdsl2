@@ -174,8 +174,8 @@ binding rules // type declarations
 		scopes TypeFunction
 	
 	todo -- fix this --
-	NativeClassFunctionFromStatic(_, NativeClassFunction(_, name, args-ty, r-ty)):
-		defines TypeFunction name of type FunctionSort()
+	// NativeClassFunctionFromStatic(_, NativeClassFunction(_, name, args-ty, r-ty)):
+	// 	defines TypeFunction name of type FunctionSort()
 	
 	// TODO
 
