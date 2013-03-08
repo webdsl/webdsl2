@@ -10,6 +10,7 @@ imports
 	lib/task/-
 	include/WebDSL
 	datamodel/trans/datamodel
+	function/trans/hql
 	
 namespaces
 	ModuleFunction
@@ -20,6 +21,7 @@ namespaces
 	Type
 	NativeClass
 	TypeOrNativeFunction
+	NativeField
 	
 properties
 	
@@ -114,8 +116,6 @@ binding rules // expressions
 			otherwise
 		refers to Entity name
 			otherwise
-		refers to ExtendedEntity name
-			otherwise
 		refers to Type name
 			otherwise
 		refers to NativeClass name
@@ -176,6 +176,9 @@ binding rules // expressions
 	FieldAccess(parent, member):
 		refers to Property member in Entity parent-ty
 			where parent has type parent-ty
+			otherwise
+		refers to NativeField member in NativeClass parent-ty
+			where parent has type parent-ty
 
 binding rules // type declarations
 
@@ -195,24 +198,31 @@ binding rules // type declarations
 			of kind knd
 			of aliasing qname-fun
 	
-	// TODO constructor
-	
 binding rules // native classes
 	
 	discuss --
 		This is a hack, because assumes that all native class declarations have an alias
 	-- 
-	NativeClass(qname-class, NativeClassAlias(name), None(), _):
-		scopes TypeOrNativeFunction
+	fixme --
+		This currently crashes the generator
+	--
+	NativeClass(qname-class, NativeClassAlias(name), None(), [..., NativeClassConstructor(cargs-ty) ,...]):
+		scopes TypeOrNativeFunction, NativeProperty
 		defines NativeClass name
 			of aliasing qname-class
-
+		defines TypeOrNativeFunction name
+			of type FunctionSort(cargs-ty, SimpleSort(name))
+		
 	NativeClass(qname-class, NativeClassAlias(name), NativeClassSuper(par), _):
 		imports TypeOrNativeFunction from NativeClass par
 		scopes TypeOrNativeFunction
 		defines NativeClass name
 			of parent par
 			of aliasing qname-class
+
+	NativeClassProperty(member, ty):
+		defines NativeProperty member
+			of type ty
 
 binding rules // HQL queries
 

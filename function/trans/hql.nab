@@ -1,0 +1,39 @@
+module function/trans/hql
+
+	author Vlad Vergu
+
+imports
+	lib/nbl/-
+	lib/task/-
+	include/WebDSL
+	datamodel/trans/datamodel
+
+namespaces
+	HqlVar
+	
+properties	
+	aliasing	of HqlVar		: String
+
+binding rules
+	
+	HqlQuery(_):
+		scopes HqlVar
+	
+	FromClass(Path([ent]), Some(AsAlias(Alias(alias))), _):
+		refers to Entity ent
+		defines HqlVar alias
+			of type SimpleSort(ent)
+			of aliasing ent
+	
+	fixme --
+		i cannot find a way to express this properly because these paths can have an arbitrary number of 
+		elements
+	--
+	Path([var]):
+		refers to HqlVar var
+
+	Path([var, prop]):
+		refers to Property prop in Entity ent
+			where var refers to HqlVar var
+				of aliasing ent
+			

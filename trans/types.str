@@ -2,7 +2,8 @@ module trans/types
 
 imports
 	lib/editor-common.generated
-
+	function/trans/types
+	
 rules
 	type-of = fail
 	

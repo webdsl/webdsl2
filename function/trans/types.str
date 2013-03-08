@@ -1,0 +1,7 @@
+module function/trans/types
+
+imports include/WebDSL
+
+rules
+	type-of:
+		FieldAccess(_, f) -> f
