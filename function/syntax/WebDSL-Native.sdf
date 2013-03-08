@@ -15,7 +15,7 @@ context-free syntax
 	"native" "class" QId NativeClassAlias NativeClassSuper "{" NativeClassElement* "}"			-> NativeClassDeclaration			{"NativeClass"}
 
 	"as" Id																																									-> NativeClassAlias						{"NativeClassAlias"}
-																																													-> NativeClassAlias						{"None"}
+																																													-> NativeClassAlias						{"None", deprecated("Native classes without aliases are not supported in WebDSL2")}
 
 	":" Id																																									-> NativeClassSuper						{"NativeClassSuper"}
 																																													-> NativeClassSuper						{"None"}
@@ -31,7 +31,7 @@ context-free syntax %%functions
 	NativeClassConstructor																																	-> NativeClassElement
 	
 	NativeFunctionKind Id "(" {Sort ","}* ")" FunctionReturn																-> NativeClassFunction				{"NativeClassFunction"}
-	"constructor" "(" {Sort ","}* ")"	FunctionReturn																				-> NativeClassFunction				{reject}
+	"constructor" "(" {Sort ","}* ")"	FunctionReturn																				-> NativeClassElement					{reject}
 	NativeClassFunction																																			-> NativeClassElement	
 	
 	"static"																																								-> NativeFunctionKind					{"Static"}

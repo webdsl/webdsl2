@@ -42,9 +42,9 @@ binding rules
 		
 	todo -- generate import-site --
 	ExtendEntity(knd, name, _):
+		scopes Property, EntityFunction, ExtendedEntityFunction
 		defines non-unique ExtendedEntity name of kind knd
 		refers to Entity name of kind knd
-		scopes Property, EntityFunction, ExtendedEntityFunction
 		imports Property, EntityFunction, ExtendedEntityFunction from Entity name
 
 	Property(name, knd, ty, annos):
@@ -62,8 +62,8 @@ binding rules
 			of derived True()
 	
 	Enum(name, _):
-		defines Enum name
 		scopes EnumValue
+		defines Enum name
 	
 	EnumValue(name, _):
 		defines EnumValue name
@@ -77,7 +77,7 @@ binding rules
 	
 	GlobalVarDeclInitInferred(name, expr):
 		defines ModuleVariable name of type ty
-		where expr has type ty
+			where expr has type ty
 
 binding rules // annotation
 

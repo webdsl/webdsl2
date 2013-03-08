@@ -18,14 +18,19 @@ namespaces
 	ExtendedEntityFunction
 	Variable
 	Type
-	TypeFunction
+	NativeClass
+	TypeOrNativeFunction
 	
 properties
 	
-	kind	of EntityFunction						: FunctionKind
-	kind	of ExtendedEntityFunction		: FunctionKind
-	kind	of ModuleFunction						: FunctionKind
-	kind	of ExtendedModuleFunction		: FunctionKind
+	kind			of EntityFunction						: FunctionKind
+	kind			of ExtendedEntityFunction		: FunctionKind
+	kind			of ModuleFunction						: FunctionKind
+	kind			of ExtendedModuleFunction		: FunctionKind
+	kind			of TypeFunction							: NativeFunctionKind
+	aliasing	of TypeFunction							: QId
+	aliasing	of NativeClass							: NativeClassAlias
+	parent		of NativeClass							: Id
 	
 binding rules // function declarations
 	
@@ -39,26 +44,26 @@ binding rules // function declarations
 	EntityFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
 		scopes Variable
 		defines non-unique ExtendedEntityFunction name
-			of type FunctionSort(args-ty, ret-ty)
-			of kind knd
-		where args has type args-ty
+				of type FunctionSort(args-ty, ret-ty)
+				of kind knd
+			where args has type args-ty
 		refers to single EntityFunction name
-			of type FunctionSort(args-ty, ret-ty)
-			of kind knd 
-		where args has type args-ty
+				of type FunctionSort(args-ty, ret-ty)
+				of kind knd 
+			where args has type args-ty
 	
 	GlobalFunction(Function(_, name, args, ret-ty, _)):
 		scopes Variable
 		defines non-unique ModuleFunction name
-			of type FunctionSort(args-ty, ret-ty)
-		where args has type args-ty
+				of type FunctionSort(args-ty, ret-ty)
+			where args has type args-ty
 	
 	GlobalFunction(ExtendFunction(Function(_, name, args, ret-ty, _))):
 		scopes Variable
 		defines non-unique ExtendedModuleFunction name
 				of type FunctionSort(args-ty, ret-ty)
 			where args has type args-ty
-		refers to single ModuleFunction name of type FunctionSort(args-ty, ret-ty)
+		refers to single ModuleFunction name of conformant type FunctionSort(args-ty, ret-ty)
 			where args has type args-ty
 	
 	Arg(name, ty):
@@ -97,7 +102,7 @@ binding rules // expressions
 	
 	VarDeclInitInferred(name, expr):
 		defines Variable name of type ty in subsequent scope
-		where expr has type ty
+			where expr has type ty
 		
 	// var ref
 	Var(name):
@@ -112,6 +117,8 @@ binding rules // expressions
 		refers to ExtendedEntity name
 			otherwise
 		refers to Type name
+			otherwise
+		refers to NativeClass name
 
 	// global var ref
 	GlobalVar(name):
@@ -129,7 +136,10 @@ binding rules // expressions
 			where args has type args-ty 
 				otherwise
 		refers to best ModuleFunction name of conformant type FunctionSort(args-ty, _)
-			where args has type args-ty 
+			where args has type args-ty
+				otherwise
+		refers to best TypeOrNativeFunction name of conformant type FunctionSort(args-ty, _)
+			where args has type args-ty
 	
 	// PartialCall(name, args):
 	// 	refers to ModuleFunction name of type FunctionSort(args-ty, _)
@@ -170,18 +180,39 @@ binding rules // expressions
 binding rules // type declarations
 
 	TypeDef(name, _):
+		scopes TypeOrNativeFunction
 		defines Type name
-		scopes TypeFunction
 	
-	todo -- fix this --
-	// NativeClassFunctionFromStatic(_, NativeClassFunction(_, name, args-ty, r-ty)):
-	// 	defines TypeFunction name of type FunctionSort()
+	NativeClassFunction(knd, name, args-ty, r-ty):
+		defines TypeOrNativeFunction name
+			of type FunctionSort(args-ty, r-ty)
+			of kind knd
+			of aliasing None()
 	
-	// TODO
-
+	NativeClassFunctionFromStatic(qname-fun, NativeClassFunction(knd, name, args-ty, r-ty)):
+		defines TypeOrNativeFunction name
+			of type FunctionSort(args-ty, r-ty)
+			of kind knd
+			of aliasing qname-fun
+	
+	// TODO constructor
+	
 binding rules // native classes
+	
+	discuss --
+		This is a hack, because assumes that all native class declarations have an alias
+	-- 
+	NativeClass(qname-class, NativeClassAlias(name), None(), _):
+		scopes TypeOrNativeFunction
+		defines NativeClass name
+			of aliasing qname-class
 
-	// TODO
+	NativeClass(qname-class, NativeClassAlias(name), NativeClassSuper(par), _):
+		imports TypeOrNativeFunction from NativeClass par
+		scopes TypeOrNativeFunction
+		defines NativeClass name
+			of parent par
+			of aliasing qname-class
 
 binding rules // HQL queries
 
