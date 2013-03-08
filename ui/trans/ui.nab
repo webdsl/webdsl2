@@ -1,7 +1,6 @@
 module ui/trans/ui
 
   author Danny Groenewegen
-  author Vlad Vergu
   author Guido Wachsmuth
   
   version 0.1

@@ -1,6 +1,5 @@
 module function/trans/function
 
-  author Danny Groenewegen
   author Vlad Vergu
   
   version 0.1
