@@ -8,6 +8,7 @@ module ui/trans/ui
   
 imports
 	lib/nbl/-
+	lib/task/-
 	include/WebDSL
 	function/trans/function
 	

@@ -8,6 +8,7 @@ module datamodel/trans/datamodel
   
 imports
 	lib/nbl/-
+	lib/task/-
 	include/WebDSL
 	function/trans/function
 	datamodel/trans/signatures

@@ -7,6 +7,7 @@ module function/trans/function
    
 imports
 	lib/nbl/-
+	lib/task/-
 	include/WebDSL
 	datamodel/trans/datamodel
 	
@@ -29,35 +30,36 @@ properties
 binding rules // function declarations
 	
 	EntityFunction(Function(knd, name, args, ret-ty, _)):
-		defines non-unique EntityFunction name
-			of type FunctionSort(args-ty, ret-ty)
-			of kind knd
-		where args has type args-ty
 		scopes Variable
+		defines non-unique EntityFunction name
+				of type FunctionSort(args-ty, ret-ty)
+				of kind knd
+			where args has type args-ty
 	
-	EntityFunction(ExtendFunction(Function(_, name, args, ret-ty, _))):
+	EntityFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
 		scopes Variable
 		defines non-unique ExtendedEntityFunction name
 			of type FunctionSort(args-ty, ret-ty)
 			of kind knd
 		where args has type args-ty
-		refers to EntityFunction name
+		refers to single EntityFunction name
 			of type FunctionSort(args-ty, ret-ty)
 			of kind knd 
 		where args has type args-ty
 	
 	GlobalFunction(Function(_, name, args, ret-ty, _)):
+		scopes Variable
 		defines non-unique ModuleFunction name
 			of type FunctionSort(args-ty, ret-ty)
 		where args has type args-ty
-		scopes Variable
 	
 	GlobalFunction(ExtendFunction(Function(_, name, args, ret-ty, _))):
-		defines non-unique ExtendedModuleFunction name
-			of type FunctionSort(args-ty, ret-ty)
-		where args has type args-ty
 		scopes Variable
-		refers to ModuleFunction name
+		defines non-unique ExtendedModuleFunction name
+				of type FunctionSort(args-ty, ret-ty)
+			where args has type args-ty
+		refers to single ModuleFunction name of type FunctionSort(args-ty, ret-ty)
+			where args has type args-ty
 	
 	Arg(name, ty):
 		defines Variable name of type ty
@@ -72,13 +74,19 @@ binding rules // expressions
 			otherwise
 		refers to Type s
 	
-	todo -- 
-    refers to Base base-ty 
-	  GenericSort(base-ty, param-ty):
-	 	refers to Entity param-ty
-	--
+	todo -- check with DG that this is fine --
 	RefSort(s):
-		refers to Entity s // otherwise to BuiltInSorts "List" | "Set" ??
+		refers to Entity s
+			otherwise
+		refers to Enum s
+			otherwise
+		refers to Type s
+
+	todo -- test this --
+	GenericSort(base, param):
+		refers to Entity s
+			otherwise
+		refers to Type s
 	
 	// var declaration * 3
 	VarDecl(name, ty):
@@ -98,6 +106,12 @@ binding rules // expressions
 		refers to Property name
 			otherwise
 		refers to ModuleVariable name
+			otherwise
+		refers to Entity name
+			otherwise
+		refers to ExtendedEntity name
+			otherwise
+		refers to Type name
 
 	// global var ref
 	GlobalVar(name):
@@ -111,24 +125,24 @@ binding rules // expressions
 	
 	// function call (partial) * 3 
 	ThisCall(name, args):
-		refers to EntityFunction name of type FunctionSort(args-ty, _)
-		where args has type args-ty 
-			otherwise
-		refers to ModuleFunction name of type FunctionSort(args-ty, _)
-		where args has type args-ty 
+		refers to best EntityFunction name of conformant type FunctionSort(args-ty, _)
+			where args has type args-ty 
+				otherwise
+		refers to best ModuleFunction name of conformant type FunctionSort(args-ty, _)
+			where args has type args-ty 
 	
 	// PartialCall(name, args):
 	// 	refers to ModuleFunction name of type FunctionSort(args-ty, _)
 	// 	where args has type args-ty 
 	
 	Call(parent-expr, member-name, args):
-		refers to EntityFunction member-name of type FunctionSort(args-ty, _) in Entity parent
-		where parent-expr has type parent
-		where args has type args-ty
-			otherwise
-		refers to TypeFunction member-name of type FunctionSort(args-ty, _) in Type parent
-		where parent-expr has type parent
-		where args has type args-ty
+		refers to best EntityFunction member-name of conformant type FunctionSort(args-ty, _) in Entity parent
+			where parent-expr has type parent
+			where args has type args-ty
+				otherwise
+		refers to best TypeFunction member-name of conformant type FunctionSort(args-ty, _) in Type parent
+			where parent-expr has type parent
+			where args has type args-ty
 		
 	Block(_):
 		scopes Variable
@@ -138,7 +152,7 @@ binding rules // expressions
 	
 	ForStmtInferred(name, expr, _, block):
 		defines Variable name of type ty in block
-		where expr has type ty
+			where expr has type ty
 	
 	ForAllStmt(name, ty, _, block):
 		defines Variable name of type ty in block
@@ -151,14 +165,18 @@ binding rules // expressions
 
 	FieldAccess(parent, member):
 		refers to Property member in Entity parent-ty
-		where parent has type parent-ty
+			where parent has type parent-ty
 
 binding rules // type declarations
 
 	TypeDef(name, _):
 		defines Type name
 		scopes TypeFunction
-
+	
+	todo -- fix this --
+	NativeClassFunctionFromStatic(_, NativeClassFunction(_, name, args-ty, r-ty)):
+		defines TypeFunction name of type FunctionSort()
+	
 	// TODO
 
 binding rules // native classes
