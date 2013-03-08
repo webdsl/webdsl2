@@ -44,11 +44,10 @@ exports
     Annotation																		-> TypeProperty		{"TypeDefAnno"}
     
     NativeClassFunction														-> TypeProperty
+    NativeQualifiedFunction												-> TypeProperty
     
     %%solve ambiguities
     "static"																			-> TypeProperty		{reject}
-    
-    QId "as" NativeClassFunction									-> TypeProperty		{"NativeClassFunctionFromStatic"}
     
     
     

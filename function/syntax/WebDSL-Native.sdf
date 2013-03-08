@@ -3,42 +3,42 @@ module WebDSL-Native
 imports
   WebDSL-Lexical
   WebDSL-Type
-
+	WebDSL-Action
+	
 exports
 
   sorts Derive DeriveType DeriveProperty
 
+
 context-free syntax
 
-  "native" "class" QId NativeClassAlias NativeClassSuper "{" NativeClassElement* "}" -> NativeClassDeclaration {cons("NativeClass")}
-  
-  "as" Id -> NativeClassAlias{cons("NativeClassAlias"),prefer}
-  -> NativeClassAlias{cons("None")}
-  
-  ":" Id -> NativeClassSuper{cons("NativeClassSuper"),prefer}
-  -> NativeClassSuper{cons("None")}
+	"native" "class" QId NativeClassAlias NativeClassSuper "{" NativeClassElement* "}"			-> NativeClassDeclaration			{"NativeClass"}
+
+	"as" Id																																									-> NativeClassAlias						{"NativeClassAlias"}
+																																													-> NativeClassAlias						{"None"}
+
+	":" Id																																									-> NativeClassSuper						{"NativeClassSuper"}
+																																													-> NativeClassSuper						{"None"}
   
 context-free syntax %%properties
   
-  Id ":" NativeType -> NativeClassElement{cons("NativeClassProperty")}
-  
-context-free syntax %%functions  
-  
-  NativeClassFunction -> NativeClassElement
-  
-  NativeClassFunctionStatic Id "(" {NativeType ","}* ")" NativeClassFunctionReturn -> NativeClassFunction{cons("NativeClassFunction")}
-  "constructor" "(" {NativeType ","}* ")" NativeClassFunctionReturn -> NativeClassElement{reject}
+	Id ":" Sort																																							-> NativeClassElement					{"NativeClassProperty"}
 
-  ":" NativeType ->  NativeClassFunctionReturn{cons("NativeClassFunctionReturn"),prefer}
-  ->  NativeClassFunctionReturn{cons("None")}
-  
-  "static" ->  NativeClassFunctionStatic{cons("NativeClassFunctionStatic"),prefer}
-  ->  NativeClassFunctionStatic{cons("None")}
-      
-  QId "as" NativeClassFunction -> NativeClassElement{cons("NativeClassFunctionFromStatic")}
+context-free syntax %%functions
 
-  "constructor" "(" {NativeType ","}* ")" -> NativeClassElement{cons("NativeClassConstructor")}
-  
-  Id "<" {NativeType ","}* ">" -> NativeType{cons("NativeGenericType")}
-  Id -> NativeType{cons("NativeSimpleType")}
+	
+	"constructor" "(" {Sort ","}* ")"																												-> NativeClassConstructor			{"NativeClassConstructor"}
+	NativeClassConstructor																																	-> NativeClassElement
+	
+	NativeFunctionKind Id "(" {Sort ","}* ")" FunctionReturn																-> NativeClassFunction				{"NativeClassFunction"}
+	"constructor" "(" {Sort ","}* ")"	FunctionReturn																				-> NativeClassFunction				{reject}
+	NativeClassFunction																																			-> NativeClassElement	
+	
+	"static"																																								-> NativeFunctionKind					{"Static"}
+																																													-> NativeFunctionKind					{"Dynamic"}
+
+	QId "as" NativeClassFunction																														-> NativeQualifiedFunction		{"NativeClassFunctionFromStatic"}
+	NativeQualifiedFunction																																	-> NativeClassElement
+
+
   
