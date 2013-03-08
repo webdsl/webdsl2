@@ -69,21 +69,41 @@ rules // Analysis
       if not([] := path*) then
         queue-strategy(|"analyze-multiple", "Analyzing files")
       end
-
+  
+  sunshine-parse-file = prim("SSL_EXT_parse_file")
+  
   analyze-multiple:
     path* -> result*
     with
       nabl-analyze-multiple-work-units; set-total-work-units;
       measure-time(
-        result* := <nabl-analyze-multiple(parse-file; desugar-all, parallel-unordered, complete-work-unit|<language>, <project-path>); 
+        result* := <nabl-analyze-multiple(sunshine-parse-file; desugar-all, parallel-unordered, complete-work-unit|<language>, <project-path>); 
           filter(update-markers)> path*
       , vdebug(!"Analysis seconds: ")
       );
-      where(index-commit);
-      mapconcat(nabl-result-dependent);
-      map(index-partition-file);
-      make-set;
-      queue-analyze-multiple
+      measure-time(
+      	measure-time(
+	      	where(index-commit)
+	      	,vdebug(!"\tCommitting seconds: ")
+	      );
+	      measure-time(
+		      mapconcat(nabl-result-dependent)     	
+	      	,vdebug(!"\tDependencies seconds: ")
+	      );
+	      measure-time(
+		      map(index-partition-file)
+	      	,vdebug(!"\tPartitioning seconds: ")
+	      );
+	      measure-time(
+		      make-set
+	      	,vdebug(!"\tJoining seconds: ")
+	      );
+	      measure-time(
+		      queue-analyze-multiple
+	      	,vdebug(!"\tQueueing seconds: ")
+	      )
+	    , vdebug(!"Post-processing seconds: ")
+	    ) 
       
   measure-time(s, log) =
     where(before := <times>);
