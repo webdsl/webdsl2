@@ -29,14 +29,14 @@ binding rules
 		defines Entity name
 			of parent par
 			of kind knd
-		scopes Property, EntityFunction, ExtendedEntityFunction
-		imports Property, EntityFunction, ExtendedEntityFunction from ExtendedEntity name
+		scopes Property, Function, ExtendedFunction
+		imports Property, Function, ExtendedFunction from ExtendedEntity name
 		
 	todo -- generate import-site --
 	ExtendEntity(knd, name, _):
-		scopes Property, EntityFunction, ExtendedEntityFunction
+		scopes Property, Function, ExtendedFunction
 		defines non-unique ExtendedEntity name of kind knd
-		imports Property, EntityFunction, ExtendedEntityFunction from Entity name of kind knd
+		imports Property, Function, ExtendedFunction from Entity name of kind knd
 
 	Property(name, knd, ty, annos):
 		defines Property name

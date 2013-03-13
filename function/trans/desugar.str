@@ -5,15 +5,22 @@ imports
 	
 rules
 	function-desugar:
-		GlobalFunction(|[ function x( farg* ) : srt { stat* } ]|) ->
-			GlobalFunction(|[ static function x( farg* ) : srt { stat* } ]|)
+		def |[ function x( farg* ) : srt { stat* } ]| ->
+			def |[ static function x( farg* ) : srt { stat* } ]|
 	
 	function-desugar:
-		|[ if (e) block ]| -> |[ if (e) block else { }]|
+		def |[ extend function x( farg* ) : srt { stat* } ]| ->
+			def |[ extend static function x( farg* ) : srt { stat* } ]|
 	
 	function-desugar:
-		|[ [ e0 | x : srt in e1 ] ]| -> |[ [ e0 | x : srt in e1 where true ] ]|
+		|[ if (e) block ]| ->
+			|[ if (e) block else { }]|
+	
+	function-desugar:
+		|[ [ e0 | x : srt in e1 ] ]| ->
+			|[ [ e0 | x : srt in e1 where true ] ]|
 	
 	function-desugar:
 		Void() -> "Void"
+		
 	

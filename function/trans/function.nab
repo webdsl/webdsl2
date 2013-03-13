@@ -2,26 +2,21 @@ module function/trans/function
  
 imports
 	include/WebDSL
+	function/trans/signatures
 	datamodel/trans/datamodel
-	//function/trans/hql
+	function/trans/hql
 	
 namespaces
-	ModuleFunction
-	ExtendedModuleFunction
-	EntityFunction
-	ExtendedEntityFunction
+	Function
+	ExtendedFunction
 	Variable
 	Type
 	NativeClass
-	TypeOrNativeFunction
 	NativeProperty
 	
 properties
-	
-	kind			of EntityFunction						: FunctionKind
-	kind			of ExtendedEntityFunction		: FunctionKind
-	kind			of ModuleFunction						: FunctionKind
-	kind			of ExtendedModuleFunction		: FunctionKind
+	kind			of Function									: FunctionKind // Dynamic/Static/Global
+	kind			of ExtendedFunction					: FunctionKind
 	kind			of TypeFunction							: NativeFunctionKind
 	aliasing	of TypeFunction							: QId
 	aliasing	of NativeClass							: NativeClassAlias
@@ -31,34 +26,37 @@ binding rules // function declarations
 	
 	EntityFunction(Function(knd, name, args, ret-ty, _)):
 		scopes Variable
-		defines non-unique EntityFunction name
+		defines non-unique Function name
 				of type FunctionSort(args-ty, ret-ty)
 				of kind knd
 			where args has type args-ty
 	
 	EntityFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
 		scopes Variable
-		defines non-unique ExtendedEntityFunction name
+		defines non-unique ExtendedFunction name
 				of type FunctionSort(args-ty, ret-ty)
 				of kind knd
 			where args has type args-ty
-		refers to single EntityFunction name
+		refers to single Function name
 				of type FunctionSort(args-ty, ret-ty)
-				of kind knd 
+				of kind knd
 			where args has type args-ty
 	
 	GlobalFunction(Function(_, name, args, ret-ty, _)):
 		scopes Variable
-		defines non-unique ModuleFunction name
+		defines non-unique Function name
 				of type FunctionSort(args-ty, ret-ty)
+				of kind Global()
 			where args has type args-ty
 	
 	GlobalFunction(ExtendFunction(Function(_, name, args, ret-ty, _))):
 		scopes Variable
-		defines non-unique ExtendedModuleFunction name
+		defines non-unique ExtendedFunction name
 				of type FunctionSort(args-ty, ret-ty)
 			where args has type args-ty
-		refers to single ModuleFunction name of type FunctionSort(args-ty, ret-ty)
+		refers to single Function name
+				of type FunctionSort(args-ty, ret-ty)
+				of kind Global()
 			where args has type args-ty
 	
 	Arg(name, ty):
@@ -123,32 +121,23 @@ binding rules // expressions
 			otherwise
 		refers to ModuleVariable name
 	
-	// function call (partial) * 3 
 	todo -- handle wildcard in property matches
 	
 	ThisCall(name, args):
-		refers to best EntityFunction name of conformant type FunctionSort(args-ty, _)
-			where args has type args-ty 
-				otherwise
-		refers to best ModuleFunction name of conformant type FunctionSort(args-ty, _)
-			where args has type args-ty
-				otherwise
-		refers to best TypeOrNativeFunction name of conformant type FunctionSort(args-ty, _)
+		refers to best Function name of conformant type FunctionSort(args-ty, _)
 			where args has type args-ty
 	
 	// PartialCall(name, args):
-	// 	refers to ModuleFunction name of type FunctionSort(args-ty, _)
+	// 	refers to Function name of type FunctionSort(args-ty, _)
 	// 	where args has type args-ty 
-	
-	Call(parent-expr, member-name, args):
-		refers to best EntityFunction member-name of conformant type FunctionSort(args-ty, _) in Entity par
-			where parent-expr has type par
-			where args has type args-ty
-				otherwise
-		refers to best TypeFunction member-name of conformant type FunctionSort(args-ty, _) in Type par
-			where parent-expr has type par
-			where args has type args-ty
-	--
+
+	Call(parent-expr, member-name, args)
+			where parent-expr has type SimpleSort(par)
+			where args has type args-ty:
+		refers to best Function member-name of conformant type FunctionSort(args-ty, _) in Entity par
+			otherwise
+		refers to best Function member-name of conformant type FunctionSort(args-ty, _) in Type par
+--	
 	
 	Block(_):
 		scopes Variable
@@ -179,17 +168,17 @@ binding rules // expressions
 binding rules // type declarations
 
 	TypeDef(name, _):
-		scopes TypeOrNativeFunction
+		scopes Function
 		defines Type name
 	
 	NativeClassFunction(knd, name, args-ty, r-ty):
-		defines TypeOrNativeFunction name
+		defines Function name
 			of type FunctionSort(args-ty, r-ty)
 			of kind knd
 			of aliasing None()
 	
 	NativeClassFunctionFromStatic(qname-fun, NativeClassFunction(knd, name, args-ty, r-ty)):
-		defines TypeOrNativeFunction name
+		defines Function name
 			of type FunctionSort(args-ty, r-ty)
 			of kind knd
 			of aliasing qname-fun
@@ -202,16 +191,16 @@ binding rules // native classes
 	fixme --
 		This currently crashes the generator
 	NativeClass(qname-class, NativeClassAlias(name), None(), [..., NativeClassConstructor(cargs-ty) ,...]):
-		scopes TypeOrNativeFunction, NativeProperty
+		scopes Function, NativeProperty
 		defines NativeClass name
 			of aliasing qname-class
-		defines TypeOrNativeFunction name
+		defines Function name
 			of type FunctionSort(cargs-ty, SimpleSort(name))
 	--
 		
 	NativeClass(qname-class, NativeClassAlias(name), NativeClassSuper(par), _):
-		imports TypeOrNativeFunction from NativeClass par
-		scopes TypeOrNativeFunction
+		imports NativeProperty, Function from NativeClass par
+		scopes NativeProperty, Function
 		defines NativeClass name
 			of parent par
 			of aliasing qname-class
@@ -220,15 +209,9 @@ binding rules // native classes
 		defines NativeProperty member
 			of type ty
 
-binding rules // HQL queries
-
-	// HQL queries and HQL-WebDSL boundaries
-	// 
-
-
 
 	
-	// TODO: These should be handled in their respective sub-languages
+	// TODO: These should be handled in their respective sub-languages:
 	 
 	// validatetemplate
 	// rendertemplate

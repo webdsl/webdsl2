@@ -1,0 +1,7 @@
+module function/trans/signatures
+
+signature
+	constructors
+		Global: FunctionKind
+		Native: FunctionKind
+
