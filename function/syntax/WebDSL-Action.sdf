@@ -111,6 +111,7 @@ exports %% Expression language
     "externalscope" "." Id -> Exp {cons("ExternalScopeVar")}
     "global" "." Id -> Exp {cons("GlobalVar")}
     "global" -> Id {reject}
+    "externalscope" -> Id {reject}
 
     Exp "." Id             -> Exp {cons("FieldAccess"),prefer}
     

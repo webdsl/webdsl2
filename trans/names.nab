@@ -3,10 +3,42 @@ module names
 imports
 	include/WebDSL
 	datamodel/trans/datamodel
-  //function/trans/function
-	//ui/trans/ui
+  function/trans/function
+	ui/trans/ui
 	
 namespaces
+	Module
+
+properties
+	application	of Module	: Bool
 	
 binding rules
-
+	ApplicationDefs(name, _, _):
+		defines Application name
+	
+	Application(name, _):
+		defines Application name
+	
+	ModuleDefs(modname, _, _):
+		defines Module name
+		scopes
+			Function, ExtendedFunction,
+			Entity, ExtendedEntity,
+			Type, NativeClass,
+			Variable, Enum
+	
+	ModuleDefs(modname, _):
+		defines Module name
+		scopes
+			Function, ExtendedFunction,
+			Entity, ExtendedEntity,
+			Type, NativeClass,
+			Variable, Enum
+	
+	
+	Imports(modname):
+		imports
+			Function, ExtendedFunction,
+			Entity, ExtendedEntity,
+			Type, NativeClass,
+			Variable, Enum from Module modname // {transitively}
