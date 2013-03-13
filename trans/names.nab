@@ -5,6 +5,7 @@ imports
 	datamodel/trans/datamodel
   function/trans/function
 	ui/trans/ui
+	accesscontrol/trans/accesscontrol
 	
 namespaces
 	Module
