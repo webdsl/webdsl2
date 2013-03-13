@@ -18,19 +18,22 @@ binding rules
 	
 	HqlQuery(_):
 		scopes HqlVar
-	
+
+	fixme -- should use the imports syntax --
 	FromClass(Path([ent]), Some(AsAlias(Alias(alias))), _):
+		// imports Entity ent as HqlVar alias
 		refers to Entity ent
 		defines HqlVar alias
 			of type SimpleSort(ent)
 			of aliasing ent
 	
-	fixme --
-		i cannot find a way to express this properly because these paths can have an arbitrary number of 
-		elements
-	--
+	FromClass(Path([ent]), None(), _):
+		imports Property from Entity e
+	
 	Path([var]):
 		refers to HqlVar var
+			otherwise
+		refers to Property var
 
 	Path([var, prop]):
 		refers to Property prop in Entity ent
