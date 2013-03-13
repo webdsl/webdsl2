@@ -58,7 +58,7 @@ binding rules // function declarations
 		defines non-unique ExtendedModuleFunction name
 				of type FunctionSort(args-ty, ret-ty)
 			where args has type args-ty
-		refers to single ModuleFunction name of conformant type FunctionSort(args-ty, ret-ty)
+		refers to single ModuleFunction name of type FunctionSort(args-ty, ret-ty)
 			where args has type args-ty
 	
 	Arg(name, ty):
@@ -84,9 +84,9 @@ binding rules // expressions
 
 	todo -- test this --
 	GenericSort(base, param):
-		refers to Entity s
+		refers to Entity param
 			otherwise
-		refers to Type s
+		refers to Type param
 	
 	// var declaration * 3
 	VarDecl(name, ty):
