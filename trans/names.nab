@@ -14,10 +14,22 @@ properties
 	
 binding rules
 	ApplicationDefs(name, _, _):
+		defines Module name
 		defines Application name
+		scopes
+			Function, ExtendedFunction,
+			Entity, ExtendedEntity,
+			Type, NativeClass,
+			Variable, Enum
 	
 	Application(name, _):
+		defines Module name
 		defines Application name
+		scopes
+			Function, ExtendedFunction,
+			Entity, ExtendedEntity,
+			Type, NativeClass,
+			Variable, Enum
 	
 	ModuleDefs(modname, _, _):
 		defines Module name
@@ -38,7 +50,12 @@ binding rules
 	
 	Imports(modname):
 		imports
-			Function, ExtendedFunction,
-			Entity, ExtendedEntity,
-			Type, NativeClass,
-			Variable, Enum from Module modname // {transitively}
+			Function, imported Function,
+			ExtendedFunction, imported ExtendedFunction,
+			Entity, imported Entity,
+			ExtendedEntity, imported ExtendedEntity,
+			Type, imported Type, 
+			NativeClass, imported NativeClass,
+			Variable, imported Variable,
+			Enum, imported Enum
+			from Module modname
