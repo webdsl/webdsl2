@@ -1,16 +1,9 @@
 module function/trans/function
-
-  author Vlad Vergu
-  
-  version 0.1
-  status under development
-   
+ 
 imports
-	lib/nbl/-
-	lib/task/-
 	include/WebDSL
 	datamodel/trans/datamodel
-	function/trans/hql
+	//function/trans/hql
 	
 namespaces
 	ModuleFunction
@@ -21,7 +14,7 @@ namespaces
 	Type
 	NativeClass
 	TypeOrNativeFunction
-	NativeField
+	NativeProperty
 	
 properties
 	
@@ -131,6 +124,8 @@ binding rules // expressions
 		refers to ModuleVariable name
 	
 	// function call (partial) * 3 
+	todo -- handle wildcard in property matches
+	
 	ThisCall(name, args):
 		refers to best EntityFunction name of conformant type FunctionSort(args-ty, _)
 			where args has type args-ty 
@@ -146,14 +141,15 @@ binding rules // expressions
 	// 	where args has type args-ty 
 	
 	Call(parent-expr, member-name, args):
-		refers to best EntityFunction member-name of conformant type FunctionSort(args-ty, _) in Entity parent
-			where parent-expr has type parent
+		refers to best EntityFunction member-name of conformant type FunctionSort(args-ty, _) in Entity par
+			where parent-expr has type par
 			where args has type args-ty
 				otherwise
-		refers to best TypeFunction member-name of conformant type FunctionSort(args-ty, _) in Type parent
-			where parent-expr has type parent
+		refers to best TypeFunction member-name of conformant type FunctionSort(args-ty, _) in Type par
+			where parent-expr has type par
 			where args has type args-ty
-		
+	--
+	
 	Block(_):
 		scopes Variable
 	
@@ -173,12 +169,12 @@ binding rules // expressions
 	ForExp(sexpr, name, ty, expr, filter):
 		defines Variable name of type ty in sexpr, expr, filter
 
-	FieldAccess(parent, member):
+	FieldAccess(par, member):
 		refers to Property member in Entity parent-ty
-			where parent has type parent-ty
+			where par has type parent-ty
 			otherwise
-		refers to NativeField member in NativeClass parent-ty
-			where parent has type parent-ty
+		refers to NativeProperty member in NativeClass parent-ty
+			where par has type parent-ty
 
 binding rules // type declarations
 
@@ -205,13 +201,13 @@ binding rules // native classes
 	-- 
 	fixme --
 		This currently crashes the generator
-	--
 	NativeClass(qname-class, NativeClassAlias(name), None(), [..., NativeClassConstructor(cargs-ty) ,...]):
 		scopes TypeOrNativeFunction, NativeProperty
 		defines NativeClass name
 			of aliasing qname-class
 		defines TypeOrNativeFunction name
 			of type FunctionSort(cargs-ty, SimpleSort(name))
+	--
 		
 	NativeClass(qname-class, NativeClassAlias(name), NativeClassSuper(par), _):
 		imports TypeOrNativeFunction from NativeClass par

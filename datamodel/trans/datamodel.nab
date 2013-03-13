@@ -1,14 +1,6 @@
 module datamodel/trans/datamodel
 
-  author Danny Groenewegen
-  author Vlad Vergu
-  
-  version 0.1
-  status under development
-  
 imports
-	lib/nbl/-
-	lib/task/-
 	include/WebDSL
 	function/trans/function
 	datamodel/trans/signatures
@@ -44,8 +36,7 @@ binding rules
 	ExtendEntity(knd, name, _):
 		scopes Property, EntityFunction, ExtendedEntityFunction
 		defines non-unique ExtendedEntity name of kind knd
-		refers to Entity name of kind knd
-		imports Property, EntityFunction, ExtendedEntityFunction from Entity name
+		imports Property, EntityFunction, ExtendedEntityFunction from Entity name of kind knd
 
 	Property(name, knd, ty, annos):
 		defines Property name
@@ -77,8 +68,8 @@ binding rules
 	
 	GlobalVarDeclInitInferred(name, expr):
 		defines ModuleVariable name of type ty
-			where expr has type ty
-
+      where expr has type ty 
+	
 binding rules // annotation
 
 	InverseAnno(par, member):
