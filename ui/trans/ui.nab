@@ -10,6 +10,7 @@ imports
 	lib/nbl/-
 	lib/task/-
 	include/WebDSL
+	ui/trans/signatures	
 	function/trans/function
 	
 namespaces
@@ -23,13 +24,13 @@ binding rules
 		defines Page name
 			of type PageSort(fargtypes)
 		where fargs has type fargtypes
-		scopes Variable
+		scopes Variable, TemplateFunction
 
 	DefineTemplate(mods, name, fargs, targs, elems):
 		defines Template name
 			of type TemplateSort(fargtypes)
 		where fargs has type fargtypes
-		scopes Variable
+		scopes Variable, TemplateFunction
 
 	PageCall(name, args):
 		refers to Page name
@@ -51,13 +52,6 @@ binding rules
 		refers to TemplateFunction name of type FunctionSort(argtypes, SimpleSort("Void"))
 		where args has type argtypes
 
-	discuss Guido Wachsmuth, Vlad Vergu --
-    The current implementation disallows variable declarations inside template for loops.
-    That is why no 'scopes Variable' is needed.
-    
-    This was stated in a comment before. 
-    However, 'defines ... in block' introduces a scope for variables in block anyway.
-	--
 	ForAll(name, type, _, block, _):
 		defines Variable name of type type in block
 

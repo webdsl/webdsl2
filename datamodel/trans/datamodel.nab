@@ -29,6 +29,7 @@ binding rules
 		defines Entity name
 			of parent par
 			of kind knd
+		imports Property, imported Property, Function, imported Function from Entity par
 		scopes Property, Function, ExtendedFunction
 		imports Property, Function, ExtendedFunction from ExtendedEntity name
 		

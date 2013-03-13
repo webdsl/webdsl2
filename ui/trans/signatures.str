@@ -1,0 +1,7 @@
+module ui/trans/signatures
+
+signature
+	constructors
+		TemplateSort: String -> Sort
+		PageSort: String -> Sort
+

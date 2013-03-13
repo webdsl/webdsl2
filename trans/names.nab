@@ -8,7 +8,8 @@ imports
 	
 namespaces
 	Module
-
+	Application
+	
 properties
 	application	of Module	: Bool
 	
@@ -20,7 +21,8 @@ binding rules
 			Function, ExtendedFunction,
 			Entity, ExtendedEntity,
 			Type, NativeClass,
-			Variable, Enum
+			Variable, Enum,
+			Page,	Template
 	
 	Application(name, _):
 		defines Module name
@@ -29,33 +31,38 @@ binding rules
 			Function, ExtendedFunction,
 			Entity, ExtendedEntity,
 			Type, NativeClass,
-			Variable, Enum
+			Variable, Enum,
+			Page,	Template
 	
-	ModuleDefs(modname, _, _):
+	ModuleDefs(name, _, _):
 		defines Module name
 		scopes
 			Function, ExtendedFunction,
 			Entity, ExtendedEntity,
 			Type, NativeClass,
-			Variable, Enum
+			Variable, Enum,
+			Page,	Template
 	
-	ModuleDefs(modname, _):
+	Module(name, _):
 		defines Module name
 		scopes
 			Function, ExtendedFunction,
 			Entity, ExtendedEntity,
 			Type, NativeClass,
-			Variable, Enum
+			Variable, Enum,
+			Page,	Template
 	
 	
 	Imports(modname):
 		imports
 			Function, imported Function,
-			ExtendedFunction, imported ExtendedFunction,
+			// ExtendedFunction, imported ExtendedFunction,
 			Entity, imported Entity,
-			ExtendedEntity, imported ExtendedEntity,
+			// ExtendedEntity, imported ExtendedEntity,
 			Type, imported Type, 
 			NativeClass, imported NativeClass,
 			Variable, imported Variable,
-			Enum, imported Enum
+			Enum, imported Enum,
+			Page,	imported Page, 
+			Template,	imported Template
 			from Module modname
