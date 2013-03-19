@@ -11,18 +11,21 @@ builders
 
 builders
                                                                                                                             
-  provider : include/webdsl.ctree                                                                                           
-  provider : include/webdsl-java.jar                                                                                        
+  //provider : include/webdsl.ctree                                                                                           
+  //provider : include/webdsl-java.jar
+  provider : include/webdsl-java.jar                                                                                                                          
+  provider : include/webdsl.jar                                                                                        
                                                                                                                             
   observer : editor-analyze                        (multifile)                                                              
                                                                                                                             
-  builder  : "Show abstract syntax"                = debug-generate-aterm (openeditor) (realtime) (meta) (source)           
-  builder  : "Show deffed syntax"                  = debug-generate-deffed (openeditor) (realtime) (meta) (source)          
-  builder  : "Show analyzed syntax"                = debug-generate-analyzed (openeditor) (realtime) (meta)        
-  builder  : "Show index entries for current file" = debug-index-show-current-file (openeditor) (realtime) (meta) (source)  
-  builder  : "Show index entries for all files"    = debug-index-show-all-files (openeditor) (realtime) (meta) (source)     
-  builder  : "Clear index for current file"        = debug-index-clear-current (meta) (source)                              
-  builder  : "Clear index"                         = debug-index-clear (meta) (source)                                      
-  builder  : "Reload index"                        = debug-index-reload (meta) (source)                                     
+  builder  : "Show abstract syntax"                    = debug-generate-aterm (openeditor) (realtime) (meta) (source)
+  builder  : "Show analyzed syntax"                    = debug-generate-analyzed (openeditor) (realtime) (meta)
+  
+  builder  : "Show NBL entries for current partition"  = debug-show-current-partition (openeditor) (realtime) (meta)
+  builder  : "Show NBL entries for current partition (PP)"  = debug-show-current-partition-pp (openeditor) (realtime) (meta)
+  builder  : "Show NBL entries for all patitions"      = debug-show-all-partitions (openeditor) (realtime) (meta)
+  builder  : "Clear NBL entries for current partition" = debug-clear-current (meta)
+  builder  : "Clear NBL all entries"                   = debug-clear-all (meta)
+  builder  : "Reload all NBL entries"                  = debug-reload (meta)                     
                                                                                                                             
   on save  : editor-save                                                                                                    

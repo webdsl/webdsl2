@@ -10,6 +10,7 @@ imports
   lib/index-library.generated
   lib/nbl/-
   lib/index/partition
+  lib/index/query
   
   names
   types
@@ -144,48 +145,12 @@ rules // Debugging
     (selected, position, ast, path, project-path) -> (filename, selected)
     with
       filename := <guarantee-extension(|"analyzed.aterm")> path
-  
-  // Prints the entries in the index of the current file.
-  debug-index-show-current-file:
-    (selected, position, ast, path, project-path) -> (filename, result)
-    with
-      index-setup(|<language>, [project-path], $[[project-path]/[path]]);
-      filename := <guarantee-extension(|"index.currentfile.aterm")> path;
-      result   := <index-get-all-in-file> path
-      
-  // Prints the entries in the index of all files.
-  debug-index-show-all-files:
-    (selected, position, ast, path, project-path) -> (filename, result)
-    with
-      index-setup(|<language>, [project-path], $[[project-path]/[path]]);
-      filename := <guarantee-extension(|"index.allfiles.aterm")> path;
-      result   := <map(\filename -> (filename, <index-get-all-in-file> filename)\)> <index-get-all-files>
-
-  // Cleans current file from the index.
-  debug-index-clear-current:
-    (selected, position, ast, path, project-path)  -> None()
-    with
-      index-setup(|<language>, [project-path], $[[project-path]/[path]]);
-      <index-clear-file> $[[project-path]/[path]]
-      
-  // Cleans all data from the index.
-  debug-index-clear:
-    (selected, position, ast, path, project-path)  -> None()
-    with
-      index-setup(|<language>, [project-path], $[[project-path]/[path]]);
-      index-clear
-      
-  // Cleans all data from the index and re-analyzes every file.
-  debug-index-reload:
-    (selected, position, ast, path, project-path)  -> None()
-    with
-      index-setup(|<language>, [project-path], $[[project-path]/[path]]);
-      index-reload
 
 rules // NBL debugging
      
   debug-show-current-partition = 
   	nabl-debug-show-current-partition(|<language>)
+  
     
   debug-show-all-partitions =
     nabl-debug-show-all-partitions(|<language>)
@@ -198,3 +163,17 @@ rules // NBL debugging
 
   debug-reload = 
   	nabl-debug-reload(|<language>)
+
+  debug-show-current-partition-pp:
+  	(_, _, _, path, project-path) -> (filename, result)
+    with
+      index-setup(|<language>, [project-path], $[[project-path]/[path]]);
+      filename := <guarantee-extension(|"index.currentpartition.ind")> path;
+      entries  := <index-get-all-in-partition> path;
+      result	 := <call-index-rule(|"from-index");call-index-rule(|"pp-index-string")> (filename, entries)
+  
+  
+  call-index-rule(|s) = prim("SSL_EXT_foreigncall", "Index", s)
+  
+  
+  	// nabl-debug-show-current-partition(|<language>);debug(!"oooo ")
