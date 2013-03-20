@@ -81,7 +81,7 @@ binding rules // expressions
 		refers to Type s
 
 	todo -- test this --
-	GenericSort(base, param):
+	GenericSort(base, SimpleSort(param)):
 		refers to Entity param
 			otherwise
 		refers to Type param

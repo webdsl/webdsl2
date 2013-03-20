@@ -22,7 +22,7 @@ builders
   builder  : "Show analyzed syntax"                    = debug-generate-analyzed (openeditor) (realtime) (meta)
   
   builder  : "Show NBL entries for current partition"  = debug-show-current-partition (openeditor) (realtime) (meta)
-  builder  : "Show NBL entries for current partition (PP)"  = debug-show-current-partition-pp (openeditor) (realtime) (meta)
+  builder  : "Show NBL entries for current partition (PP)"  = debug-show-current-partition-pp (openeditor) (meta)
   builder  : "Show NBL entries for all patitions"      = debug-show-all-partitions (openeditor) (realtime) (meta)
   builder  : "Clear NBL entries for current partition" = debug-clear-current (meta)
   builder  : "Clear NBL all entries"                   = debug-clear-all (meta)
