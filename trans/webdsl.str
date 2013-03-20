@@ -150,7 +150,6 @@ rules // NBL debugging
      
   debug-show-current-partition = 
   	nabl-debug-show-current-partition(|<language>)
-  
     
   debug-show-all-partitions =
     nabl-debug-show-all-partitions(|<language>)
@@ -172,6 +171,13 @@ rules // NBL debugging
       entries  := <index-get-all-in-partition> path;
       result	 := <call-index-rule(|"from-index");call-index-rule(|"pp-index-string")> (filename, entries)
   
+   debug-show-all-partitions-pp:
+    (_, _, _, path, project-path) -> (filename, result)
+    with
+      index-setup(|<language>, [project-path], $[[project-path]/[path]]);
+      filename := <guarantee-extension(|"index.allfiles.ind")> path;
+      entries  := <index-get-all-partitions; map(\filename -> ( <Fst> filename, <index-get-all-in-partition> filename)\)>;
+      result   := <call-index-rule(|"from-index");call-index-rule(|"pp-index-string")> entries
   
   call-index-rule(|s) = prim("SSL_EXT_foreigncall", "Index", s)
   
