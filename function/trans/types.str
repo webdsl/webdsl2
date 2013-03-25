@@ -1,7 +1,23 @@
 module function/trans/types
 
 imports include/WebDSL
+imports lib/nbl/-
 
 rules
-	type-of:
-		FieldAccess(_, f) -> f
+	
+  type-of:
+    VarDecl(_, t) -> <type-of> t
+    
+  type-of:
+    VarDeclInit(_, t, _) -> <type-of> t
+
+  type-of:
+    Var(x) -> <nabl-resolve-collect-one; type-of> x
+
+  type-of:
+	FieldAccess(_, f) -> <type-of> f
+	
+rules
+	
+  type-of:
+    Def(uri) -> <nabl-get-property(|Type())> uri
