@@ -26,3 +26,4 @@ lib-refactoring/*.generated.str
 /include/webdsl-java.jar
 /syntax/WebDSL.generated.pp
 *.aterm
+/include

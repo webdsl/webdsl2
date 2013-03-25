@@ -16,6 +16,7 @@ imports
   types
   check
   desugar
+  metrics
   
 	
 rules // Analysis

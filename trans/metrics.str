@@ -1,0 +1,62 @@
+module trans/metrics
+/*
+ Provides a builder to show code metrics for the WebDSL project it is opened in
+*/
+imports
+	include/WebDSL
+
+rules // builder
+	webdsl-metrics:
+		(_, _, _, _, project-path) -> (filename, metrics)
+		where
+			filename := "statistics.txt";
+			files := <find-file-all(|"app",project-path)>;
+			exploded-metrics := <map(webdsl-file-metrics(|project-path))> files;
+			imploded-metrics := <foldl(add-metrics)> (exploded-metrics, (0,0,0));
+			metrics := <metrics-to-string> imploded-metrics
+	
+rules // metrics calculation
+
+	metrics-to-string:
+		(loc, tdefs, tcalls) -> $[[loc],[tdefs],[tcalls]]
+
+	webdsl-file-metrics(|dir):
+		file -> (loc, tdefs, tcalls)
+		where
+			loc := <file-loc(|file,dir)>;
+			tdefs := <webdsl-num-tdefs> file;
+			tcalls := <webdsl-num-tcalls> file
+
+	webdsl-num-tdefs = !0
+	
+	webdsl-num-tcalls = !0
+
+	
+	add-metrics:
+		((loc,tdefs,tcalls), (loc',tdefs', tcalls')) -> (tloc, ttdefs, ttcalls)
+		with
+			tloc := <addi> (loc, loc');
+			ttdefs := <addi> (tdefs, tdefs');
+			ttcalls := <addi> (tcalls, tcalls')
+
+	
+
+rules // helpers
+	
+	/*
+	* Counts the number of lines of code in the given file
+	* @type
+	* 	_ -> Int 
+	*/
+	external file-loc(|file, dir)
+	
+	/*
+	* Returns a list of all file with the given extension in the given directory (recursively).
+	* The result is a list of file names/paths relative to the given directory.
+	* @type
+	*		_ -> [String]
+	*/
+	external find-file-all(|extension, dir)
+
+	
+	
