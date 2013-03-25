@@ -8,6 +8,10 @@ imports
   // lib/analysis-library.generated
   // lib/analysis-library-internal.generated
   // lib/nbl-library.generated
+  datamodel/trans/check
+  ui/trans/check
+  function/trans/check
+	
 
 rules // Extensions for error/warning/note reporting
   

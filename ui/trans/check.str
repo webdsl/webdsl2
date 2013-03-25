@@ -1,0 +1,12 @@
+module trans/check
+
+imports
+	include/WebDSL
+	lib/nbl/-
+
+rules
+	
+  constraint-error:
+    node{anno*} -> (node, "Duplicate definition.")
+    where
+      duplicate*    := <nabl-get-duplicate-definitions> node
