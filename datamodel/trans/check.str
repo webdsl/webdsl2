@@ -2,3 +2,17 @@ module trans/check
 
 imports
 	include/WebDSL
+
+rules
+	
+  constraint-error:
+    node@Property(name, _, _, _) -> (node, error)
+    where error := <is-builtin-property-error> name
+    
+  constraint-error:
+    node@DerivedProperty(name, _, _, _, _) -> (node, error)
+    where error := <is-builtin-property-error> name
+    
+  is-builtin-property-error = 
+    (?"id" <+ ?"version" <+ ?"created" <+ ?"modified")
+  ; !$[Cannot override the built-in property '[<id>]'.]
