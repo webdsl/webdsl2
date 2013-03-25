@@ -18,7 +18,7 @@ builders
                                                                                                                             
   observer : editor-analyze                        (multifile)                                                              
   
-  builder  : "Compute code metrics"	= webdsl-metrics (openeditor) (source)                                                                                                                    
+  builder  : "Compute code metrics"	= webdsl-metrics (openeditor) (source)                                                                                                              
   builder  : "Show abstract syntax"                    = debug-generate-aterm (openeditor) (realtime) (meta) (source)
   builder  : "Show analyzed syntax"                    = debug-generate-analyzed (openeditor) (realtime) (meta)
   

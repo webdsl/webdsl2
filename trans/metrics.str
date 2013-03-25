@@ -4,42 +4,49 @@ module trans/metrics
 */
 imports
 	include/WebDSL
-
+	lib/editor-common.generated
+	desugar
+	
 rules // builder
 	webdsl-metrics:
 		(_, _, _, _, project-path) -> (filename, metrics)
 		where
 			filename := "statistics.txt";
-			files := <find-file-all(|"app",project-path)>;
-			exploded-metrics := <map(webdsl-file-metrics(|project-path))> files;
-			imploded-metrics := <foldl(add-metrics)> (exploded-metrics, (0,0,0));
-			metrics := <metrics-to-string> imploded-metrics
+			metrics := <webdsl-project-metric(|project-path); webdsl-metrics-to-string>
+			
+rules // webdsl specific metrics
+	
+	webdsl-project-metric(|dir) = metrics-all(webdsl-zero-metric, webdsl-file-metric(|dir)|dir)
+	
+	webdsl-file-metric(|dir):
+		file -> (loc, tdefs, tcalls)
+		where
+			loc := <file-loc(|file, dir)>;
+			ast := <parse-webdsl-file;desugar-all> file;
+			tdefs := <collect-all(is-webdsl-tdef);length> ast;
+			tcalls := <collect-all(is-webdsl-tcall);length> ast
+
+	webdsl-zero-metric = !(0, 0, 0)
+	
+	is-webdsl-tdef = ?DefineTemplate(_, _, _, _, _)
+	
+	is-webdsl-tcall = ?TemplateCall(_, _, _, _) 
+		
+	webdsl-metrics-to-string:
+		(loc, tdefs, tcalls) -> $[[loc],[tdefs],[tcalls]]
 	
 rules // metrics calculation
 
-	metrics-to-string:
-		(loc, tdefs, tcalls) -> $[[loc],[tdefs],[tcalls]]
-
-	webdsl-file-metrics(|dir):
-		file -> (loc, tdefs, tcalls)
-		where
-			loc := <file-loc(|file,dir)>;
-			tdefs := <webdsl-num-tdefs> file;
-			tcalls := <webdsl-num-tcalls> file
-
-	webdsl-num-tdefs = !0
+	metrics-all(zero-metric,metrics|dir) =
+		find-file-all(|"app", dir);
+		foldr(zero-metric,metrics-one(metrics))
 	
-	webdsl-num-tcalls = !0
-
-	
-	add-metrics:
-		((loc,tdefs,tcalls), (loc',tdefs', tcalls')) -> (tloc, ttdefs, ttcalls)
+	metrics-one(metric):
+		(file, result) -> <metrics-add> (result, result')
 		with
-			tloc := <addi> (loc, loc');
-			ttdefs := <addi> (tdefs, tdefs');
-			ttcalls := <addi> (tcalls, tcalls')
-
-	
+			result' := <metric> file  
+		
+	metrics-add = (TupleToList, TupleToList); zip(addi); ListToTuple
 
 rules // helpers
 	
