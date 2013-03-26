@@ -1,23 +1,35 @@
 module function/trans/types
 
-imports include/WebDSL
-imports lib/nbl/-
+imports 
+  include/WebDSL
+  function/trans/signatures
+  lib/nbl/-
+  lib/task/-
+  lib/types/-
+  lib/editor-common.generated
+ 
+rules  	
+  	  
+  type-error:
+  	Task(_, [], t@TypeCheck(current, expected*)) -> (t, $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]])
 
 rules
-	
-  type-of:
-    VarDecl(_, t) -> <type-of> t
-    
-  type-of:
-    VarDeclInit(_, t, _) -> <type-of> t
 
-  type-of:
-    Var(x) -> <nabl-resolve-collect-one; type-of> x
+  type-task(|task*): String(_) -> <new-task(|task*)> TypeCalc(SimpleSort("String"),[])
+  type-task(|task*): Int(_) -> <new-task(|task*)> TypeCalc(SimpleSort("Int"),[])
+  type-task(|task*): Float(_) -> <new-task(|task*)> TypeCalc(SimpleSort("Float"),[])
+  type-task(|task*): True() -> <new-task(|task*)> TypeCalc(SimpleSort("Bool"),[])
+  type-task(|task*): False() -> <new-task(|task*)> TypeCalc(SimpleSort("Bool"),[])
+  		
+  type-task(|task*): 
+  	Not(e) -> <new-task(|task*)> TypeCalc(SimpleSort("Bool"), [<new-task(|task*)> TypeCheck(<type-task(|task*)> e, [SimpleSort("Bool")])])
 
-  type-of:
-	FieldAccess(_, f) -> <type-of> f
-	
-rules
-	
-  type-of:
-    Def(uri) -> <nabl-get-property(|Type())> uri
+  type-task(|task*):
+    If(e, b1, b2) -> <new-task(|task*)> TypeCheck(<try(type-task(|task*))> e, [SimpleSort("Bool")])
+
+  type-task(|task*):
+    IfExp(e, e1, e2) -> e1t
+    where <new-task(|task*)> TypeCheck(<try(type-task(|task*))> e, [SimpleSort("Bool")])
+        ; e1t := <type-task(|task*)> e1
+        ; e2t := <type-task(|task*)> e2
+        ; <new-task(|task*)> TypeCheck(e2t, [e1t]) // or subtype of e1t
