@@ -59,7 +59,7 @@ rules // Analysis
       )
 
   update-markers:
-    Result(partition, initial-ast, analyzed-ast, old-entry*, new-entry*, evaluated-task*, error-task*, dependent-partition*, errors, warnings, notes)-> <id>
+    Result(partition, initial-ast, analyzed-ast, old-entry*, new-entry*, evaluated-task*, error-task*, dependent-partition*, _, _, _) -> Result(partition, initial-ast, analyzed-ast, old-entry*, new-entry*, evaluated-task*, error-task*, dependent-partition*, errors, warnings, notes)
     where
       not(() := initial-ast)
     with
