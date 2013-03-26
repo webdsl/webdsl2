@@ -13,23 +13,73 @@ rules
   type-error:
   	Task(_, [], t@TypeCheck(current, expected*)) -> (t, $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]])
 
-rules
+  fixed-type(|task*) : 
+  	type -> <new-task(|task*)> TypeCalc(type,[]) // only need second argument (list of dependencies) if type tasks are used in the calculation but not contained in end result  	 
+ 
+  type-check(|task*) :
+    (current, expected*) -> <new-task(|task*)> TypeCheck(current, expected*)
 
-  type-task(|task*): String(_) -> <new-task(|task*)> TypeCalc(SimpleSort("String"),[])
-  type-task(|task*): Int(_) -> <new-task(|task*)> TypeCalc(SimpleSort("Int"),[])
-  type-task(|task*): Float(_) -> <new-task(|task*)> TypeCalc(SimpleSort("Float"),[])
-  type-task(|task*): True() -> <new-task(|task*)> TypeCalc(SimpleSort("Bool"),[])
-  type-task(|task*): False() -> <new-task(|task*)> TypeCalc(SimpleSort("Bool"),[])
+  type-of(|task*) = 
+  	try(type-task(|task*))
+    
+  set-of  : 
+  	type -> GenericSort("Set",[type])
+  	
+  list-of : 
+  	type -> GenericSort("List",[type]) 
+
+rules // literals
+
+  type-task(|task*): String(_) -> <fixed-type(|task*)> SimpleSort("String")
+  type-task(|task*): Int(_)    -> <fixed-type(|task*)> SimpleSort("Int")
+  type-task(|task*): Float(_)  -> <fixed-type(|task*)> SimpleSort("Float")
+  type-task(|task*): True()    -> <fixed-type(|task*)> SimpleSort("Bool")
+  type-task(|task*): False()   -> <fixed-type(|task*)> SimpleSort("Bool") 
+  
+rules // statements  		
   		
-  type-task(|task*): 
-  	Not(e) -> <new-task(|task*)> TypeCalc(SimpleSort("Bool"), [<new-task(|task*)> TypeCheck(<type-task(|task*)> e, [SimpleSort("Bool")])])
+  type-task(|task*):
+    If(e, b1, b2) -> <id>
+    where <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
 
   type-task(|task*):
-    If(e, b1, b2) -> <new-task(|task*)> TypeCheck(<try(type-task(|task*))> e, [SimpleSort("Bool")])
+    ForStmt(x, t, e, _, _) -> <id>
+    where <type-check(|task*)> (<type-of(|task*)> e, [<set-of> t, <list-of> t])
+  
+  type-task(|task*):  
+    ForCountStmt(_, e1, e2, _) -> <id>
+    where <type-check(|task*)> (<type-of(|task*)> e1, [SimpleSort("Int")])
+        ; <type-check(|task*)> (<type-of(|task*)> e2, [SimpleSort("Int")])
+
+rules // expressions  	
+	 
+  type-task(|task*): 
+    Var(x) -> <fixed-type(|task*)> <debug(!1);nabl-resolve-collect-one;debug(!2); nabl-get-property(|Type());debug(!3)> x 
+  		
+  type-task(|task*): 
+  	Not(e) -> <fixed-type(|task*)> SimpleSort("Bool")
+  	where <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
 
   type-task(|task*):
     IfExp(e, e1, e2) -> e1t
-    where <new-task(|task*)> TypeCheck(<try(type-task(|task*))> e, [SimpleSort("Bool")])
-        ; e1t := <type-task(|task*)> e1
-        ; e2t := <type-task(|task*)> e2
-        ; <new-task(|task*)> TypeCheck(e2t, [e1t]) // or subtype of e1t
+    where <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
+        ; e1t := <type-of(|task*)> e1
+        ; e2t := <type-of(|task*)> e2
+        ; <type-check(|task*)> (e2t, [e1t]) // or subtype of e1t
+          
+  type-task(|task*):
+  	ForExp(e, _, srt, ecol, _) -> <fixed-type(|task*)> <list-of> et
+    where ecolt := <type-of(|task*)> ecol
+        ; <type-check(|task*)> (ecolt, [<set-of> srt, <list-of> srt])
+        ; et := <type-of(|task*)> e
+  
+  type-task(|task*):
+  	AndForExp(e) -> <fixed-type(|task*)> SimpleSort("Bool")
+    where et := <type-of(|task*)> e
+        ; <type-check(|task*)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
+          
+  type-task(|task*):
+  	OrForExp(e) -> <fixed-type(|task*)> SimpleSort("Bool")
+    where et := <type-of(|task*)> e
+        ; <type-check(|task*)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
+  
