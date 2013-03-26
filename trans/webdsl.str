@@ -40,7 +40,7 @@ rules // Analysis
       not(is-tuple)
     with
       full-path* := <map(\p -> $[[<project-path>]/[p]]\)> path*;
-      result*    := <analyze-multiple; debug(!"Results: ")> full-path*
+      result*    := <analyze-multiple> full-path*
       //queue-analyze-multiple
       
   editor-save:
