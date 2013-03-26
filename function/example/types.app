@@ -18,6 +18,15 @@ entity Ent1 {
     	
     }
     var y := [s.contains("1") | s : String in ["1","2","3"]];
+    var y := And [s.contains("1") | s : String in ["1","2","3"]];
+    var y := Or [s.contains("1") | s : String in ["1","2","3"]];
+    
+    a[false] := "1";
+    b["2"];
+    
+    for(x in [Ent1{}] where x>3 order by x.name limit "" offset false){
+    	
+    }
   }
 }
 

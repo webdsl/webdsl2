@@ -13,7 +13,7 @@ rules
   type-error:
   	Task(_, [], Choice(results,error)) -> (node, message)
     where node := <Hd> results // needs to be changed to fix origin tracking
-        ; message := <map(is-string <+ pp-webdsl-string); concat-strings> error
+        ; message := <map(is-string <+ pp-webdsl-string); concat-strings <+ !"default error message"> error
 
   type-error:
   	Task(_, [], t@PropCheck(current, expected*)) -> (t, <type-error-message-after-eval> (current,expected*))
@@ -39,6 +39,9 @@ rules
   type-of(|task*) = 
   	try(type-task(|task*))
     
+  check-is-bool(|task*) : e -> <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
+  check-is-int(|task*) : e -> <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Int")])
+    
   set-of  : 
   	type -> GenericSort("Set",[type])
   	
@@ -57,7 +60,7 @@ rules // statements
   		
   type-task(|task*):
     If(e, b1, b2) -> <id>
-    where <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
+    where <check-is-bool(|task*)> e
 
   type-task(|task*):
     ForStmt(x, t, e, _, _) -> <id>
@@ -65,19 +68,19 @@ rules // statements
   
   type-task(|task*):  
     ForCountStmt(_, e1, e2, _) -> <id>
-    where <type-check(|task*)> (<type-of(|task*)> e1, [SimpleSort("Int")])
-        ; <type-check(|task*)> (<type-of(|task*)> e2, [SimpleSort("Int")])
+    where <check-is-int(|task*)> e1
+    where <check-is-int(|task*)> e2
 
 rules // expressions  	
 	 
   type-task(|task*): 
   	Not(e) -> <create-type(|task*)> SimpleSort("Bool")
-  	where <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
+  	where <check-is-bool(|task*)> e
 
   type-task(|task*):
     IfExp(e, e1, e2) -> e1t
-    where <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
-        ; e1t := <type-of(|task*)> e1
+    where <check-is-bool(|task*)> e
+    where e1t := <type-of(|task*)> e1
         ; e2t := <type-of(|task*)> e2
         ; <type-check(|task*)> (e2t, [e1t]) // or subtype of e1t
           
@@ -85,7 +88,7 @@ rules // expressions
   	ForExp(e, _, srt, ecol, _) -> <create-type(|task*)> <list-of> et
     where ecolt := <type-of(|task*)> ecol
         ; <type-check(|task*)> (ecolt, [<set-of> srt, <list-of> srt])
-        ; et := <type-of(|task*)> e
+    where et := <type-of(|task*)> e
   
   type-task(|task*):
   	AndForExp(e) -> <create-type(|task*)> SimpleSort("Bool")
@@ -96,4 +99,23 @@ rules // expressions
   	OrForExp(e) -> <create-type(|task*)> SimpleSort("Bool")
     where et := <type-of(|task*)> e
         ; <type-check(|task*)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
+          
+  type-task(|task*):
+  	CollectionIndex(e_col,e_index) -> <create-type(|task*)> type
+    where e_colt := <type-of(|task*)> e_col
+    	; <type-check(|task*)> (e_colt, [GenericSort("List",SimpleSort("TODO should match any type"))])
+    where <check-is-int(|task*)> e_index
+    where GenericSort(_,[type]) := e_colt
+          
+rules // for loop filter  
+	
+  type-task(|task*): Filter(we, _, _)           -> <check-is-bool(|task*)> we
+  type-task(|task*): FilterNoLimit(we, _)       -> <check-is-bool(|task*)> we
+  type-task(|task*): FilterNoOrderBy(we, _)     -> <check-is-bool(|task*)> we
+  type-task(|task*): FilterNoOrderByNoLimit(we) -> <check-is-bool(|task*)> we
+
+  type-task(|task*): Limit(lim,off)     -> <check-is-int(|task*)> lim
+  type-task(|task*): Limit(lim,off)     -> <check-is-int(|task*)> off
+  type-task(|task*): LimitNoOffset(lim) -> <check-is-int(|task*)> lim
+  type-task(|task*): LimitNoLimit(off)  -> <check-is-int(|task*)> off
   
