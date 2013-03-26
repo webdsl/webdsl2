@@ -35,12 +35,13 @@ rules // Analysis
       <queue-analyze-multiple> <map(index-partition-file)> dependent
 
   editor-analyze:
-    path* -> None()
+    path* -> result*
     where
       not(is-tuple)
     with
-      map(\p -> $[[<project-path>]/[p]]\);
-      queue-analyze-multiple
+      full-path* := <map(\p -> $[[<project-path>]/[p]]\)> path*;
+      result*    := <analyze-multiple; debug(!"Results: ")> full-path*
+      //queue-analyze-multiple
       
   editor-save:
   	(_, _, _, path, project-path) -> None()
@@ -58,12 +59,12 @@ rules // Analysis
       )
 
   update-markers:
-    Result(_, ast, ast', _, _, _, _) -> <id>
+    Result(partition, initial-ast, analyzed-ast, old-entry*, new-entry*, evaluated-task*, error-task*, dependent-partition*, errors, warnings, notes)-> <id>
     where
-      not(() := ast)
+      not(() := initial-ast)
     with
-      (errors, warnings, notes) := <analyze-markers> ast';
-      <set-markers(|ast)> (ast', errors, warnings, notes)
+      (errors, warnings, notes) := <analyze-markers> analyzed-ast;
+      <set-markers(|initial-ast)> (analyzed-ast, errors, warnings, notes)
 
   queue-analyze-multiple:
     path* -> None()
