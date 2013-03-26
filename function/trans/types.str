@@ -11,13 +11,30 @@ imports
 rules  	
   	  
   type-error:
-  	Task(_, [], t@TypeCheck(current, expected*)) -> (t, $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]])
+  	Task(_, [], Choice(results,error)) -> (node, message)
+    where node := <Hd> results // needs to be changed to fix origin tracking
+        ; message := <map(is-string <+ pp-webdsl-string); concat-strings> error
 
-  fixed-type(|task*) : 
-  	type -> <new-task(|task*)> TypeCalc(type,[]) // only need second argument (list of dependencies) if type tasks are used in the calculation but not contained in end result  	 
+  type-error:
+  	Task(_, [], t@PropCheck(current, expected*)) -> (t, <type-error-message-after-eval> (current,expected*))
+
+  type-error-message-after-eval :
+  	(current, expected*) -> $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]]
+
+rules
+
+  type-error-message-before-eval :
+  	(current, expected*) -> ["Type error found: ", current,", expected: ",expected*]
+	
+  create-type(|task*) : 
+  	type -> <new-task(|task*)> PropCalc(type,[]) // only need second argument (list of dependencies) if type tasks are used in the calculation but not contained in end result 
  
   type-check(|task*) :
-    (current, expected*) -> <new-task(|task*)> TypeCheck(current, expected*)
+    (current, expected*) -> <new-task(|task*)> Choice(<map(create-check-task(|current,task*))> expected*,[message])
+    with message := <type-error-message-before-eval> (current,expected*)
+    
+  create-check-task(|current,task*) : 
+  	x -> <new-task(|task*)> PropCheck(current, x)
 
   type-of(|task*) = 
   	try(type-task(|task*))
@@ -30,11 +47,11 @@ rules
 
 rules // literals
 
-  type-task(|task*): String(_) -> <fixed-type(|task*)> SimpleSort("String")
-  type-task(|task*): Int(_)    -> <fixed-type(|task*)> SimpleSort("Int")
-  type-task(|task*): Float(_)  -> <fixed-type(|task*)> SimpleSort("Float")
-  type-task(|task*): True()    -> <fixed-type(|task*)> SimpleSort("Bool")
-  type-task(|task*): False()   -> <fixed-type(|task*)> SimpleSort("Bool") 
+  type-task(|task*): String(_) -> <create-type(|task*)> SimpleSort("String")
+  type-task(|task*): Int(_)    -> <create-type(|task*)> SimpleSort("Int")
+  type-task(|task*): Float(_)  -> <create-type(|task*)> SimpleSort("Float")
+  type-task(|task*): True()    -> <create-type(|task*)> SimpleSort("Bool")
+  type-task(|task*): False()   -> <create-type(|task*)> SimpleSort("Bool") 
   
 rules // statements  		
   		
@@ -54,10 +71,7 @@ rules // statements
 rules // expressions  	
 	 
   type-task(|task*): 
-    Var(x) -> <fixed-type(|task*)> <debug(!1);nabl-resolve-collect-one;debug(!2); nabl-get-property(|Type());debug(!3)> x 
-  		
-  type-task(|task*): 
-  	Not(e) -> <fixed-type(|task*)> SimpleSort("Bool")
+  	Not(e) -> <create-type(|task*)> SimpleSort("Bool")
   	where <type-check(|task*)> (<type-of(|task*)> e, [SimpleSort("Bool")])
 
   type-task(|task*):
@@ -68,18 +82,18 @@ rules // expressions
         ; <type-check(|task*)> (e2t, [e1t]) // or subtype of e1t
           
   type-task(|task*):
-  	ForExp(e, _, srt, ecol, _) -> <fixed-type(|task*)> <list-of> et
+  	ForExp(e, _, srt, ecol, _) -> <create-type(|task*)> <list-of> et
     where ecolt := <type-of(|task*)> ecol
         ; <type-check(|task*)> (ecolt, [<set-of> srt, <list-of> srt])
         ; et := <type-of(|task*)> e
   
   type-task(|task*):
-  	AndForExp(e) -> <fixed-type(|task*)> SimpleSort("Bool")
+  	AndForExp(e) -> <create-type(|task*)> SimpleSort("Bool")
     where et := <type-of(|task*)> e
         ; <type-check(|task*)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
           
   type-task(|task*):
-  	OrForExp(e) -> <fixed-type(|task*)> SimpleSort("Bool")
+  	OrForExp(e) -> <create-type(|task*)> SimpleSort("Bool")
     where et := <type-of(|task*)> e
         ; <type-check(|task*)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
   
