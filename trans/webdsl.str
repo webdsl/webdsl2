@@ -76,7 +76,7 @@ rules // Analysis
   sunshine-parse-file = prim("SSL_EXT_parse_file")
   
   analyze-multiple:
-    path* -> result*
+    path* -> [result*, result-rec*]
     with
       nabl-analyze-multiple-work-units; set-total-work-units;
       measure-time(
@@ -102,8 +102,12 @@ rules // Analysis
 	      	,vdebug(!"\tJoining seconds: ")
 	      );
 	      measure-time(
-		      queue-analyze-multiple
-	      	,vdebug(!"\tQueueing seconds: ")
+			      if not(?[]) then
+			        analyze-multiple => result-rec*
+		        else
+		        	![] => result-rec*
+			      end
+	      	,vdebug(!"\tRecursion seconds: ")
 	      )
 	    , vdebug(!"Post-processing seconds: ")
 	    ) 
