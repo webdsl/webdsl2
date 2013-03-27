@@ -11,12 +11,12 @@ imports
 rules  	
   	  
   type-error:
-  	Task(_, [], Choice(results,error)) -> (node, message)
+  	Task(_, [], Choice(results,error), _) -> (node, message)
     where node := <Hd> results // needs to be changed to fix origin tracking
         ; message := <map(is-string <+ pp-webdsl-string); concat-strings <+ !"default error message"> error
 
   type-error:
-  	Task(_, [], t@PropCheck(current, expected*)) -> (t, <type-error-message-after-eval> (current,expected*))
+  	Task(_, [], t@PropCheck(current, expected*), _) -> (t, <type-error-message-after-eval> (current,expected*))
 
   type-error-message-after-eval :
   	(current, expected*) -> $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]]
