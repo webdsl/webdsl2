@@ -1,4 +1,35 @@
 module trans/check
 
 imports
-	include/WebDSL
+  include/WebDSL
+  datamodel/trans/datamodel
+  function/trans/types
+  lib/nbl/-
+  
+rules
+
+  constraint-error:
+    node@Assignment(FieldAccess(e1,prop),e2) -> (node, AssignToDerivedError())
+    // this should work when FieldAccess resolve is fixed:
+    // where True() := <nabl-resolve-collect-one;nabl-get-property(|NablProp_derived())> prop
+    where SimpleSort(x) := <type-of> e1
+        ; <is-derived-property> (x,<strip-annos> prop)
+
+  constraint-error:
+    node@Assignment(e1@Var(prop), e2) -> (node, AssignToDerivedError())
+    where True() := <nabl-resolve-collect-one;nabl-get-property(|NablProp_derived())> prop
+
+  overlays          
+    AssignToDerivedError = "Assignment to derived property is not allowed."     
+
+  rules
+  	  
+  is-derived-property =
+    ?(x,prop)
+  ; where(True() := <  nabl-resolve-collect-one
+                     ; nabl-uri
+                     ; nabl-extend-uri(|NablNsProperty(), prop, ())
+                     ; nabl-get-all-definitions
+                     ; Hd
+                     ; nabl-get-property(|NablProp_derived())> x)
+                       

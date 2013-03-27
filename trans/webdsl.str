@@ -24,23 +24,25 @@ rules // Analysis
   
 	// Main entry point for analyzes, called when a single file is opened in the editor.
   editor-analyze:
-    (ast, path, project-path) -> (ast', errors, warnings, notes)
+    (ast, path, project-path) -> (ast', [error*, type-error*], warnings, notes)
     with
       editor-init;
       (ast', entries, tasks, dependent) := <origin-track-forced(desugar-all); nabl-analyze(|<language>, path, project-path)> ast;
-      (errors, warnings, notes)         := <analyze-markers> ast';
+      <filter(type-error)> tasks => type-error* ;
+      (error*, warnings, notes)         := <analyze-markers> ast';
       <map(vdebug(!"Entry: "))> entries;
       <map(vdebug(!"Tasks: "))> tasks;
       <map(vdebug(!"Dependent: "))> dependent;
       <queue-analyze-multiple> <map(index-partition-file)> dependent
 
   editor-analyze:
-    path* -> None()
+    path* -> result*
     where
       not(is-tuple)
     with
-      map(\p -> $[[<project-path>]/[p]]\);
-      queue-analyze-multiple
+      full-path* := <map(\p -> $[[<project-path>]/[p]]\)> path*;
+      result*    := <analyze-multiple> full-path*
+      //queue-analyze-multiple
       
   editor-save:
   	(_, _, _, path, project-path) -> None()
@@ -58,12 +60,12 @@ rules // Analysis
       )
 
   update-markers:
-    Result(_, ast, ast', _, _, _, _) -> <id>
+    Result(partition, initial-ast, analyzed-ast, old-entry*, new-entry*, evaluated-task*, error-task*, dependent-partition*, _, _, _) -> Result(partition, initial-ast, analyzed-ast, old-entry*, new-entry*, evaluated-task*, error-task*, dependent-partition*, errors, warnings, notes)
     where
-      not(() := ast)
+      not(() := initial-ast)
     with
-      (errors, warnings, notes) := <analyze-markers> ast';
-      <set-markers(|ast)> (ast', errors, warnings, notes)
+      (errors, warnings, notes) := <analyze-markers> analyzed-ast;
+      <set-markers(|initial-ast)> (analyzed-ast, errors, warnings, notes)
 
   queue-analyze-multiple:
     path* -> None()
@@ -75,7 +77,7 @@ rules // Analysis
   sunshine-parse-file = prim("SSL_EXT_parse_file")
   
   analyze-multiple:
-    path* -> result*
+    path* -> [result*, result-rec*]
     with
       nabl-analyze-multiple-work-units; set-total-work-units;
       measure-time(
@@ -101,8 +103,12 @@ rules // Analysis
 	      	,vdebug(!"\tJoining seconds: ")
 	      );
 	      measure-time(
-		      queue-analyze-multiple
-	      	,vdebug(!"\tQueueing seconds: ")
+			      if not(?[]) then
+			        analyze-multiple => result-rec*
+		        else
+		        	![] => result-rec*
+			      end
+	      	,vdebug(!"\tRecursion seconds: ")
 	      )
 	    , vdebug(!"Post-processing seconds: ")
 	    ) 
