@@ -1,11 +1,5 @@
 module ui/trans/ui
 
-  author Danny Groenewegen
-  author Guido Wachsmuth
-  
-  version 0.1
-  status under development
-  
 imports
 	lib/nbl/-
 	lib/task/-
@@ -20,13 +14,13 @@ namespaces
 
 binding rules
 
-	DefinePage(mods, name, fargs, targs, elems):
+	DefinePage(mods, name, fargs, targs, _):
 		defines Page name
 			of type PageSort(fargtypes)
 		where fargs has type fargtypes
 		scopes Variable, TemplateFunction
 
-	DefineTemplate(mods, name, fargs, targs, elems):
+	DefineTemplate(mods, name, fargs, targs, _):
 		defines Template name
 			of type TemplateSort(fargtypes)
 		where fargs has type fargtypes
