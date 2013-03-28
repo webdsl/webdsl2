@@ -73,23 +73,18 @@ rules // Analysis
     with
       nabl-analyze-multiple-work-units; set-total-work-units;
       measure-time(
-        (task*, result*) := <nabl-analyze-multiple(parse-file; desugar-all, try, complete-work-unit|<language>, <project-path>)> path*;
+        (task*, result*) := <nabl-analyze-multiple(measure-time(parse-file,id|"webdsl-analyze-multiple-parse"); measure-time(desugar-all,id|"webdsl-analyze-multiple-desugar"), try, complete-work-unit|<language>, <project-path>)> path*;
         result'*         := <filter(update-markers)> result*
-      , vdebug(!"Analysis seconds: ")
+      , vdebug(!"Analysis seconds: ") | "webdsl-analyze-multiple-analysis"
       );
       measure-time(
       	measure-time(
 	      	where(index-commit)
-	      	,vdebug(!"\tCommitting seconds: ")
+	      	,vdebug(!"\tCommitting seconds: ") | "webdsl-analyze-multiple-commit"
 	      )
-	    , vdebug(!"Post-processing seconds: ")
-	    ) 
-      
-  measure-time(s, log) =
-    where(before := <times>);
-    s;
-    where(after := <times>; !(after, before); diff-times; times-to-seconds; Fst; log)
-      
+	    , vdebug(!"Post-processing seconds: ") | "webdsl-analyze-multiple-postproc"
+	    )
+  
 rules // Editor services
 
   editor-resolve:
