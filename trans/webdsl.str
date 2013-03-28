@@ -39,8 +39,11 @@ rules // Analysis
     where
       not(is-tuple)
     with
-      full-path* := <map(\p -> $[[<project-path>]/[p]]\)> path*;
-      result*    := <analyze-multiple> full-path*
+    	measure-time(
+	      full-path* := <map(\p -> $[[<project-path>]/[p]]\)> path*;
+	      result*    := <analyze-multiple> full-path*,
+	      id | "ANALYSIS-TOTAL"
+	    )
       
   editor-save:
   	(_, _, _, path, project-path) -> None()
