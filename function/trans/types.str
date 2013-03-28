@@ -9,11 +9,13 @@ imports
   lib/editor-common.generated
  
 rules  	
+  	
+  	
   	  
   type-error:
-  	Task(_, [], Choice(results,error), _) -> (node, message)
-    where node := <Hd> results // needs to be changed to fix origin tracking
-        ; message := <map(is-string <+ pp-webdsl-string); concat-strings <+ !"default error message"> error
+  	//Task(_, [], Choice(results,error), _) -> (node, message)
+  	Error(error) -> (error, message)
+    where message := <map(is-string <+ pp-webdsl-string); concat-strings <+ !"default error message"> error
 
   type-error:
   	Task(_, [], t@PropCheck(current, expected*), _) -> (t, <type-error-message-after-eval> (current,expected*))
