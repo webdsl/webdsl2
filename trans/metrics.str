@@ -1,0 +1,69 @@
+module trans/metrics
+/*
+ Provides a builder to show code metrics for the WebDSL project it is opened in
+*/
+imports
+	include/WebDSL
+	lib/editor-common.generated
+	desugar
+	
+rules // builder
+	webdsl-metrics:
+		(_, _, _, _, project-path) -> (filename, metrics)
+		where
+			filename := "statistics.txt";
+			metrics := <webdsl-project-metric(|project-path); webdsl-metrics-to-string>
+			
+rules // webdsl specific metrics
+	
+	webdsl-project-metric(|dir) = metrics-all(webdsl-zero-metric, webdsl-file-metric(|dir)|dir)
+	
+	webdsl-file-metric(|dir):
+		file -> (loc, tdefs, tcalls)
+		where
+			loc := <file-loc(|file, dir)>;
+			ast := <parse-webdsl-file;desugar-all> file;
+			tdefs := <collect-all(is-webdsl-tdef);length> ast;
+			tcalls := <collect-all(is-webdsl-tcall);length> ast
+
+	webdsl-zero-metric = !(0, 0, 0)
+	
+	is-webdsl-tdef = ?DefineTemplate(_, _, _, _, _)
+	
+	is-webdsl-tcall = ?TemplateCall(_, _, _, _) 
+		
+	webdsl-metrics-to-string:
+		(loc, tdefs, tcalls) -> $[[loc],[tdefs],[tcalls]]
+	
+rules // metrics calculation
+
+	metrics-all(zero-metric,metrics|dir) =
+		find-file-all(|"app", dir);
+		foldr(zero-metric,metrics-one(metrics))
+	
+	metrics-one(metric):
+		(file, result) -> <metrics-add> (result, result')
+		with
+			result' := <metric> file  
+		
+	metrics-add = (TupleToList, TupleToList); zip(addi); ListToTuple
+
+rules // helpers
+	
+	/*
+	* Counts the number of lines of code in the given file
+	* @type
+	* 	_ -> Int 
+	*/
+	external file-loc(|file, dir)
+	
+	/*
+	* Returns a list of all file with the given extension in the given directory (recursively).
+	* The result is a list of file names/paths relative to the given directory.
+	* @type
+	*		_ -> [String]
+	*/
+	external find-file-all(|extension, dir)
+
+	
+	
