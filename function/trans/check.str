@@ -17,7 +17,7 @@ rules
 
   constraint-error:
     node@Assignment(e1@Var(prop), e2) -> (node, AssignToDerivedError())
-    where True() := <nabl-resolve-collect-one;nabl-get-property(|NablProp_derived())> prop
+    where True() := <nabl-collect-one-resolved-def;nabl-get-property(|NablProp_derived())> prop
 
   overlays          
     AssignToDerivedError = "Assignment to derived property is not allowed."     
@@ -26,7 +26,7 @@ rules
   	  
   is-derived-property =
     ?(x,prop)
-  ; where(True() := <  nabl-resolve-collect-one
+  ; where(True() := <  nabl-collect-one-resolved-def
                      ; nabl-uri
                      ; nabl-extend-uri(|NablNsProperty(), prop, ())
                      ; nabl-get-all-definitions
