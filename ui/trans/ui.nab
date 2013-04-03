@@ -29,9 +29,6 @@ binding rules
 	PageCall(name, args):
 		refers to Page name
 
-  discuss Guido Wachsmuth, Vlad Vergu, Danny Groenewegen --
-    This is the current way to express conformance and best match.
-  --
 	TemplateCall(name, args, attrs, body):
 		refers to best Template name of conformant type TemplateSort(argtypes)
 		where args has type argtypes
