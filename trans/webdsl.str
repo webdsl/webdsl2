@@ -75,7 +75,7 @@ rules // Analysis
     with
       nabl-analyze-multiple-work-units; set-total-work-units;
       measure-time(
-        (task*, error*, result*) := <analyze-multiple(desugar-all; parse-file, try, complete-work-unit|<language>, <project-path>)> path*;
+        (task*, error*, result*) := <analyze-multiple(desugar-all; sunshine-parse-file, try, complete-work-unit|<language>, <project-path>)> path*;
         result'*                 := <filter(editor-update-markers)> result*
       , id| "webdsl-analyze-multiple-analysis"
       );
@@ -120,8 +120,6 @@ rules // Debugging
     with
       filename := <guarantee-extension(|"analyzed.aterm")> path
 
-rules // NBL debugging
-     
 rules // NBL debugging
      
   debug-show-current-partition =
