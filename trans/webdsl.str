@@ -26,12 +26,13 @@ rules // Analysis
   
 	// Main entry point for analyzes, called when a single file is opened in the editor.
   editor-analyze:
-    (ast, path, project-path) -> (ast', [error-task*, type-error*], warnings, notes)
+    (ast, path, project-path) -> (ast', [error, type-error*], warnings, notes)
     with
       editor-init;
-      (ast', error-task*)      := <desugar-all; analyze-one(|<language>, path, project-path)> ast;
-      type-error*              := <filter(type-error)> error-task*;
+      (ast', error-task*, _)   := <desugar-all; analyze-one(|<language>, path, project-path)> ast;
+      type-error*              := <filter(type-error)> error-task*; // TODO: turn task IDs into instructions.
       (error, warnings, notes) := <editor-analyze-markers> ast'
+      // TODO: Update markers for partitions that have had a task executed.
 
   editor-analyze:
     path* -> result*
@@ -71,17 +72,21 @@ rules // Analysis
   sunshine-parse-file = prim("SSL_EXT_parse_file")
   
   editor-analyze-multiple:
-    path* -> ([], result'*, error*)
+    path* -> (error*, result'*, evaluated-count)
     with
       nabl-analyze-multiple-work-units; set-total-work-units;
       measure-time(
-        (task*, error*, result*) := <analyze-multiple(desugar-all; sunshine-parse-file, try, complete-work-unit|<language>, <project-path>)> path*;
-        result'*                 := <filter(editor-update-markers)> result*
-      , id| "webdsl-analyze-multiple-analysis"
+        (error*, result*, evaluated-count) := <analyze-multiple(desugar-all; sunshine-parse-file, try, complete-work-unit|<language>, <project-path>)> path*;
+        result'*                           := <filter(editor-update-markers)> result*
+      , id | "webdsl-analyze-multiple-full-analysis"
       );
     	measure-time(
-      	where(index-commit)
-      	, id| "webdsl-analyze-multiple-commit"
+	      index-commit
+      	, id | "webdsl-analyze-multiple-index-commit"
+      );
+    	measure-time(
+	      task-persist
+      	, id | "webdsl-analyze-multiple-task-commit"
       )
   
 rules // Editor services
