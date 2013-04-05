@@ -37,7 +37,7 @@ binding rules // function declarations
 				of type FunctionSort(args-ty, ret-ty)
 				of kind knd
 			where args has type args-ty
-		refers to single Function name
+		refers to Function name
 				of type FunctionSort(args-ty, ret-ty)
 				of kind knd
 			where args has type args-ty
@@ -54,7 +54,7 @@ binding rules // function declarations
 		defines non-unique ExtendedFunction name
 				of type FunctionSort(args-ty, ret-ty)
 			where args has type args-ty
-		refers to single Function name
+		refers to Function name
 				of type FunctionSort(args-ty, ret-ty)
 				of kind Global()
 			where args has type args-ty

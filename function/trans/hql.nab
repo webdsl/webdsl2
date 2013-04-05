@@ -19,7 +19,7 @@ binding rules
 	HqlQuery(_):
 		scopes HqlVar
 
-	fixme -- should use the imports syntax --
+	// fixme -- should use the imports syntax --
 	FromClass(Path([ent]), Some(AsAlias(Alias(alias))), _):
 		// imports Entity ent as HqlVar alias
 		refers to Entity ent
