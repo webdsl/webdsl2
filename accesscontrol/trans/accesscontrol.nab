@@ -5,3 +5,9 @@ imports
 
 binding rules
 	
+  AccessControlRule("page", name, arg*, cond, _):
+  	scopes Variable
+  	refers to Page name
+  	
+  	
+  	
