@@ -33,7 +33,6 @@ binding rules
 		scopes Property, Function, ExtendedFunction
 		imports Property, Function, ExtendedFunction from ExtendedEntity name
 		
-	todo -- generate import-site --
 	ExtendEntity(knd, name, _):
 		scopes Property, Function, ExtendedFunction
 		defines non-unique ExtendedEntity name of kind knd

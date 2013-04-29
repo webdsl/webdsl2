@@ -22,7 +22,7 @@ rules // webdsl specific metrics
 		file -> (loc, tdefs, tcalls)
 		where
 			loc := <file-loc(|file, dir)>;
-			ast := <parse-webdsl-file;desugar-all> file;
+			ast := <parse-webdsl-file;desugar-all <+ ![]> file;
 			tdefs := <collect-all(is-webdsl-tdef);length> ast;
 			tcalls := <collect-all(is-webdsl-tcall);length> ast
 

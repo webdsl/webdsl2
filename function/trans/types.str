@@ -18,7 +18,7 @@ rules
     where message := <map(is-string <+ pp-webdsl-string); concat-strings <+ !"default error message"> error
 
   type-error:
-  	Task(_, [], t@PropCheck(current, expected*), _) -> (t, <type-error-message-after-eval> (current,expected*))
+  	t@PropCheck(current, expected*) -> (t, <type-error-message-after-eval> (current,expected*))
 
   type-error-message-after-eval :
   	(current, expected*) -> $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]]
