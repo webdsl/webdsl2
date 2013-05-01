@@ -28,7 +28,7 @@ binding rules
 			of aliasing ent
 	
 	FromClass(Path([ent]), None(), _):
-		imports Property from Entity e
+		imports Property from Entity ent
 	
 	Path([var]):
 		refers to HqlVar var
