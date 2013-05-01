@@ -1,0 +1,49 @@
+module generate-warnings
+
+//imports Stratego
+
+signature
+  constructors
+  	Module : ID * List(Def) -> Module
+  	OpDecl : ID * Type -> OpDecl
+  	FunType : List(Type) * Type -> Type
+  	ConstType : Sort -> Type
+  	SortNoArgs : ID -> Sort
+  	Sort : ID * List(Sort) -> Sort
+
+rules
+	
+	generate-name-warnings :
+		Module(_, sig*) -> $[
+			module name-warnings
+			imports include/WebDSL
+			signature
+        constructors
+  	      Def: URI -> Anno
+  	      Use: URI -> Anno
+      rules	
+        has-name-binding-annotation =  ?_{Use(_)} <+ ?_{Def(_)}
+			rules
+				[code*]
+		]
+		where <collect(generate-name-warning)> sig* => code*
+		
+  generate-name-warning :
+  	OpDecl(cons, FunType(t*, t)) -> $[
+  		constraint-warning:
+  		  [cons]([tpat*]) -> (name, "name binding rule missing for this identifier")
+  			where <not(has-name-binding-annotation)> name
+  	]
+  	where <oncetd(?ConstType(SortNoArgs("Id")))> t*;
+  	      <map(\ConstType(SortNoArgs("Id")) -> "name"\ <+ !"_"); separate-by(|", ")> t* => tpat*
+  	      
+
+  generate-name-warning :
+  	OpDecl(cons, FunType(t*, t)) -> $[
+  		constraint-warning:
+  		  [cons]([tpat*]) -> (name, "name binding rule missing for this identifier")
+  			where <not(has-name-binding-annotation)> name
+  	]
+  	where <oncetd(?ConstType(Sort("Option", [SortNoArgs("Id")])))> t*;
+  	      <map(\ConstType(Sort("Option", [SortNoArgs("Id")])) -> "Some(name)"\ <+ !"_"); separate-by(|", ")> t* => tpat*
+  	        	      

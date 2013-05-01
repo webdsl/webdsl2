@@ -11,7 +11,10 @@ imports
   datamodel/trans/check
   ui/trans/check
   function/trans/check
-	
+  
+  trans/names 
+  
+	name-warnings
 
 rules // Extensions for error/warning/note reporting
   
@@ -23,4 +26,5 @@ rules // Extensions for error/warning/note reporting
   	
   constraint-note:
   	_ -> <fail>
-
+  	 
+    	

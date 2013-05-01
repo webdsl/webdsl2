@@ -1,0 +1,451 @@
+
+module name-warnings
+imports include/WebDSL
+signature
+constructors
+    Def: URI -> Anno
+    Use: URI -> Anno
+rules	
+  has-name-binding-annotation =  ?_{Use(_)} <+ ?_{Def(_)}
+		rules
+			
+			constraint-warning:
+			  Action(_, name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ActionCall(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  PageCall(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  TemplateArg(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DefineTemplate(_, name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DefinePage(_, name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  LocalRedefine(_, name, _, name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Define(_, name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  EmailCall(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForExpNoFilter(_, name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForExp(_, name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  IncompleteObjectPropertyAssignment(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ObjectPropertyAssignment(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  VarDeclInitInferred(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  VarDeclInit(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  VarDecl(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  FunctionRef(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Arg(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Function(_, name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  GenericSort(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  SimpleSort(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Qualified(_, name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DerivedPropertyNoAnno(name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DerivedProperty(name, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  PropertyNoAnno(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Property(name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  GlobalVarDeclInitInferred(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  GlobalVarDeclInit(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  GlobalVarDecl(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  EntityNoSuper(_, name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Entity(_, name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RelativeFieldAccess(_, name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  TemplateArgOrThis(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  PrefetchNode(_, name, _, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendSchedule(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendType(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendNeighborSize(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendNeighborAlg(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendAlgorithm(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendValue(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendItem(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendUser(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendConfigStaticOrder(name, _, _, _, _, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  RecommendConfig(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  TargetEntity(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AnalyzerName(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  FieldName(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  SearchFieldMapping(_, name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  SearchNamespaceMapping(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  SearchMapping(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  FullTextAnalyzer(_, name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  NativeClassFunction(_, name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  NativeClassProperty(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  NativeClassSuper(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  NativeClassAlias(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DeriveBodyElement(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DeriveMode(name, name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DeriveDefault(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Name(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AccessControlPointcut(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AccessControlPointcutElement(name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  SpecialAccessControlRule(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AccessControlRule(name, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  TypeDef(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DeriveWebServices(name, name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ServiceFunction(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Test(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  DeriveCrud(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Enum(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Predicate(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AccessControlPrincipal(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AccessControlDefinition(Some(name), _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ValidationErrors(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  PredicateInEntity(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  CollationAnno(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  SelectAnno(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  InverseSlaveAnno(name, name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  InverseAnno(_, name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  SimpleAnno(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  NamedValidateAnno(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AjaxClear(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AjaxRestyle(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AjaxVisibility(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AjaxAppend(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AjaxReplace(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForCountStmt(name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForAllStmt(name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForStmtInferred(name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForStmt(name, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  NamedValidateStatement(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  EventArg(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForCount(name, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForAll(name, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ForInferred(name, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  For(name, _, _, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Derive(name, _, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Derive(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Derive(name, _, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  AccessControlImportRules(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  PlaceholderWithAjaxCall(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Placeholder(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  EventCallElement(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ThisCall(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  FieldAccess(_, name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  GlobalVar(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  ExternalScopeVar(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Var(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  Call(_, name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  EventCall(name, _) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			
+			constraint-warning:
+			  QualifiedElementsCall(name) -> (name, "name binding rule missing for this identifier")
+				where <not(has-name-binding-annotation)> name
+			

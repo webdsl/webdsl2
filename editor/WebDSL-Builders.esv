@@ -28,6 +28,7 @@ builders
   builder  : "Show all index partitions"    = debug-show-all-partitions (openeditor) (realtime) (meta)
   builder  : "Reset index"                  = debug-reset-index (meta)
   builder  : "Reset tasks"                  = debug-reset-task (meta)
-  builder  : "Reset and reanalyze"          = debug-reanalyze (meta)                 
+  builder  : "Reset and reanalyze"          = debug-reanalyze (meta)  
+  builder  : "Generate name warnings"       = debug-generate-name-warnings (meta)               
                                                                                                                             
   on save  : editor-save                                                                                                    

@@ -19,6 +19,8 @@ imports
   check
   desugar
   metrics
+  generate-warnings
+  
 	
 rules // Analysis
   
@@ -121,6 +123,16 @@ rules // Debugging
     (selected, position, ast, path, project-path) -> (filename, selected)
     with
       filename := <guarantee-extension(|"analyzed.aterm")> path
+      
+  debug-generate-name-warnings:
+    (selected, position, ast, path, project-path) -> (filename, code)
+    with
+    	<debug(!"debug-generate-name-warnings a: ")> project-path;
+    	sig := <ReadFromFile> $[[project-path]/include/WebDSL.aterm];
+    	<debug(!"debug-generate-name-warnings b: ")> sig;
+    	code := <generate-name-warnings> sig;
+    	<debug(!"debug-generate-name-warnings c: ")> code;
+      filename := <guarantee-extension(|"str")> $[[project-path]/trans/name-warnings.str]
 
 rules // NBL debugging
      
