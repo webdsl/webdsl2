@@ -10,8 +10,7 @@ imports
  
 rules  	
   	
-  	
-  	  
+  /*
   type-error:
   	//Task(_, [], Choice(results,error), _) -> (node, message)
   	Error(error) -> (error, message)
@@ -19,6 +18,10 @@ rules
 
   type-error:
   	t@PropCheck(current, expected*) -> (t, <type-error-message-after-eval> (current,expected*))
+	*/
+
+	pp-type-message:
+		(t, message) -> (t, <map(is-string <+ pp-webdsl-string); concat-strings <+ !"default error message"> message)
 
   type-error-message-after-eval :
   	(current, expected*) -> $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]]

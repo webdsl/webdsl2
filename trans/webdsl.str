@@ -19,13 +19,12 @@ imports
   check
   desugar
   metrics
-  
 	
 rules // Analysis
   
 	// Main entry point for analyzes, called when a single file is opened in the editor.
   editor-analyze:
-    (ast, path, project-path) -> (ast', [error*, analyze-error*], [warning*, analyze-warning*], [note*, analyze-note*])
+    (ast, path, project-path) -> (ast', [error*, <map(pp-type-message)> analyze-error*], [warning*, <map(pp-type-message)> analyze-warning*], [note*, <map(pp-type-message)> analyze-note*])
     with
       editor-init;
       (ast', error-task*, _, (analyze-error*, analyze-warning*, analyze-note*)) := <desugar-all; analyze-one(|<language>, path, project-path)> ast;
