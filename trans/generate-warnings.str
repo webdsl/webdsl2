@@ -22,7 +22,8 @@ rules
   	      Def: URI -> Anno
   	      Use: URI -> Anno
       rules	
-        has-name-binding-annotation =  ?_{Use(_)} <+ ?_{Def(_)}
+        has-name-binding-annotation =
+        	where(?_{t*}; <oncetd(?Use(_) <+ ?Def(_))> t*)
 			rules
 				[code*]
 		]
