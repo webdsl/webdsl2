@@ -32,8 +32,9 @@ binding rules
 			Page,	Template
 	
 	Application(name, _):
-		implicitly defines Module "_application"		
-		//defines Application "application"		
+		defines Module name
+		//implicitly defines Module "_application"		
+		//defines Module "_application"		
 		scopes
 			Function, ExtendedFunction,
 			Entity, ExtendedEntity,

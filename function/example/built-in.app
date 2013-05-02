@@ -282,6 +282,11 @@ module .servletapp/src-webdsl-template/built-in
     name.fraser.neil.plaintext.patch_factory.patchMake   as makePatch(String):Patch
     name.fraser.neil.plaintext.patch_factory.diff        as diff(String):List<String>
   }
+  
+  type List {
+  }
+  type Set {
+  } 
 
   type DateTime { // includes Date and Time types
     utils.DateType.format as format(String):String

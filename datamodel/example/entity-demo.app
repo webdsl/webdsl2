@@ -1,5 +1,9 @@
 module datamodel/example/entities
 
+type Text {}
+
+entity Entity { }
+
 entity Ent1 {
 	field  : Text
 	field2 :: Text

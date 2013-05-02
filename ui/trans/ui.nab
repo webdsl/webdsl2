@@ -15,16 +15,16 @@ namespaces
 binding rules
 
 	DefinePage(mods, name, fargs, targs, _):
-		defines Page name
-			of type PageSort(fargtypes)
-		where fargs has type fargtypes
 		scopes Variable, TemplateFunction
+		defines Page name
+			   of type PageSort(fargtypes)
+		where fargs has type fargtypes
 
 	DefineTemplate(mods, name, fargs, targs, _):
-		defines Template name
-			of type TemplateSort(fargtypes)
-		where fargs has type fargtypes
 		scopes Variable, TemplateFunction
+		defines Template name
+			   of type TemplateSort(fargtypes)
+		  where fargs has type fargtypes
 
 	PageCall(name, args):
 		refers to Page name

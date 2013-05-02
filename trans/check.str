@@ -13,7 +13,7 @@ imports
   names
   types
   
-	name-warnings
+	//name-warnings
 
 rules // Extensions for error/warning/note reporting
   

@@ -1,5 +1,7 @@
 module function/example/function-demo
 
+imports _application
+
 entity Ent1 {
 	foo : String
 	bar -> List<String>
@@ -11,6 +13,8 @@ entity Ent1 {
 	function undoit() {
 		foo;
 	}
+	
+	foo2 : Foo
 }
 
 entity Ent2 : Ent1 {
@@ -24,3 +28,4 @@ extend entity Ent2 {
 		barrie;
 	}
 }
+

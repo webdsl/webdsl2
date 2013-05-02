@@ -1,4 +1,4 @@
-module .servletapp/src-webdsl-template/built-in
+module built-in
 // hibbernate transaction management
 
   native class utils.ValidationException as NativeValidationException {
