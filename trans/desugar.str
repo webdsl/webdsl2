@@ -15,4 +15,5 @@ strategies
   	ModuleDefs(name, [Imports("_application"), Imports("built-in") | import*], section*)
   	
   ApplicationName :
-  	ApplicationDefs(_, section*, stuff) -> ApplicationDefs("_application", section*, stuff)
+  	ApplicationDefs(_, import*, section*) -> 
+  	ApplicationDefs("_application", [Imports("built-in") | import*], section*)

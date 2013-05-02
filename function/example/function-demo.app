@@ -1,6 +1,6 @@
 module function/example/function-demo
 
-imports _application
+//imports _application
 
 entity Ent1 {
 	foo : String
