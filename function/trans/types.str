@@ -46,6 +46,9 @@ rules // checking
     
   check-is-bool(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Bool")])
   check-is-int(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Int")])
+  
+  resolve-type(|partition) :
+  	x -> <new-task(|partition)> PropLookup(Type(), x)  
 
 rules // type helpers
     
@@ -79,6 +82,9 @@ rules // statements
     where <check-is-int(|partition)> e2
 
 rules // expressions  	
+	 
+  type-of-task(|partition): 
+  	Var(x) -> <resolve-type(|partition)> x	 
 	 
   type-of-task(|partition): 
   	Not(e) -> <create-type(|partition)> SimpleSort("Bool")
