@@ -1,0 +1,8 @@
+module search/trans/search
+
+binding rules
+
+  SearchFieldMapping(_, name, _) :
+  	refers to Property name
+  	
+  	

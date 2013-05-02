@@ -1,0 +1,9 @@
+module datavalidation/trans/datavalidation
+
+binding rules
+
+//  NamedValidateAnno(name, _) : 
+  	//refers to Property name
+  	
+//  NamedValidateStatement(name, _) :
+  	//refers to 

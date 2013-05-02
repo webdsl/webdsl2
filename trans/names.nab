@@ -1,11 +1,16 @@
 module names
 
-imports
-	include/WebDSL
-	datamodel/trans/datamodel
-  function/trans/function
-	ui/trans/ui
+imports include/WebDSL
 	accesscontrol/trans/accesscontrol
+	datamodel/trans/datamodel
+	datavalidation/trans/datavalidation
+  function/trans/function
+  prefetch/trans/prefetch
+  recommend/trans/recommend
+	search/trans/search
+	service/trans/service
+	//task/trans/task
+	ui/trans/ui
 	
 namespaces
 	Module
@@ -15,6 +20,7 @@ properties
 	application	of Module	: Bool
 	
 binding rules
+
 	ApplicationDefs(name, _, _):
 		defines Module name
 		defines Application name
