@@ -8,7 +8,7 @@ imports
   lib/types/-
   lib/editor-common.generated
  
-rules  	
+rules // printing error messages
   	
   /*
   type-error:
@@ -26,7 +26,7 @@ rules
   type-error-message-after-eval :
   	(current, expected*) -> $[Type error found: [<pp-webdsl-string> current], expected: [<map(pp-webdsl-string);concat-strings> expected*]]
 
-rules
+rules // checking
 
   type-error-message-before-eval :
   	(current, expected*) -> ["Type error found: ", current, ", expected: ", expected*]
@@ -43,12 +43,11 @@ rules
     
   create-check-task(|current,partition) : 
   	x -> <new-task(|partition)> PropCheck(current, x)
-
-  type-of(|partition) = 
-  	try(type-task(|partition))
     
-  check-is-bool(|partition) : e -> <type-check(|partition, e)> (<type-of(|partition)> e, [SimpleSort("Bool")])
-  check-is-int(|partition) : e -> <type-check(|partition, e)> (<type-of(|partition)> e, [SimpleSort("Int")])
+  check-is-bool(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Bool")])
+  check-is-int(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Int")])
+
+rules // type helpers
     
   set-of  : 
   	type -> GenericSort("Set",[type])
@@ -58,72 +57,72 @@ rules
 
 rules // literals
 
-  type-task(|partition): String(_) -> <create-type(|partition)> SimpleSort("String")
-  type-task(|partition): Int(_)    -> <create-type(|partition)> SimpleSort("Int")
-  type-task(|partition): Float(_)  -> <create-type(|partition)> SimpleSort("Float")
-  type-task(|partition): True()    -> <create-type(|partition)> SimpleSort("Bool")
-  type-task(|partition): False()   -> <create-type(|partition)> SimpleSort("Bool") 
+  type-of-task(|partition): String(_) -> <create-type(|partition)> SimpleSort("String")
+  type-of-task(|partition): Int(_)    -> <create-type(|partition)> SimpleSort("Int")
+  type-of-task(|partition): Float(_)  -> <create-type(|partition)> SimpleSort("Float")
+  type-of-task(|partition): True()    -> <create-type(|partition)> SimpleSort("Bool")
+  type-of-task(|partition): False()   -> <create-type(|partition)> SimpleSort("Bool") 
   
 rules // statements  		
   		
-  type-task(|partition):
+  type-of-task(|partition):
     If(e, b1, b2) -> <id>
     where <check-is-bool(|partition)> e
 
-  type-task(|partition):
+  type-of-task(|partition):
     ForStmt(x, t, e, _, _) -> <id>
-    where <type-check(|partition, e)> (<type-of(|partition)> e, [<set-of> t, <list-of> t])
+    where <type-check(|partition, e)> (<type-of-task(|partition)> e, [<set-of> t, <list-of> t])
   
-  type-task(|partition):  
+  type-of-task(|partition):  
     ForCountStmt(_, e1, e2, _) -> <id>
     where <check-is-int(|partition)> e1
     where <check-is-int(|partition)> e2
 
 rules // expressions  	
 	 
-  type-task(|partition): 
+  type-of-task(|partition): 
   	Not(e) -> <create-type(|partition)> SimpleSort("Bool")
   	where <check-is-bool(|partition)> e
 
-  type-task(|partition):
+  type-of-task(|partition):
     t@IfExp(e, e1, e2) -> e1t
     where <check-is-bool(|partition)> e
-    where e1t := <type-of(|partition)> e1
-        ; e2t := <type-of(|partition)> e2
+    where e1t := <type-of-task(|partition)> e1
+        ; e2t := <type-of-task(|partition)> e2
         ; <type-check(|partition, t)> (e2t, [e1t]) // or subtype of e1t
           
-  type-task(|partition):
+  type-of-task(|partition):
   	t@ForExp(e, _, srt, ecol, _) -> <create-type(|partition)> <list-of> et
-    where ecolt := <type-of(|partition)> ecol
+    where ecolt := <type-of-task(|partition)> ecol
         ; <type-check(|partition, t)> (ecolt, [<set-of> srt, <list-of> srt])
-    where et := <type-of(|partition)> e
+    where et := <type-of-task(|partition)> e
   
-  type-task(|partition):
+  type-of-task(|partition):
   	t@AndForExp(e) -> <create-type(|partition)> SimpleSort("Bool")
-    where et := <type-of(|partition)> e
+    where et := <type-of-task(|partition)> e
         ; <type-check(|partition, t)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
           
-  type-task(|partition):
+  type-of-task(|partition):
   	t@OrForExp(e) -> <create-type(|partition)> SimpleSort("Bool")
-    where et := <type-of(|partition)> e
+    where et := <type-of-task(|partition)> e
         ; <type-check(|partition, t)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
           
-  type-task(|partition):
+  type-of-task(|partition):
   	t@CollectionIndex(e_col,e_index) -> <create-type(|partition)> type
-    where e_colt := <type-of(|partition)> e_col
+    where e_colt := <type-of-task(|partition)> e_col
     	; <type-check(|partition, t)> (e_colt, [GenericSort("List",SimpleSort("TODO should match any type"))])
     where <check-is-int(|partition)> e_index
     where GenericSort(_,[type]) := e_colt
           
 rules // for loop filter  
 	
-  type-task(|partition): Filter(we, _, _)           -> <check-is-bool(|partition)> we
-  type-task(|partition): FilterNoLimit(we, _)       -> <check-is-bool(|partition)> we
-  type-task(|partition): FilterNoOrderBy(we, _)     -> <check-is-bool(|partition)> we
-  type-task(|partition): FilterNoOrderByNoLimit(we) -> <check-is-bool(|partition)> we
+  type-of-task(|partition): Filter(we, _, _)           -> <check-is-bool(|partition)> we
+  type-of-task(|partition): FilterNoLimit(we, _)       -> <check-is-bool(|partition)> we
+  type-of-task(|partition): FilterNoOrderBy(we, _)     -> <check-is-bool(|partition)> we
+  type-of-task(|partition): FilterNoOrderByNoLimit(we) -> <check-is-bool(|partition)> we
 
-  type-task(|partition): Limit(lim,off)     -> <check-is-int(|partition)> lim
-  type-task(|partition): Limit(lim,off)     -> <check-is-int(|partition)> off
-  type-task(|partition): LimitNoOffset(lim) -> <check-is-int(|partition)> lim
-  type-task(|partition): LimitNoLimit(off)  -> <check-is-int(|partition)> off
+  type-of-task(|partition): Limit(lim,off)     -> <check-is-int(|partition)> lim
+  type-of-task(|partition): Limit(lim,off)     -> <check-is-int(|partition)> off
+  type-of-task(|partition): LimitNoOffset(lim) -> <check-is-int(|partition)> lim
+  type-of-task(|partition): LimitNoLimit(off)  -> <check-is-int(|partition)> off
   
