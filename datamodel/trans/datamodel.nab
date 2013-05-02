@@ -24,17 +24,18 @@ properties
 	annotations				of Property: List(Annotation)
 	
 binding rules
-
+	
 	Entity(knd, name, par, _):
 		defines Entity name
 			of parent par
 			of kind knd
 		imports Property, imported Property, Function, imported Function from Entity par
-		scopes Property, Function, ExtendedFunction
+		scopes Property, Function, ExtendedFunction, Variable
 		imports Property, Function, ExtendedFunction from ExtendedEntity name
+		implicitly defines Variable "this" of type SimpleSort(name)
 		
 	ExtendEntity(knd, name, _):
-		scopes Property, Function, ExtendedFunction
+		scopes Property, Function, ExtendedFunction, Variable
 		defines non-unique ExtendedEntity name of kind knd
 		imports Property, Function, ExtendedFunction from Entity name of kind knd
 
