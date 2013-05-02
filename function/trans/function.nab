@@ -1,7 +1,7 @@
 module function/trans/function
  
 imports
-	include/WebDSL
+	include/WebDSL 
 	function/trans/signatures
 	datamodel/trans/datamodel
 	function/trans/hql
@@ -33,7 +33,7 @@ binding rules // function declarations
 	
 	EntityFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
 		scopes Variable
-		defines non-unique ExtendedFunction name
+		defines non-unique ExtendedFunction name 
 				of type FunctionSort(args-ty, ret-ty)
 				of kind knd
 			where args has type args-ty
@@ -62,6 +62,24 @@ binding rules // function declarations
 	Arg(name, ty):
 		defines Variable name of type ty
 		
+binding rules // function calls
+
+  ThisCall(name, args):
+		refers to Function name of kind _ of type FunctionSort(args-ty, ret-ty)
+		    where args has type args-ty
+		otherwise 
+  	refers to Function name of kind Global() of type FunctionSort(args-ty, ret-ty)
+		    where args has type args-ty
+	
+	Call(e, name, args):
+		refers to Function name of type FunctionSort(args-ty, ret-ty) in Entity t
+		    where e has type t
+		    where args has type args-ty
+		otherwise 
+  	refers to Function name of kind Global() of type FunctionSort(args-ty, ret-ty)
+		    where args has type args-ty
+		
+			
 binding rules // expressions
 	
 	// sort reference (simple, generic, ref)
@@ -70,7 +88,7 @@ binding rules // expressions
 			otherwise
 		refers to Enum s
 			otherwise
-		refers to Type s
+		refers to Type s 
 	
 	RefSort(s):
 		refers to Entity s
@@ -79,10 +97,9 @@ binding rules // expressions
 			otherwise
 		refers to Type s
 
-	GenericSort(base, SimpleSort(param)):
-		refers to Entity param
-			otherwise
-		refers to Type param
+	GenericSort(name, _):
+		refers to Entity "List"
+		otherwise refers to Entity "Set"
 	
 	// var declaration * 3
 	VarDecl(name, ty):
@@ -118,8 +135,6 @@ binding rules // expressions
 		refers to Property name
 			otherwise
 		refers to ModuleVariable name
-	
-
 	
 	Block(_):
 		scopes Variable
