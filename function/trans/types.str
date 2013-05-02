@@ -41,8 +41,8 @@ rules // checking
     	task     := <new-task(|partition)> Choice(check*);
     	message  := <origin-track-forced(<type-error-message-before-eval; task-error-message> (current, expected*))> origin
     
-  create-check-task(|current,partition) : 
-  	x -> <new-task(|partition)> PropCheck(current, x)
+  create-check-task(|current, partition) : 
+  	expected -> <new-task(|partition)> PropCheck(current, expected)
     
   check-is-bool(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Bool")])
   check-is-int(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Int")])
@@ -110,8 +110,9 @@ rules // expressions
   type-of-task(|partition):
   	t@CollectionIndex(e_col,e_index) -> <create-type(|partition)> type
     where e_colt := <type-of-task(|partition)> e_col
-    	; <type-check(|partition, t)> (e_colt, [GenericSort("List",SimpleSort("TODO should match any type"))])
-    where <check-is-int(|partition)> e_index
+    	; <type-check(|partition, t)> (e_colt, [GenericSort("List", SimpleSort("TODO should match any type"))])
+    where e_indext := <type-of-task(|partition)> e_index
+    where <check-is-int(|partition)> e_indext
     where GenericSort(_,[type]) := e_colt
           
 rules // for loop filter  
