@@ -14,27 +14,14 @@ signature
 	
 rules
 	
-	type-of = fail
-	
 	print-type = pp-webdsl-string
-	
-rules // type retrieval
 
 	// Gets the type of the given term, or fails if the term has no type.
-	get-type:
+	type-of:
 		t{anno*} -> type
-		with
+		where
 			result := <collect-one(?Type(<id>))> anno*;
-			type   := <task-get-result> result
-	
-	// Gets the types of the given term. Returns an empty list of the term has no type.
-	get-types:
-		t{anno*} -> types
-		with
-			results := <collect-all(?Type(<id>))> anno*;
-			types   := <filter(task-get-result)> results
-
-rules // generic type-task
+			type   := <task-get-result; Hd> result
 
 	type-task(|partition):
 		t{a*} -> t{Type(<type-of-task(|partition)> t), a*}
