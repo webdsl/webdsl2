@@ -450,3 +450,160 @@ rules
 			  QualifiedElementsCall(name) -> (name, "name binding rule missing for this identifier")
 				where <not(has-name-binding-annotation)> name
 			
+			
+			constraint-warning:
+			  e@ValidateTemplateFunctionCall(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@RenderTemplateFunctionCall(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@SendEmailFunctionCall(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@EmailFunctionCall(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@RenderEmailFunctionCall(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@OrForExp(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@AndForExp(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Not(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			 
+			constraint-warning:
+			  e@Sub(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Add(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Mod(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Div(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Mul(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Or(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@And(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@SmallerThanOrEqual(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@SmallerThan(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@LargerThanOrEqual(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@LargerThan(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@NotEq(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Eq(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@InColl(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Cast(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@IsA(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@ThisCall(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@TypedSetCreation(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@TypedListCreation(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@SetCreation(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@ListCreation(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@MapCreation(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@CollectionIndex(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@FieldAccess(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@GlobalVar(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@ExternalScopeVar(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Var(_) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@IfExp(_, _, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@FunctionRefCall(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@Call(_, _, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			
+			constraint-warning:
+			  e@EventCall(_, _) -> (e, "type-of missing")
+				where <not(type-of)> e
+			

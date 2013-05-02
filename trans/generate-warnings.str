@@ -25,9 +25,11 @@ rules
         has-name-binding-annotation =
         	where(?_{t*}; <oncetd(?Use(_) <+ ?Def(_))> t*)
 			rules
-				[code*]
+				[code1*]
+				[code2*]
 		]
-		where <collect(generate-name-warning)> sig* => code*
+		where <collect(generate-name-warning)> sig* => code1*;
+		      <collect(generate-type-warning)> sig* => code2*
 		
   generate-name-warning :
   	OpDecl(cons, FunType(t*, t)) -> $[
@@ -47,4 +49,13 @@ rules
   	]
   	where <oncetd(?ConstType(Sort("Option", [SortNoArgs("Id")])))> t*;
   	      <map(\ConstType(Sort("Option", [SortNoArgs("Id")])) -> "Some(name)"\ <+ !"_"); separate-by(|", ")> t* => tpat*
-  	        	      
+
+  generate-type-warning :
+  	OpDecl(cons, FunType(t*, ConstType(SortNoArgs("Exp")))) -> $[
+  		constraint-warning:
+  		  e@[cons]([tpat*]) -> (e, "type-of missing")
+  			where <not(type-of)> e
+  	]
+  	where <map(!"_"); separate-by(|", ")> t* => tpat*  	     
+  	
+  	   	      
