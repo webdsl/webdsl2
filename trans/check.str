@@ -1,18 +1,17 @@
 module check
 
 imports
+	
   libstratego-lib
   include/WebDSL
-  // lib/editor-common.generated
-  // lib/index-library.generated
-  // lib/analysis-library.generated
-  // lib/analysis-library-internal.generated
-  // lib/nbl-library.generated
+  lib/nbl/-
+  
   datamodel/trans/check
   ui/trans/check
   function/trans/check
   
-  trans/names 
+  names
+  types
   
 	name-warnings
 
@@ -27,4 +26,21 @@ rules // Extensions for error/warning/note reporting
   constraint-note:
   	_ -> <fail>
   	 
-    	
+rules // Name binding
+  
+  constraint-error:
+    node -> (node, "Unresolved reference.")
+    where
+      nabl-is-unresolved
+      
+  constraint-error:
+    node -> (node, "Duplicate definition.")
+    where
+      nabl-get-duplicate-definitions
+      
+  constraint-error:
+    node -> (node, $[Ambiguous, could be from [<map(nabl-print-uri); separate-by(|", "); concat-strings> ambiguity'*]])
+    where
+      ambiguity*  := <nabl-get-ambiguities> node;
+      ambiguity'* := <filter(where(nabl-uri-namespace; ?NablNsApplication() <+ ?NablNsModule()))> ambiguity*;
+      <gt> (<length> ambiguity'*, 1)
