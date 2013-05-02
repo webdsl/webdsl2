@@ -35,11 +35,11 @@ rules
   	type -> <new-task(|partition)> PropCalc(type, ()) // only need second argument (list of dependencies) if type tasks are used in the calculation but not contained in end result 
  
   type-check(|partition, origin) :
-    (current, expected*) -> <task-create-error-on-failure(|partition, task)> message
+    (current, expected*) -> <task-create-message-on-failure(|partition, task)> message
     with
-    	check*  := <map(create-check-task(|current, partition))> expected*;
-    	task    := <new-task(|partition)> Choice(check*);
-    	message := <force-origins(<type-error-message-before-eval> (current, expected*))> origin
+    	check*   := <map(create-check-task(|current, partition))> expected*;
+    	task     := <new-task(|partition)> Choice(check*);
+    	message  := <origin-track-forced(<type-error-message-before-eval; task-error-message> (current, expected*))> origin
     
   create-check-task(|current,partition) : 
   	x -> <new-task(|partition)> PropCheck(current, x)
@@ -59,7 +59,7 @@ rules
 rules // literals
 
   type-task(|partition): String(_) -> <create-type(|partition)> SimpleSort("String")
-  type-task(|partition): Int(_)    -> <debug(!"type-task1: "); create-type(|partition); debug(!"type-task2: ")> SimpleSort("Int")
+  type-task(|partition): Int(_)    -> <create-type(|partition)> SimpleSort("Int")
   type-task(|partition): Float(_)  -> <create-type(|partition)> SimpleSort("Float")
   type-task(|partition): True()    -> <create-type(|partition)> SimpleSort("Bool")
   type-task(|partition): False()   -> <create-type(|partition)> SimpleSort("Bool") 
