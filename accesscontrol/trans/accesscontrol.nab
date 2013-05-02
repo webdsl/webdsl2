@@ -5,9 +5,25 @@ imports
 
 binding rules
 	
-  AccessControlRule("page", name, arg*, cond, _):
-  	scopes Variable
+  AccessControlRule("page", name, MatchArgs(arg*, _), cond, _):
+  	scopes Variable, TemplateFunction
   	refers to Page name
-  	
-  	
-  	
+  	imports TemplateFunction from Page name
+
+  AccessControlRule("template", name, MatchArgs(arg*, _), cond, _):
+  	scopes Variable, TemplateFunction
+  	refers to Template name of type TemplateSort(t*) where arg* has type t*
+  	imports TemplateFunction from Template name
+  	  	
+  AccessControlRule("action", name, MatchArgs(arg*, _), cond, _):
+  	scopes Variable
+  	refers to TemplateFunction name
+  	  	
+  Predicate(name, arg*, e) : 
+  	scopes Variable
+  	defines Function name
+  	     of type FunctionSort(t*, SimpleSort("Bool"))
+  	     of kind Global()
+  	  where arg* has type t*
+  	  
+  	  
