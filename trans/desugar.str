@@ -8,12 +8,12 @@ imports
 	
 strategies
 	
-	desugar-all = /*alltd(ImportApplication <+ ApplicationName);*/ topdown(try(datamodel-desugar <+ ui-desugar <+ function-desugar))
+	desugar-all = alltd(ImportApplication <+ ApplicationName); topdown(try(datamodel-desugar <+ ui-desugar <+ function-desugar))
 
   ImportApplication :
   	ModuleDefs(name, import*, section*) -> 
-  	ModuleDefs(name, [Imports("_application"), Imports("built-in") | import*], section*)
+  	ModuleDefs(name, [/*Imports("_application"),*/ Imports("built-in"), Imports("extra-built-in") | import*], section*)
   	
   ApplicationName :
   	ApplicationDefs(_, import*, section*) -> 
-  	ApplicationDefs("_application", [Imports("built-in") | import*], section*)
+  	ApplicationDefs("_application", [Imports("built-in"), Imports("extra-built-in") | import*], section*)
