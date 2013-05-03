@@ -12,7 +12,7 @@ strategies
 
   ImportApplication :
   	ModuleDefs(name, import*, section*) -> 
-  	ModuleDefs(name, [/*Imports("_application"),*/ Imports("built-in"), Imports("extra-built-in") | import*], section*)
+  	ModuleDefs(name, [Imports("_application"), Imports("built-in"), Imports("extra-built-in") | import*], section*)
   	
   ApplicationName :
   	ApplicationDefs(_, import*, section*) -> 

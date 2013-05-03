@@ -158,8 +158,8 @@ rules // NBL debugging
   debug-show-all-partitions =
     analysis-debug-show-all-partitions(|<language>)
 
-  debug-show-all-results =
-  	analysis-debug-show-all-results(|<language>)
+  debug-show-tasks =
+  	analysis-debug-show-tasks(|<language>)
 
   debug-reset-index =
     analysis-debug-reset-index(|<language>)

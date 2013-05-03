@@ -29,10 +29,9 @@ binding rules
 		defines Entity name
 			of parent par
 			of kind knd
-		//imports Property, imported Property, Function, imported Function from Entity par
+		imports Property, imported Property, Function, imported Function from Entity par
 		scopes Property, Function, ExtendedFunction, Variable
 		//imports Property, Function, ExtendedFunction from ExtendedEntity name
-		
 		//implicitly defines Variable "this" of type SimpleSort(name)
 		
 	ExtendEntity(knd, name, _):

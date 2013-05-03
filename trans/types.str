@@ -24,4 +24,9 @@ rules
 			type   := <task-get-result; Hd> result
 
 	type-task(|partition):
-		t{a*} -> t{Type(<type-of-task(|partition)> t), a*}
+		t{a*} -> result
+		where
+			switch !t
+				case is-list : where(<map(type-of-task(|partition))> t)
+				otherwise    : !t{Type(<type-of-task(|partition)> t), a*}
+			end => result

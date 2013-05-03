@@ -26,7 +26,7 @@ builders
   
   builder  : "Show current index partition" = debug-show-current-partition (openeditor) (realtime) (meta)
   builder  : "Show all index partitions"    = debug-show-all-partitions (openeditor) (meta)
-  builder  : "Show all results"             = debug-show-all-results (openeditor) (meta)
+  builder  : "Show tasks for current partition"             = debug-show-tasks (openeditor) (meta)
   builder  : "Reset index"                  = debug-reset-index (meta)
   builder  : "Reset tasks"                  = debug-reset-task (meta)
   builder  : "Reset and reanalyze"          = debug-reanalyze (meta)  

@@ -27,7 +27,7 @@ binding rules // function declarations
 	
 	EntityFunction(Function(knd, name, args, ret-ty, _)):
 		scopes Variable
-		defines non-unique Function name
+		defines Function name
 				of type ret-ty
 				of signature args-ty
 				of kind knd
@@ -35,7 +35,7 @@ binding rules // function declarations
 	
 	EntityFunction(ExtendFunction(Function(knd, name, args, ret-ty, _))):
 		scopes Variable
-		defines non-unique ExtendedFunction name 
+		defines ExtendedFunction name 
 				of type ret-ty
 				of signature args-ty
 				of kind knd
@@ -47,7 +47,7 @@ binding rules // function declarations
 	
 	GlobalFunction(Function(_, name, args, ret-ty, _)):
 		scopes Variable
-		defines non-unique Function name
+		defines Function name
 				of type ret-ty
 				of signature args-ty
 				of kind Global()
@@ -55,7 +55,7 @@ binding rules // function declarations
 	
 	GlobalFunction(ExtendFunction(Function(_, name, args, ret-ty, _))):
 		scopes Variable
-		defines non-unique ExtendedFunction name
+		defines ExtendedFunction name
 				of type ret-ty
 				of signature args-ty
 				of kind Global()
@@ -74,24 +74,13 @@ binding rules // function calls
 		refers to Function name
 				of signature args-ty
 			where args has type args-ty
-		otherwise 
-  	refers to Function name 
-  			of kind Global() 
-  			of signature args-ty
-			where args has type args-ty
 	
 	Call(e, name, args):
 		refers to Function name 
 				of signature args-ty 
 				in Entity t
-			where e has type t
+			where e has type SimpleSort(t)
 			where args has type args-ty
-		otherwise 
-  	refers to Function name 
-  			of kind Global() 
-  			of signature args-ty
-			where args has type args-ty
-		
 			
 binding rules // expressions
 	
@@ -111,8 +100,7 @@ binding rules // expressions
 		refers to Type s
 
 	GenericSort(name, _):
-		refers to Entity "List"
-		otherwise refers to Entity "Set"
+		refers to Type name
 	
 	// var declaration * 3
 	VarDecl(name, ty):
