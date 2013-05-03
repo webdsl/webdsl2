@@ -62,7 +62,6 @@ binding rules
 	  //imports Function from Module "application"
 	
 	Imports(modname):
-		refers to Module modname
 		imports
 			Function, imported Function,
 			// ExtendedFunction, imported ExtendedFunction,

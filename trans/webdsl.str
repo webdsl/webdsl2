@@ -4,15 +4,12 @@ imports
   libstratego-lib
   libstratego-gpp
   libstratego-aterm
-  libstratego-parallel
   include/WebDSL
   lib/editor-common.generated
-  lib/index-library.generated
   lib/analysis/-
   lib/nbl/-
   lib/task/-
-  lib/index/partition
-  lib/index/query
+  lib/index/-
   
   names
   types
@@ -20,6 +17,7 @@ imports
   desugar
   metrics
   generate-warnings
+  name-warnings
   
 rules // Analysis
   
@@ -28,20 +26,38 @@ rules // Analysis
     (ast, path, project-path) -> (ast', [error*, <map(pp-type-message)> analyze-error*], [warning*, <map(pp-type-message)> analyze-warning*], [note*, <map(pp-type-message)> analyze-note*])
     with
       editor-init;
+      <debug(!"Analyzing file: ")> path;
       (ast', error-task*, _, (analyze-error*, analyze-warning*, analyze-note*)) := <desugar-all; analyze-one(|<language>, path, project-path)> ast;
       (error*, warning*, note*) := <editor-analyze-markers> ast'
       // TODO: Update markers for partitions that have had a task executed.
 
-  editor-analyze:
+  /*editor-analyze:
     path* -> result*
     where
       not(is-tuple)
     with
+    	debug(!"Bla ");
     	measure-time(
 	      full-path* := <map(\p -> $[[<project-path>]/[p]]\)> path*;
 	      result*    := <editor-analyze-multiple> full-path*,
 	      id | "webdsl-analyze-total"
 	    )
+  */
+  
+  editor-analyze:
+    path* -> None()
+    where
+      not(is-tuple)
+    with
+      map(\p -> $[[<project-path>]/[p]]\);
+      editor-queue-analyze-multiple
+
+  editor-queue-analyze-multiple:
+    path* -> None()
+    with
+      if not([] := path*) then
+        queue-strategy(|"editor-analyze-multiple", "Analyzing files")
+      end
       
   editor-save:
   	(_, _, _, path, project-path) -> None()
@@ -72,9 +88,10 @@ rules // Analysis
   editor-analyze-multiple:
     path* -> (error*, result'*, evaluated-count)
     with
+    	debug(!"Analyzing files: ");
       nabl-analyze-multiple-work-units; set-total-work-units;
       measure-time(
-        (error*, result*, evaluated-count) := <analyze-multiple(desugar-all; parse-file <+ !(), try, complete-work-unit|<language>, <project-path>)> path*;
+        (error*, result*, evaluated-count) := <analyze-multiple(desugar-all; parse-file <+ !(), complete-work-unit|<language>, <project-path>)> path*;
         result'*                           := <filter(editor-update-markers)> result*
       , id | "webdsl-analyze-multiple-full-analysis"
       );
@@ -140,6 +157,9 @@ rules // NBL debugging
      
   debug-show-all-partitions =
     analysis-debug-show-all-partitions(|<language>)
+
+  debug-show-all-results =
+  	analysis-debug-show-all-results(|<language>)
 
   debug-reset-index =
     analysis-debug-reset-index(|<language>)
