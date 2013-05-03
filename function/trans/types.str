@@ -60,11 +60,18 @@ rules // type helpers
 
 rules // literals
 
+	type-of-task(|partition): list -> <new-task(|partition)> Concat(<map(type-of-task(|partition))> list)
+
   type-of-task(|partition): String(_) -> <create-type(|partition)> SimpleSort("String")
   type-of-task(|partition): Int(_)    -> <create-type(|partition)> SimpleSort("Int")
   type-of-task(|partition): Float(_)  -> <create-type(|partition)> SimpleSort("Float")
   type-of-task(|partition): True()    -> <create-type(|partition)> SimpleSort("Bool")
   type-of-task(|partition): False()   -> <create-type(|partition)> SimpleSort("Bool") 
+
+rules // definitions
+	
+	type-of-task(|partition):
+		Arg(_, t) -> <create-type(|partition)> t
   
 rules // statements  		
   		
@@ -84,7 +91,13 @@ rules // statements
 rules // expressions  	
 	 
   type-of-task(|partition): 
-  	Var(x) -> <resolve-type(|partition)> x	 
+  	Var(x) -> <resolve-type(|partition)> x
+  
+  type-of-task(|partition): 
+  	Call(_, x, _) -> <resolve-type(|partition)> x
+
+  type-of-task(|partition): 
+  	ThisCall(x, _) -> <resolve-type(|partition)> x	 
 	 
   type-of-task(|partition): 
   	Not(e) -> <create-type(|partition)> SimpleSort("Bool")
