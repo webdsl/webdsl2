@@ -23,7 +23,6 @@ binding rules
 
 	ApplicationDefs(name, _, _):
 		defines Module name
-		defines Application name
 		scopes
 			Function, ExtendedFunction,
 			Entity, ExtendedEntity,
@@ -33,8 +32,6 @@ binding rules
 	
 	Application(name, _):
 		defines Module name
-		//implicitly defines Module "_application"		
-		//defines Module "_application"		
 		scopes
 			Function, ExtendedFunction,
 			Entity, ExtendedEntity,
@@ -59,7 +56,6 @@ binding rules
 			Type, NativeClass,
 			Variable, Enum,
 			Page,	Template
-	  //imports Function from Module "application"
 	
 	Imports(modname):
 		imports
