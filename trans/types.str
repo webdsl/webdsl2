@@ -30,3 +30,16 @@ rules
 				case is-list : where(<map(type-of-task(|partition))> t)
 				otherwise    : !t{Type(<type-of-task(|partition)> t), a*}
 			end => result
+			
+rules // Custom type equality
+	
+	nabl-property-eq(|type):
+		(t1, t2) -> <id>
+		where
+			<debug(!"custom eq: ")> (type, t1, t2);
+			<?NablProp_signature()> type;
+			<eq> (<strip-annos> t1, <strip-annos> t2)
+			
+	nabl-disambiguate(|ns):
+		list -> list
+		
