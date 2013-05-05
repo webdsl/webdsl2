@@ -5,7 +5,16 @@ module extra-built-in
 	entity Entity {}
 	
 	type Void {}
+	type Bool {}
+	type Int {}
+	type Long {}
+	type Float {}
+	type Double {}
+	type List {}
+	type Set {}
+	type Object {}
 
   function cancel() {}
   function rollback() {}
   function flush() {}
+  function elements() {} // TODO: only defined in templates.

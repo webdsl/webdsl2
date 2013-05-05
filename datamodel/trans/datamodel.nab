@@ -60,6 +60,9 @@ binding rules
 	EnumValue(name, _):
 		defines EnumValue name
 
+	NativeClass(_, NativeClassAlias(c), _, _):
+		defines Type c
+
 		// var declaration * 3
 	GlobalVarDecl(name, ty):
 		defines ModuleVariable name of type ty
