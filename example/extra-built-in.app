@@ -9,3 +9,20 @@ module extra-built-in
   function cancel() {}
   function rollback() {}
   function flush() {}
+  
+  type Int { }
+  type Long { }
+  type Float { }
+  type UUID { }
+  type Date { }
+  type Time { }
+  
+  type ATerm { }
+  type Object { }
+  type Bool { }
+  
+  type List { }
+  type Set { }
+  type Secret { }
+  
+  
