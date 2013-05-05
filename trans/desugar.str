@@ -1,6 +1,7 @@
 module desugar
 
 imports
+	lib/editor-common.generated
 	include/WebDSL
 	datamodel/trans/desugar
 	ui/trans/desugar
@@ -10,10 +11,25 @@ strategies
 	
 	desugar-all = alltd(ImportApplication <+ ApplicationName); topdown(try(datamodel-desugar <+ ui-desugar <+ function-desugar))
 
+
   ImportApplication :
-  	ModuleDefs(name, import*, section*) -> 
-  	ModuleDefs(name, [Imports("_application"), Imports("built-in"), Imports("extra-built-in") | import*], section*)
+  	m@ModuleDefs(name, import*, section*) -> <origin-track-forced(!ModuleDefs(name, import'*, section*))> m
+  	with
+  		import'* := <add-module-imports> import*
+
+	add-module-imports:
+		import* -> [Imports("_application"), Imports("built-in"), Imports("extra-built-in") | import*]
+  	
   	
   ApplicationName :
-  	ApplicationDefs(_, import*, section*) -> 
-  	ApplicationDefs("_application", [Imports("built-in"), Imports("extra-built-in") | import*], section*)
+  	a@ApplicationDefs(name, import*, section*) -> <origin-track-forced(!ApplicationDefs(name', import'*, section*))> a
+  	with
+  		name'    := <normalize-application-name> name;
+  		import'* := <add-application-imports> import*
+
+	normalize-application-name:
+		name -> "_application"
+		
+	add-application-imports:
+		import* -> [Imports("built-in"), Imports("extra-built-in") | import*]
+		

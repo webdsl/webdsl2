@@ -36,7 +36,6 @@ rules // Custom type equality
 	nabl-property-eq(|type):
 		(t1, t2) -> <id>
 		where
-			<debug(!"custom eq: ")> (type, t1, t2);
 			<?NablProp_signature()> type;
 			<eq> (<strip-annos> t1, <strip-annos> t2)
 			
