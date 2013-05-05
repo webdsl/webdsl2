@@ -5,24 +5,25 @@ module extra-built-in
 	entity Entity {}
 	
 	type Void {}
+	type Bool {}
+	type Int {}
+	type Long {}
+	type Float {}
+	type Double {}
+	type List {}
+	type Set {}
+	type Object {}
 
   function cancel() {}
-  function rollback() {}
+  function rollback() {} 
   function flush() {}
   
-  type Int { }
-  type Long { }
-  type Float { }
   type UUID { }
   type Date { }
   type Time { }
   
   type ATerm { }
-  type Object { }
-  type Bool { }
   
-  type List { }
-  type Set { }
   type Secret { }
   
-  
+  template elements() {} // TODO: only defined in templates.
