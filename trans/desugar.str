@@ -15,21 +15,26 @@ strategies
   ImportApplication :
   	m@ModuleDefs(name, import*, section*) -> <origin-track-forced(!ModuleDefs(name, import'*, section*))> m
   	with
-  		import'* := <add-module-imports> import*
+  		import'* := <add-module-imports(|name)> import*
 
-	add-module-imports:
-		import* -> [Imports("_application"), Imports("built-in"), Imports("extra-built-in") | import*]
+	add-module-imports(|name):
+		import* -> <remove-all(?name)> [Imports("_application"), Imports("built-in"), Imports("extra-built-in") | import*]
   	
   	
   ApplicationName :
   	a@ApplicationDefs(name, import*, section*) -> <origin-track-forced(!ApplicationDefs(name', import'*, section*))> a
   	with
   		name'    := <normalize-application-name> name;
-  		import'* := <add-application-imports> import*
+  		import'* := <add-application-imports(|name)> import*
+  		
+  ApplicationName :
+  	a@Application(name, section*) -> <origin-track-forced(!Application(name', section*))> a
+  	with
+  		name' := <normalize-application-name> name
 
 	normalize-application-name:
 		name -> "_application"
 		
-	add-application-imports:
-		import* -> [Imports("built-in"), Imports("extra-built-in") | import*]
+	add-application-imports(|name):
+		import* -> <remove-all(?name)> [Imports("built-in"), Imports("extra-built-in") | import*]
 		
