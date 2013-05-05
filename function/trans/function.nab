@@ -91,6 +91,8 @@ binding rules // expressions
 		refers to Enum s
 			otherwise
 		refers to Type s 
+		  otherwise
+		refers to NativeClass s
 	
 	RefSort(s):
 		refers to Entity s
@@ -167,7 +169,7 @@ binding rules // type declarations
 
 	TypeDef(name, _):
 		scopes Function
-		defines Type name
+		defines non-unique Type name
 	
 	NativeClassFunction(knd, name, args-ty, r-ty):
 		defines Function name
@@ -183,6 +185,12 @@ binding rules // type declarations
 	
 binding rules // native classes
 
+	NativeClass(qname-class, NativeClassAlias(name), None(), _):
+		scopes NativeProperty, Function
+		defines NativeClass name
+			of parent None()
+			of aliasing qname-class
+			
 	NativeClass(qname-class, NativeClassAlias(name), NativeClassSuper(par), _):
 		imports NativeProperty, Function from NativeClass par
 		scopes NativeProperty, Function
