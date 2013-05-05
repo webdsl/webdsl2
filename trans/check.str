@@ -46,9 +46,3 @@ rules // Name binding
         <gt> (<length> paramTypes*, 1)
       end
       
-  constraint-error:
-    node -> (node, $[Ambiguous, could be from [<map(nabl-print-uri); separate-by(|", "); concat-strings> ambiguity'*]])
-    where
-      ambiguity*  := <nabl-get-ambiguities> node;
-      ambiguity'* := <filter(where(nabl-uri-namespace; ?NablNsApplication() <+ ?NablNsModule()))> ambiguity*;
-      <gt> (<length> ambiguity'*, 1)

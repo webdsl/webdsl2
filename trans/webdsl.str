@@ -23,12 +23,12 @@ rules // Analysis
   
 	// Main entry point for analyzes, called when a single file is opened in the editor.
   editor-analyze:
-    (ast, path, project-path) -> (ast', [error*, <map(pp-type-message)> analyze-error*], [warning*, <map(pp-type-message)> analyze-warning*], [note*, <map(pp-type-message)> analyze-note*])
+    (ast, path, project-path) -> (ast', error*, warning*, note*)
     with
       editor-init;
       <debug(!"Analyzing file: ")> path;
       (ast', error-task*, _, (analyze-error*, analyze-warning*, analyze-note*)) := <desugar-all; analyze-one(|<language>, path, project-path)> ast;
-      (error*, warning*, note*) := <editor-analyze-markers> ast'
+      (error*, warning*, note*) := <editor-analyze-markers(|analyze-error*, analyze-warning*, analyze-note*)> ast'
       // TODO: Update markers for partitions that have had a task executed.
 
   /*editor-analyze:
@@ -65,21 +65,22 @@ rules // Analysis
   		index-setup(|<language>, [project-path], $[[project-path]/[path]]);
   		index-commit
 
-  editor-analyze-markers:
-    ast -> (errors, warnings, notes)
+  editor-analyze-markers(|analyze-error*, analyze-warning*, analyze-note*):
+    ast -> ([<map(pp-type-message)> analyze-error*, error*], [<map(pp-type-message)> analyze-warning*, warning*], 
+    	[<map(pp-type-message)> analyze-note*, note*])
     with
-      errors   := <collect-all(constraint-error, conc)> ast;
-      warnings := <collect-all(constraint-warning, conc)> ast;
-      notes    := <collect-all(constraint-note, conc)> ast
+      error*   := <collect-all(constraint-error, conc)> ast;
+      warning* := <collect-all(constraint-warning, conc)> ast;
+      note*    := <collect-all(constraint-note, conc)> ast
 
   editor-update-markers:
-    Result(partition, initial-ast, analyzed-ast, changed-read*, _, _, _) -> 
-    Result(partition, initial-ast, analyzed-ast, changed-read*, errors, warnings, notes)
+    Result(partition, initial-ast, analyzed-ast, changed-read*, error*, warning*, note*) -> 
+    Result(partition, initial-ast, analyzed-ast, changed-read*, error'*, warnings'*, notes'*)
     where
       not(() := initial-ast)
     with
-      (errors, warnings, notes) := <editor-analyze-markers> analyzed-ast;
-      <set-markers(|initial-ast)> (analyzed-ast, errors, warnings, notes)
+      (error'*, warnings'*, notes'*) := <editor-analyze-markers(|error*, warning*, note*)> analyzed-ast;
+      <set-markers(|initial-ast)> (analyzed-ast, error'*, warnings'*, notes'*)
 
   sunshine-parse-file = prim("SSL_EXT_parse_file")
   

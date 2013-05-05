@@ -27,3 +27,10 @@ lib-refactoring/*.generated.str
 /syntax/WebDSL.generated.pp
 *.aterm
 /include
+datavalidation/trans/datavalidation.str
+lib/guava.jar
+lib/task.jar
+prefetch/trans/prefetch.str
+recommend/trans/recommend.str
+search/trans/search.str
+service/trans/service.str
