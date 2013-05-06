@@ -94,13 +94,15 @@ binding rules // expressions
 		  otherwise
 		refers to NativeClass s
 	
-	RefSort(s):
+	// Not needed, RefSort contains a SimpleSort.
+	/*RefSort(s):
 		refers to Entity s
 			otherwise
 		refers to Enum s
 			otherwise
 		refers to Type s
-
+	*/
+	
 	GenericSort(name, _):
 		refers to Type name
 	
@@ -158,12 +160,12 @@ binding rules // expressions
 	ForExp(sexpr, name, ty, expr, filter):
 		defines Variable name of type ty in sexpr, expr, filter
 
-	FieldAccess(par, member):
-		refers to Property member in Entity parent-ty
-			where par has type parent-ty
+	FieldAccess(e, member):
+		refers to Property member in Entity e-ty
+			where e has type SimpleSort(e-ty)
 			otherwise
-		refers to NativeProperty member in NativeClass parent-ty
-			where par has type parent-ty
+		refers to NativeProperty member in NativeClass e-ty
+			where e has type SimpleSort(e-ty)
 
 binding rules // type declarations
 
