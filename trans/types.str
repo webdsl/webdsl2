@@ -16,11 +16,15 @@ rules
 	
 	print-type = pp-webdsl-string
 
+	// Gets the type task of the given term, or fails if the term has no type.
+	get-type-task:
+		t{anno*} -> <collect-one(?Type(<id>))> anno*
+
 	// Gets the type of the given term, or fails if the term has no type.
 	type-of:
-		t{anno*} -> type
+		t -> type
 		where
-			result := <collect-one(?Type(<id>))> anno*;
+			result := <get-type-task> t;
 			type   := <task-get-result; Hd> result
 
 	type-task(|partition):

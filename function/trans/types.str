@@ -2,6 +2,7 @@ module function/trans/types
 
 imports 
   include/WebDSL
+  trans/types
   function/trans/signatures
   lib/nbl/-
   lib/task/-
@@ -44,8 +45,8 @@ rules // checking
   create-check-task(|current, partition) : 
   	expected -> <new-task(|partition)> PropCheck(current, expected)
     
-  check-is-bool(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Bool")])
-  check-is-int(|partition) : e -> <type-check(|partition, e)> (<type-of-task(|partition)> e, [SimpleSort("Int")])
+  check-is-bool(|partition) : e -> <type-check(|partition, e)> (<get-type-task> e, [SimpleSort("Bool")])
+  check-is-int(|partition) : e -> <type-check(|partition, e)> (<get-type-task> e, [SimpleSort("Int")])
   
   resolve-type(|partition) :
   	x -> <new-task(|partition)> PropLookup(Type(), x)  
@@ -81,7 +82,7 @@ rules // statements
 
   type-of-task(|partition):
     ForStmt(x, t, e, _, _) -> <id>
-    where <type-check(|partition, e)> (<type-of-task(|partition)> e, [<set-of> t, <list-of> t])
+    where <type-check(|partition, e)> (<get-type-task> e, [<set-of> t, <list-of> t])
   
   type-of-task(|partition):  
     ForCountStmt(_, e1, e2, _) -> <id>
@@ -97,7 +98,10 @@ rules // expressions
   	Call(_, x, _) -> <resolve-type(|partition)> x
 
   type-of-task(|partition): 
-  	ThisCall(x, _) -> <resolve-type(|partition)> x	 
+  	ThisCall(x, _) -> <resolve-type(|partition)> x
+  	
+  type-of-task(|partition): 
+  	FieldAccess(_, x) -> <resolve-type(|partition)> x	 
 	 
   type-of-task(|partition): 
   	Not(e) -> <create-type(|partition)> SimpleSort("Bool")
@@ -106,31 +110,31 @@ rules // expressions
   type-of-task(|partition):
     t@IfExp(e, e1, e2) -> e1t
     where <check-is-bool(|partition)> e
-    where e1t := <type-of-task(|partition)> e1
-        ; e2t := <type-of-task(|partition)> e2
+    where e1t := <get-type-task> e1
+        ; e2t := <get-type-task> e2
         ; <type-check(|partition, t)> (e2t, [e1t]) // or subtype of e1t
           
   type-of-task(|partition):
   	t@ForExp(e, _, srt, ecol, _) -> <create-type(|partition)> <list-of> et
-    where ecolt := <type-of-task(|partition)> ecol
+    where ecolt := <get-type-task> ecol
         ; <type-check(|partition, t)> (ecolt, [<set-of> srt, <list-of> srt])
-    where et := <type-of-task(|partition)> e
+    where et := <get-type-task> e
   
   type-of-task(|partition):
   	t@AndForExp(e) -> <create-type(|partition)> SimpleSort("Bool")
-    where et := <type-of-task(|partition)> e
+    where et := <get-type-task> e
         ; <type-check(|partition, t)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
           
   type-of-task(|partition):
   	t@OrForExp(e) -> <create-type(|partition)> SimpleSort("Bool")
-    where et := <type-of-task(|partition)> e
+    where et := <get-type-task> e
         ; <type-check(|partition, t)> (et, [<set-of> SimpleSort("Bool"), <list-of> SimpleSort("Bool")])
           
   type-of-task(|partition):
   	t@CollectionIndex(e_col,e_index) -> <create-type(|partition)> type
-    where e_colt := <type-of-task(|partition)> e_col
+    where e_colt := <get-type-task> e_col
     	; <type-check(|partition, t)> (e_colt, [GenericSort("List", SimpleSort("TODO should match any type"))])
-    where e_indext := <type-of-task(|partition)> e_index
+    where e_indext := <get-type-task> e_index
     where <check-is-int(|partition)> e_indext
     where GenericSort(_,[type]) := e_colt
     
@@ -139,11 +143,11 @@ rules // expressions
     
   type-of-task(|partition):
   	ListCreation([e|_]) -> <create-type(|partition)> type
-  	where type := <type-of-task(|partition)> e 
+  	where type := <get-type-task> e 
           
   type-of-task(|partition):
   	SetCreation([e|_]) -> <create-type(|partition)> type
-  	where type := <type-of-task(|partition)> e 
+  	where type := <get-type-task> e 
           
 rules // for loop filter  
 	
