@@ -81,6 +81,12 @@ binding rules // function calls
 				in Entity t
 			where e has type SimpleSort(t)
 			where args has type args-ty
+		 otherwise
+	 		refers to best Function name 
+				of conformant signature args-ty 
+				in NativeClass t
+			where e has type SimpleSort(t)
+			where args has type args-ty
 			
 binding rules // expressions
 	
@@ -175,13 +181,15 @@ binding rules // type declarations
 	
 	NativeClassFunction(knd, name, args-ty, r-ty):
 		defines Function name
-			of type FunctionSort(args-ty, r-ty)
+			of signature args-ty
+			of type r-ty
 			of kind knd
 			of aliasing None()
 	
 	NativeClassFunctionFromStatic(qname-fun, NativeClassFunction(knd, name, args-ty, r-ty)):
 		defines Function name
-			of type FunctionSort(args-ty, r-ty)
+			of signature args-ty
+			of type r-ty
 			of kind knd
 			of aliasing qname-fun
 	
