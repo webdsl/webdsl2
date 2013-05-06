@@ -133,6 +133,17 @@ rules // expressions
     where e_indext := <type-of-task(|partition)> e_index
     where <check-is-int(|partition)> e_indext
     where GenericSort(_,[type]) := e_colt
+    
+  type-of-task(|partition):
+  	ObjectCreation(type, _) -> <create-type(|partition)> type 
+    
+  type-of-task(|partition):
+  	ListCreation([e|_]) -> <create-type(|partition)> type
+  	where type := <type-of-task(|partition)> e 
+          
+  type-of-task(|partition):
+  	SetCreation([e|_]) -> <create-type(|partition)> type
+  	where type := <type-of-task(|partition)> e 
           
 rules // for loop filter  
 	

@@ -9,7 +9,10 @@ entity Ent1 {
   	true;
   	false;
   	1.0;
-    !"123"; 
+    !"123";
+    Ent1{};
+    [Ent1{}];
+    {Ent1{}};
     if(56){
     	
     }      
