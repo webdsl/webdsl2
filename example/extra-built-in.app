@@ -1,8 +1,6 @@
 module extra-built-in
 
 	// built-ins that are not yet in WebDSL's built-in.app, instead they are defined in the compiler itself
-
-	entity Entity {}
 	
 	type Void {}
 	type Bool {}
@@ -12,18 +10,40 @@ module extra-built-in
 	type Double {}
 	type List {}
 	type Set {}
-	type Object {}
 
-  function cancel() {}
-  function rollback() {} 
-  function flush() {}
+	entity Entity {}
+	type Object {}
+	type UUID { }
+	
+	type Date { }
+	type Time { }
+	type DateTime { }
   
-  type UUID { }
-  type Date { }
-  type Time { }
+    type String { }
+	type Secret { }
+	type Text { }
+	type WikiText { }
+	type Email { }
+	type URL { }
+	type Patch { }
+	
+	type ATerm { }
   
-  type ATerm { }
+	function cancel() {}
+	function rollback() {} 
+	function flush() {}
   
-  type Secret { }
-  
-  template elements() {} // TODO: only defined in templates.
+	template elements() {} // TODO: only defined in templates.
+
+	// built-ins for session variable management
+	entity SessionManager{
+		messages : [SessionMessage]
+		lastUse : DateTime
+		logsqlMessage : Text (default=null)
+		stayLoggedIn : Bool  	
+	}
+	entity SessionMessage{ 
+		text :: Text 
+	}
+	function getSessionManager() : SessionManager { }
+	
