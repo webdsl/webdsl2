@@ -71,13 +71,13 @@ binding rules // function declarations
 binding rules // function calls
 
   ThisCall(name, args):
-		refers to Function name
-				of signature args-ty
+		refers to best Function name
+				of conformant signature args-ty
 			where args has type args-ty
 	
 	Call(e, name, args):
-		refers to Function name 
-				of signature args-ty 
+		refers to best Function name 
+				of conformant signature args-ty 
 				in Entity t
 			where e has type SimpleSort(t)
 			where args has type args-ty

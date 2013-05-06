@@ -37,8 +37,9 @@ rules // Name binding
   constraint-error:
     node{anno*} -> (node, "Duplicate definition.")
     where
-      duplicate*    := <nabl-get-duplicate-definitions> node;
-      if NablNsFunction() := <Hd; nabl-uri; nabl-uri-namespace> duplicate* then
+      duplicate* := <nabl-get-duplicate-definitions> node;
+      ns         := <Hd; nabl-uri; nabl-uri-namespace> duplicate*;
+      if <?NablNsFunction() <+ ?NablNsPage() <+ ?NablNsTemplate()> ns then
         // For functions, only cause a duplicate definition error if there are multiple functions with the same parameter types.
         definition  := <collect-one(?Def(_))> anno*;
         paramTypes  := <nabl-get-property(|NablProp_signature()); insert-results> definition;

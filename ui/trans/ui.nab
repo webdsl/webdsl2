@@ -11,47 +11,64 @@ namespaces
 	Page
 	Template
 	TemplateFunction
+	
+properties
+	signature of Page     : List(Type)
+	signature of Template : List(Type)
 
 binding rules
 
 	DefinePage(mods, name, fargs, targs, _):
 		scopes Variable, TemplateFunction
 		defines Page name
-			   of type PageSort(fargtypes)
-		where fargs has type fargtypes
+				of signature fargs-ty
+			where fargs has type fargs-ty
 
 	DefineTemplate(mods, name, fargs, targs, _):
 		scopes Variable, TemplateFunction
 		defines Template name
-			   of type TemplateSort(fargtypes)
-		  where fargs has type fargtypes
+				of signature fargs-ty
+		  where fargs has type fargs-ty
 
 	PageCall(name, args):
 		refers to Page name
+				of conformant signature args-ty
+			where args has type args-ty
 
 	TemplateCall(name, args, attrs, body):
-		refers to best Template name of conformant type TemplateSort(argtypes)
-		where args has type argtypes
+		refers to best Template name 
+				of conformant signature args-ty
+			where args has type args-ty
 
 	Action(_, name, fargs, block):
 		defines TemplateFunction name
-			of type FunctionSort(fargtypes, SimpleSort("Void"))
-		  where fargs has type fargtypes
+				of signature fargs-ty
+				of type SimpleSort("Void")
+		  where fargs has type fargs-ty
 		scopes Variable
 
 	ActionCall(name, args):
-		refers to TemplateFunction name of type FunctionSort(argtypes, SimpleSort("Void"))
-		where args has type argtypes
+		refers to TemplateFunction name 
+				of conformant signature args-ty
+			where args has type args-ty
 
 	ForAll(name, type, _, block, _):
-		defines Variable name of type type in block
+		defines Variable name 
+			of type type 
+			in block
 
 	For(name, type, _, _, block, _):
-		defines Variable name of type type in block
+		defines Variable name 
+			of type type 
+			in block
 
 	ForCount(name, _, _, block, _):
-		defines Variable name of type SimpleSort("Int") in block
+		defines Variable name 
+			of type SimpleSort("Int") 
+			in block
 
 	ForInferred(name, expr, _, block, _):
-		defines Variable name of type type in block
-		where expr has type type
+		defines Variable name 
+				of type type 
+				in block
+			where expr has type type
