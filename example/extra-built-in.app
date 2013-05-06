@@ -13,27 +13,40 @@ module extra-built-in
 
 	entity Entity {}
 	type Object {}
-	type UUID { }
+	type UUID {}
 	
-	type Date { }
-	type Time { }
-	type DateTime { }
+	type Date {}
+	type Time {}
+	type DateTime {}
+	
+	function now() : DateTime {}
+	function today() : Date {}
   
-    type String { }
-	type Secret { }
-	type Text { }
-	type WikiText { }
-	type Email { }
-	type URL { }
-	type Patch { }
+    type String {}
+	type Secret {}
+	type Text {}
+	type WikiText {}
+	type Email {}
+	type URL {}
+	type Patch {}
 	
-	type ATerm { }
+	type ATerm {}
   
 	function cancel() {}
 	function rollback() {} 
 	function flush() {}
+	function getValidationErrorsByName(s:String) {}
+	function getRequestParameter(s:String) {}
+	function attribute(s:String) {}
   
 	template elements() {} // TODO: only defined in templates.
+	template rawoutput() {}
+	template rawoutput(s:String) {}
+	template block() {}
+	template text(s:String) {}
+	template title() {}
+	template includeJS(s:String) {}
+	template includeCSS(s:String) {}
 
 	// built-ins for session variable management
 	entity SessionManager{
