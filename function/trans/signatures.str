@@ -7,3 +7,6 @@ signature
 		
 		String : Term -> Term
 
+		BinOp : String * Exp * Exp -> Exp
+
+		BinOpTypeTask : String * Exp * Exp -> Exp

@@ -1,0 +1,10 @@
+module function/trans/types-util
+
+imports
+  include/WebDSL
+
+rules
+
+  is-numeric-type = where(SimpleSort(?"Int" <+ ?"Float" <+ ?"Long"))  
+  is-string-type = where(SimpleSort(?"String" <+ ?"Email" <+ ?"Secret" <+ ?"Text" <+ ?"WikiText" <+ ?"URL" <+ ?"Patch"))  
+  is-date-type = where(SimpleSort(?"Date" <+ ?"Time" <+ ?"DateTime"))

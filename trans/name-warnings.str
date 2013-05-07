@@ -606,4 +606,7 @@ rules
 			constraint-warning:
 			  e@EventCall(_, _) -> (e, "type-of missing")
 				where <not(type-of)> e
-			
+
+			constraint-warning:
+			  e@BinOp(_, _, _) -> (e, "type-of missing")
+				where <not(type-of)> e			

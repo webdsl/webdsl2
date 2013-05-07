@@ -178,6 +178,7 @@ binding rules // type declarations
 	TypeDef(name, _):
 		scopes Function
 		defines non-unique Type name
+			of parent "Object"
 	
 	NativeClassFunction(knd, name, args-ty, r-ty):
 		defines Function name

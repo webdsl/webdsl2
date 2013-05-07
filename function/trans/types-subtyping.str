@@ -1,0 +1,39 @@
+module function/trans/types-subtyping
+
+imports
+  include/WebDSL
+  function/trans/types-util
+  lib/nbl/-
+  function/trans/function
+  lib/task/core
+
+rules
+
+  /**
+   *  <subtype> (t1,t2)
+   *  t1 is super or same type as t2
+   *  can also be equivalent type, such as String - Email, or Date - DateTime
+   *  a value of type t2 can be assigned to a variable of type t1
+   */
+
+  subtype = ?(t, t)
+  
+  subtype = (is-string-type, is-string-type)
+  
+  subtype = (is-date-type, is-date-type)
+
+  subtype =
+    ?(SimpleSort(supertype),SimpleSort(subtype))
+    ; where( <extends>(supertype, subtype) )
+
+  // nabl-collect-one-resolved-def is needed to normalize terms to their definitions for comparison, this comes from NaBL runtime
+  extends = (nabl-collect-one-resolved-def,nabl-collect-one-resolved-def); extends-helper(|[])
+  
+  extends-helper(|checked*) = 
+  	 eq
+  <+ ?(t1,t2)
+     ; not(<fetch(?t2)> checked*) //fail if looping
+     ; <extends-helper(|[t2|checked*])> (t1, <extends-check> t2)
+
+  extends-check = nabl-get-property(|NablProp_parent()); nabl-collect-one-resolved-def
+

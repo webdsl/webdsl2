@@ -1,0 +1,55 @@
+module function/trans/types-binop
+
+imports
+  include/WebDSL
+  function/trans/types-subtyping
+  function/trans/types-util
+
+rules
+
+  is-equal-numeric-type = 
+  	?(t,t)
+  ; <is-numeric-type> t
+
+  can-compare-equals = 
+  	?(t1,t2)
+  ; ( <?t1> t2
+      <+ <subtype> (t1,t2)
+      <+ <subtype> (t2,t1) )
+      
+rules
+
+  check-binop : ("Add",t1,t2) -> t1
+    where <is-equal-numeric-type> (t1,t2)
+       <+ <is-string-type> t1 //all types can be converted to strings implicitly
+ 
+  check-binop : ("Sub",t1,t2) -> t1
+    where <is-equal-numeric-type> (t1,t2)
+ 
+  check-binop : ("Mul",t1,t2) -> t1
+    where <is-equal-numeric-type> (t1,t2)
+  
+  check-binop : ("Div",t1,t2) -> t1
+    where <is-equal-numeric-type> (t1,t2)
+ 
+  check-binop : ("Mod",t1,t2) -> t1
+    where <is-equal-numeric-type> (t1,t2)
+ 
+  check-binop : ("Eq", t1, t2) -> SimpleSort("Bool")
+    where <can-compare-equals> (t1,t2)
+  
+  check-binop : ("NotEq", t1, t2) -> SimpleSort("Bool")
+    where <can-compare-equals> (t1,t2)
+  
+  check-binop : ("SmallerThan", t, t) -> SimpleSort("Bool")
+ 
+  check-binop : ("SmallerThanOrEqual", t, t) -> SimpleSort("Bool")
+ 
+  check-binop : ("LargerThan", t, t) -> SimpleSort("Bool")
+ 
+  check-binop : ("LargerThanOrEqual", t, t) -> SimpleSort("Bool")
+ 
+  check-binop : ("And", SimpleSort("Bool"), SimpleSort("Bool")) -> SimpleSort("Bool")
+ 
+  check-binop : ("Or", SimpleSort("Bool"), SimpleSort("Bool")) -> SimpleSort("Bool")
+  		     			

@@ -4,6 +4,8 @@ imports
   include/WebDSL
   trans/types
   function/trans/signatures
+  function/trans/types-binop
+  function/trans/types-subtyping
   lib/nbl/-
   lib/task/-
   lib/types/-
@@ -149,6 +151,21 @@ rules // expressions
   	SetCreation([e|_]) -> <create-type(|partition)> type
   	where type := <get-type-task> e 
           
+  type-of-task(|partition):
+  	SetCreation([e|_]) -> <create-type(|partition)> type
+  	where type := <get-type-task> e 
+          
+  type-of-task(|partition):
+  	Cast(_,type) -> <create-type(|partition)> type
+
+  type-of-task(|partition):
+  	BinOp(op,l,r) -> <new-task(|partition)> BinOpTypeTask(op,tl,tr)
+  	where tl := <get-type-task> l 
+        ; tr := <get-type-task> r
+        
+  perform-task(|n) :
+  	BinOpTypeTask(op,tl,tr) -> [<check-binop> (op,<Hd> tl,<Hd> tr)]
+
 rules // for loop filter  
 	
   type-of-task(|partition): Filter(we, _, _)           -> <check-is-bool(|partition)> we

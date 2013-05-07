@@ -23,4 +23,9 @@ rules
 	function-desugar:
 		Void() -> "Void"
 		
+	function-desugar:
+		c#([e1,e2]) -> BinOp(c,e1,e2)
+		where <elem> (c, ["Add", "Sub", "Mul", "Div", "Mod", "Eq", "NotEq", "SmallerThan", "SmallerThanOrEqual", "LargerThan", "LargerThanOrEqual", "And", "Or"])
+
+		
 	
