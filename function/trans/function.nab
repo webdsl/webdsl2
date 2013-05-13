@@ -81,8 +81,8 @@ binding rules // function calls
 				in Entity t
 			where e has type SimpleSort(t)
 			where args has type args-ty
-		 otherwise
-	 		refers to best Function name 
+		otherwise
+ 		refers to best Function name 
 				of conformant signature args-ty 
 				in NativeClass t
 			where e has type SimpleSort(t)
@@ -201,6 +201,7 @@ binding rules // native classes
 		defines NativeClass name
 			of parent None()
 			of aliasing qname-class
+			of type SimpleSort(name)
 			
 	NativeClass(qname-class, NativeClassAlias(name), NativeClassSuper(par), _):
 		imports NativeProperty, Function from NativeClass par

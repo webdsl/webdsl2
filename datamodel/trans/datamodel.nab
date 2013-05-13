@@ -29,6 +29,7 @@ binding rules
 		defines Entity name
 			of parent par
 			of kind knd
+			of type SimpleSort(name)
 		imports Property, imported Property, Function, imported Function from Entity par
 		scopes Property, Function, ExtendedFunction, Variable
 		//imports Property, Function, ExtendedFunction from ExtendedEntity name
@@ -56,6 +57,7 @@ binding rules
 	Enum(name, _):
 		scopes EnumValue
 		defines Enum name
+			of type SimpleSort(name)
 	
 	EnumValue(name, _):
 		defines EnumValue name
