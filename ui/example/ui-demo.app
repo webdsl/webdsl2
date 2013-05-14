@@ -14,7 +14,30 @@ module test
 		testcall[]{}
 		testcall(){}
 		testcall()[]{}
+		
+		testcall("")
+		testcall(12)
+		testcall(Ent1{})
+		testcall(Ent1{},Ent1{})
+		testcall(Ent1{},Ent2{})
+		testcall(Ent2{},Ent2{}) //error, ambiguous
+		testcall(Ent2{},Ent3{})
+		testcall(Ent3{},Ent2{})
 	}
+	
+	template testcall(){}
+	template testcall(s:String){}
+	template testcall(i:Int){}
+	template testcall(e:Ent1){}
+	template testcall(e:Ent2){}
+	template testcall(e:Ent3){}
+	template testcall(e1:Ent1,e2:Ent2){}
+	template testcall(e1:Ent3,e2:Ent2){}
+	template testcall(e1:Ent2,e2:Ent3){}
+
+    entity Ent3 {}
+    entity Ent2 : Ent3 {}
+    entity Ent1 : Ent2 {}
 
 	page navigate(){
 		navigate testnav() { "go" }
@@ -22,6 +45,7 @@ module test
 		navigate testnav() []{ "go" }
 		navigate (testnav())[] { "go" }
 	}
+	page testnav(){}
 
 	page action(s:String){
 		action foo(i:Int){

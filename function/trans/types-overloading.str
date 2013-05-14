@@ -1,0 +1,107 @@
+module function/trans/types-overloading
+
+imports
+  include/WebDSL
+  function/trans/types-subtyping
+  lib/nbl/-
+  
+rules
+	
+  /**
+   *  tcall* is call signature type list, tdef* is def signature type list 
+   *  subtype expects (supertype,subtype)
+   *  checking here whether elements of t2 are same type or supertype of elements in t1
+   */	
+  signature-conformance-check :
+  	(tcall*, tdef*) -> <debug(!"success")>//<id>
+  	where <eq> (<strip-annos> tcall*, <strip-annos> tdef*)
+       <+ <zip; map(subtype)> (tdef*,tcall*) 
+
+  signature-overload-resolve = 
+  	?(callsig, defsigs)
+  ; <find-most-specific-signature(|callsig)> defsigs 
+ 
+rules 
+
+  /**
+   *  overloading resolution
+   *  assumes options have the same name and arity, and there are no duplicates
+   *  t_target : list of types, the types of the call being resolved
+   *  a@[x|xs] : list of list of types, the options available
+   *  
+   */
+  find-most-specific-signature(|t_target): 
+    a@[x|xs] -> result
+    where arity := <length> t_target
+        ; t_target_norm := <signature-normalize-helper> t_target
+        ; distances := <map(find-most-specific-signature-helper(|t_target_norm))> a
+        ; {| MostSpecificFunction : 
+             <map(compare-distances-for-overloading)> distances
+           ; resultarglists := <bagof-MostSpecificFunction>
+          |}
+        ; if [elem] := resultarglists // only correct if one result 
+          then y{result} := elem // retrieve original signature from annotation
+          else result := None() end  
+       
+  find-most-specific-signature-helper(|t_target):    
+    t_check -> newlist{t_check} // put original signature in annotation
+    where newlist := <zip(count-number-of-extends-traversals)> (t_target, <signature-normalize-helper> t_check)
+ 
+  signature-normalize-helper = map(try(remove-sort-constructor); nabl-collect-one-resolved-def)
+
+  // Simplesort types extends-check is based on just the name
+  remove-sort-constructor : SimpleSort(s) -> s
+
+rules
+
+  /**
+   *  count-number-of-extends-traversals:
+   *  Receives a tuple of types, where the left value is the type in the call and the right value
+   *  is the type in the definition. If they don't match, then the left value is replaced by its
+   *  super type and a counter is increased until left and right match. When "Object" is reached on the left,
+   *  either the types did not match or the right also had "Object". The result is a number which 
+   *  indicates the distance between the call and definition types or -1 if they did not match at all.
+   */
+
+  count-number-of-extends-traversals =
+    count-number-of-extends-traversals(|0,[])
+
+  count-number-of-extends-traversals(|n,alreadychecked) :
+    (t,t) -> n
+    
+  // <extends-check> t_target only goes one class up in the hierarchy
+  count-number-of-extends-traversals(|n,alreadychecked) :
+    (t_target,t_check) -> 
+      <count-number-of-extends-traversals(|<inc>n,[t_target|alreadychecked])> (<extends-check> t_target,t_check)
+    where not(<fetch(?t_target)> alreadychecked) 
+        ; not(<?t_target> t_check)
+
+  count-number-of-extends-traversals(|n,alreadychecked) :
+    (t_target,t_check) -> -1 
+    where <fetch(?t_target)> alreadychecked // indicates circular subclass problem
+      
+rules
+  
+  compare-distances-for-overloading:
+    x -> x
+    where if not(MostSpecificFunction)
+          then rules (MostSpecificFunction :+= x)
+          else 
+            if <map(is-more-specific-function(|x))> <bagof-MostSpecificFunction>
+            then repeat(once-MostSpecificFunction);rules (MostSpecificFunction :+= x)
+            else 
+              if not(<map(is-less-specific-function(|x))> <bagof-MostSpecificFunction>)
+              then rules (MostSpecificFunction :+= x)
+              end
+            end
+          end
+          
+  is-more-specific-function(|new)=
+    ?current
+  ; !(new,current)
+  ; zip(leq)
+  
+  is-less-specific-function(|new)=
+    ?current
+  ; !(new,current)
+  ; zip(geq)

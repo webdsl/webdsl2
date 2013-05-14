@@ -6,6 +6,7 @@ imports
   function/trans/signatures
   function/trans/types-binop
   function/trans/types-subtyping
+  function/trans/types-overloading
   lib/nbl/-
   lib/task/-
   lib/types/-

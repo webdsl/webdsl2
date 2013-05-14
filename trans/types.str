@@ -4,7 +4,10 @@ imports
 	
 	lib/editor-common.generated
 	lib/task/core
+	function/trans/function
 	function/trans/types
+	function/trans/types-overloading
+	lib/nbl/-
 
 signature
 
@@ -39,10 +42,15 @@ rules // Custom type equality
 	
 	nabl-property-eq(|type):
 		(t1, t2) -> <id>
-		where
-			<?NablProp_signature()> type;
-			<eq> (<strip-annos> t1, <strip-annos> t2)
-			
-	nabl-disambiguate(|ns):
-		list -> list
-		
+		where <?NablProp_signature()> type
+		where signature-conformance-check 
+	    	
+	nabl-disambiguate(|prop*, namespace, name) : 
+		[list] -> result
+		where <fetch(?Prop(NablProp_signature(),callsig,_))> prop* 
+			; defsigs := <map(nabl-get-property(|NablProp_signature()));insert-results> list
+			; sigresult := <signature-overload-resolve> (callsig, defsigs)
+			; if <?None()> sigresult
+			  then result := [] // for now, indicate ambiguity with generic unresolved error
+			  else index := <get-index> (sigresult, defsigs)
+			     ; result := [<index(|index)> list] end
