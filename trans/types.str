@@ -46,7 +46,7 @@ rules // Custom type equality
 		where signature-conformance-check 
 	    	
 	nabl-disambiguate(|prop*, namespace, name) : 
-		[list] -> result
+		list -> result
 		where <fetch(?Prop(NablProp_signature(),callsig,_))> prop* 
 			; defsigs := <map(nabl-get-property(|NablProp_signature()));insert-results> list
 			; sigresult := <signature-overload-resolve> (callsig, defsigs)
