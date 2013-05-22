@@ -13,7 +13,7 @@ rules
    *  checking here whether elements of t2 are same type or supertype of elements in t1
    */	
   signature-conformance-check :
-  	(tcall*, tdef*) -> <debug(!"success")>//<id>
+  	(tcall*, tdef*) -> <id>
   	where <eq> (<strip-annos> tcall*, <strip-annos> tdef*)
        <+ <zip; map(subtype)> (tdef*,tcall*) 
 

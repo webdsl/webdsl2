@@ -14,6 +14,7 @@ rules
   can-compare-equals = 
   	?(t1,t2)
   ; ( <?t1> t2
+      <+ <?t1 <+ ?t2> SimpleSort("Null")
       <+ <subtype> (t1,t2)
       <+ <subtype> (t2,t1) )
       

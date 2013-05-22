@@ -71,6 +71,7 @@ rules // literals
   type-of-task(|partition): Float(_)  -> <create-type(|partition)> SimpleSort("Float")
   type-of-task(|partition): True()    -> <create-type(|partition)> SimpleSort("Bool")
   type-of-task(|partition): False()   -> <create-type(|partition)> SimpleSort("Bool") 
+  type-of-task(|partition): Null()    -> <create-type(|partition)> SimpleSort("Null") 
 
 rules // definitions
 	
@@ -166,6 +167,12 @@ rules // expressions
         
   perform-task(|n) :
   	BinOpTypeTask(op,tl,tr) -> [<check-binop> (op,<Hd> tl,<Hd> tr)]
+  	
+  type-of-task(|partition):
+  	RenderTemplateFunctionCall(_) -> <create-type(|partition)> SimpleSort("String")
+
+  type-of-task(|partition):
+  	SendEmailFunctionCall(_) -> <create-type(|partition)> SimpleSort("Bool")
 
 rules // for loop filter  
 	
