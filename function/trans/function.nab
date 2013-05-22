@@ -70,7 +70,7 @@ binding rules // function declarations
 		
 binding rules // function calls
 
-  ThisCall(name, args):
+	ThisCall(name, args):
 		refers to best Function name
 				of conformant signature args-ty
 			where args has type args-ty
@@ -85,6 +85,12 @@ binding rules // function calls
  		refers to best Function name 
 				of conformant signature args-ty 
 				in NativeClass t
+			where e has type SimpleSort(t)
+			where args has type args-ty
+		otherwise
+ 		refers to best Function name 
+				of conformant signature args-ty 
+				in Type t
 			where e has type SimpleSort(t)
 			where args has type args-ty
 			
@@ -186,6 +192,11 @@ binding rules // type declarations
 			of type r-ty
 			of kind knd
 			of aliasing None()
+	/*
+	Rule for NativeClassFunctionFromStatic conflicts with rule above, 
+	name receives double Def annotation when both are defined.
+	Don't need a special rule for NativeClassFunctionFromStatic currently, 
+	because the qname-fun alias is only needed for code generation.
 	
 	NativeClassFunctionFromStatic(qname-fun, NativeClassFunction(knd, name, args-ty, r-ty)):
 		defines Function name
@@ -193,7 +204,7 @@ binding rules // type declarations
 			of type r-ty
 			of kind knd
 			of aliasing qname-fun
-	
+	*/
 binding rules // native classes
 
 	NativeClass(qname-class, NativeClassAlias(name), None(), _):
