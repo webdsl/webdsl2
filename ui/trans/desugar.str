@@ -35,3 +35,9 @@ rules
 
 	ui-desugar :
 		TemplateCallBody(name, body) -> TemplateCall(name, [], [], body)
+
+rules
+	
+	// work around issue in NaBL, vardecl definition is not visible when wrapped in RequestScopeTemplate constructor
+	ui-desugar :
+		RequestScopeTemplate(vardecl) -> vardecl

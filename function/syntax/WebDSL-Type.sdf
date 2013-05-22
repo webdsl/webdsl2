@@ -39,7 +39,10 @@ exports
     %%  Will also need to cope with input/output decode/encode.
     %%
 
-    "type" Id "{" TypeProperty* "}"								-> Definition			{"TypeDef"}
+    "type" Id TypeSuper "{" TypeProperty* "}" -> Definition {"TypeDef"}
+    
+    -> TypeSuper {"None"}
+    ":" Sort -> TypeSuper {bracket}
     
     Annotation																		-> TypeProperty		{"TypeDefAnno"}
     
@@ -49,5 +52,8 @@ exports
     %%solve ambiguities
     "static"																			-> TypeProperty		{reject}
     
-    
+  context-free syntax %% properties
+  
+	Id ":" Sort -> TypeProperty {"TypeProperty"}
+  
     

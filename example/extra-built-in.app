@@ -8,36 +8,43 @@ module extra-built-in
 	type Long {}
 	type Float {}
 	type Double {}
-	type List {}
-	type Set {}
+	type List {
+		length : Int
+	}
+	type Set {
+		length : Int
+	}
 
-	entity Entity {}
+	entity Entity {
+		function save(){}
+		function delete(){}
+	}
 	type Object {}
 	type UUID {}
 	
-	type Date {}
-	type Time {}
+	type Date : DateTime {}
+	type Time : DateTime {}
 	type DateTime {}
 	
 	function now() : DateTime {}
 	function today() : Date {}
   
     type String {}
-	type Secret {}
-	type Text {}
-	type WikiText {}
-	type Email {}
-	type URL {}
-	type Patch {}
+	type Secret : String {}
+	type Text : String {}
+	type WikiText : String {}
+	type Email : String {}
+	type URL : String {}
+	type Patch : String {}
 	
 	type ATerm {}
   
 	function cancel() {}
 	function rollback() {} 
 	function flush() {}
-	function getValidationErrorsByName(s:String) {}
-	function getRequestParameter(s:String) {}
-	function attribute(s:String) {}
+	function getValidationErrorsByName(s:String):[String] {}
+	function getRequestParameter(s:String):String {}
+	function attribute(s:String):String {}
   
 	template elements() {} // TODO: only defined in templates.
 	template rawoutput() {}
@@ -60,3 +67,10 @@ module extra-built-in
 	}
 	function getSessionManager() : SessionManager { }
 	
+	// built-ins for email templates
+	template to(s:String){}
+    template from(s:String){}
+    template subject(s:String){}
+    template cc(s:String){}
+    template bcc(s:String){}
+    template replyTo(s:String){}

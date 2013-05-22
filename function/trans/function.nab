@@ -13,6 +13,7 @@ namespaces
 	Type
 	NativeClass
 	NativeProperty
+	TypeProperty
 	
 properties
 	kind			of Function									: FunctionKind // Dynamic/Static/Global
@@ -178,13 +179,20 @@ binding rules // expressions
 			otherwise
 		refers to NativeProperty member in NativeClass e-ty
 			where e has type SimpleSort(e-ty)
+		refers to TypeProperty member in Type e-ty
+			where e has type SimpleSort(e-ty)
 
 binding rules // type declarations
 
-	TypeDef(name, _):
-		scopes Function
+	TypeDef(name, SimpleSort(super), _):
 		defines non-unique Type name
-			of parent "Object"
+		imports Function, TypeProperty from Type super
+		scopes Function, TypeProperty
+			//of parent "Object"
+			
+	TypeProperty(name, ty):
+		defines TypeProperty name
+			of type ty
 	
 	NativeClassFunction(knd, name, args-ty, r-ty):
 		defines Function name

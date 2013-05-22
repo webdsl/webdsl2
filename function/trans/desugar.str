@@ -27,5 +27,9 @@ rules
 		c#([e1,e2]) -> BinOp(c,e1,e2)
 		where <elem> (c, ["Add", "Sub", "Mul", "Div", "Mod", "Eq", "NotEq", "SmallerThan", "SmallerThanOrEqual", "LargerThan", "LargerThanOrEqual", "And", "Or"])
 
-		
+	// simplify for now, the inner type is used for typechecking/overloading resolve
+	function-desugar:
+		RefSort(type) -> type
 	
+	function-desugar:
+		TypeDef(name, None(), body) -> TypeDef(name, SimpleSort("Object"), body) 
