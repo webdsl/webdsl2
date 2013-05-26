@@ -11,6 +11,12 @@ strategies
 	
 	desugar-all = alltd(ImportApplication <+ ApplicationName); topdown(try(datamodel-desugar <+ ui-desugar <+ function-desugar))
 
+rules
+
+  ImportApplication :
+  	m@Module(name, section*) -> <origin-track-forced(!ModuleDefs(name, import'*, section*))> m
+  	with
+  		import'* := <add-module-imports(|name)> []
 
   ImportApplication :
   	m@ModuleDefs(name, import*, section*) -> <origin-track-forced(!ModuleDefs(name, import'*, section*))> m
@@ -18,7 +24,7 @@ strategies
   		import'* := <add-module-imports(|name)> import*
 
 	add-module-imports(|name):
-		import* -> <remove-all(?name)> [Imports("_application"), Imports("built-in"), Imports("extra-built-in") | import*]
+		import* -> <remove-all(?Imports(name))> [Imports("_application"), Imports("built-in"), Imports("extra-built-in") | import*]
   	
   	
   ApplicationName :
@@ -28,13 +34,14 @@ strategies
   		import'* := <add-application-imports(|name)> import*
   		
   ApplicationName :
-  	a@Application(name, section*) -> <origin-track-forced(!Application(name', section*))> a
+  	a@Application(name, section*) -> <origin-track-forced(!ApplicationDefs(name', import'*, section*))> a
   	with
-  		name' := <normalize-application-name> name
+  		name'    := <normalize-application-name> name;
+  		import'* := <add-application-imports(|name)> []
 
 	normalize-application-name:
 		name -> "_application"
 		
 	add-application-imports(|name):
-		import* -> <remove-all(?name)> [Imports("built-in"), Imports("extra-built-in") | import*]
+		import* -> <remove-all(?Imports(name))> [Imports("built-in"), Imports("extra-built-in") | import*]
 		
