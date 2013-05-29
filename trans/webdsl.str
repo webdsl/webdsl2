@@ -114,7 +114,7 @@ rules // Editor services
     	task-setup(|project-path);
     	index-setup(|<language>, [project-path], $[[project-path]/[path]]);
     	<nabl-has-reference> node;
-    	definition := <nabl-collect-one-resolved-def; nabl-get-all-definitions; Hd> node
+    	definition := <nabl-collect-one-resolved-def; index-get-all; Hd> node
 
   editor-hover:
     (target, position, ast, path, project-path) -> $[Type: [<print-type> type]]
