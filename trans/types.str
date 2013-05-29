@@ -43,7 +43,12 @@ rules // Custom type equality
 	nabl-property-eq(|type):
 		(t1, t2) -> <id>
 		where <?NablProp_signature()> type
-		where signature-conformance-check 
+		where signature-conformance-check
+		
+	nabl-property-eq(|type):
+		(t1, t2) -> <id>
+		where <?Type()> type
+		where <?t1> t2
 	    	
 	nabl-disambiguate(|prop*, namespace, name) : 
 		list -> result
