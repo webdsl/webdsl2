@@ -521,7 +521,6 @@ native class java.lang.Double as Double {
     sendKeys(String)
     submit()
     clear()
-    getAttribute(String):String
     isEnabled():Bool
     isSelected():Bool
     findElements(SelectBy):List<WebElement>

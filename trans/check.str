@@ -46,11 +46,17 @@ rules // Name binding
     where
       duplicate* := <nabl-get-duplicate-definitions> node;
       ns         := <Hd; nabl-uri; nabl-uri-namespace> duplicate*;
-      if <?NablNsFunction() <+ ?NablNsPage() <+ ?NablNsTemplate()> ns then
+      if <has-signature-property> ns then
         // For functions, only cause a duplicate definition error if there are multiple functions with the same parameter types.
         definition  := <collect-one(?Def(_))> anno*;
-        paramTypes  := <nabl-get-property(|NablProp_signature()); insert-results> definition;
-        paramTypes* := <map(nabl-get-property(|NablProp_signature())); insert-results; collect-all(?paramTypes, conc)> duplicate*;
+        paramTypes  := <get-signature; insert-results> definition;
+        paramTypes* := <map(get-signature); insert-results; collect-all(?paramTypes, conc)> duplicate*;
         <gt> (<length> paramTypes*, 1)
       end
       
+  get-signature = nabl-get-property(|NablProp_signature())
+  has-signature-property = ?NablNsFunction()
+  has-signature-property = ?NablNsPage()
+  has-signature-property = ?NablNsTemplate()
+  has-signature-property = ?ExtendedFunction()
+  

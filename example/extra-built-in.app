@@ -10,6 +10,8 @@ module extra-built-in
 	type Double {}
 	type List {
 		length : Int
+		set() : Set
+		removeAt(Int)
 	}
 	type Set {
 		length : Int
