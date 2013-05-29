@@ -3,11 +3,13 @@ module trans/desugar
 imports
 	include/WebDSL
 	lib/editor-common.generated
+	datamodel/trans/signatures
+	check
 	
 rules
 
 	datamodel-desugar:
-		|[ entity x { ebd* } ]| -> |[ entity x : Entity { ebd* } ]|
+		|[ entity x { ebd* } ]| -> <!|[ entity x : Entity { ebd* } ]|; datamodel-desugar>
 	
 	datamodel-desugar:
 		|[ session x { ebd* } ]| -> |[ session x : Session { ebd* } ]|
@@ -18,3 +20,8 @@ rules
 	datamodel-desugar:
 		|[ x0 k0 srt0 := e0]| -> |[ x0 k0 srt0 () := e0]|		
 		
+	datamodel-desugar:
+		Entity(knd, name, par, body) -> Entity(knd, name, name{NoUnresolvedError()}, par, body) 
+		
+	datamodel-desugar:
+		ExtendEntity(knd, SimpleSort(name), body) -> ExtendEntity(knd, name, name, body)

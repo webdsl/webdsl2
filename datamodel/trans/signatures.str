@@ -4,4 +4,7 @@ signature
 	constructors
 		String: String -> String
 		EnumValue: String * String -> String
+		
+		Entity : T * T * T * T * T -> Entity
+		ExtendEntity : T * T * T * T -> ExtendEntity
 

@@ -25,19 +25,19 @@ properties
 	
 binding rules
 	
-	Entity(knd, name, SimpleSort(par), _):
+	Entity(knd, name, fakename, SimpleSort(par), _):
 		defines Entity name
 			of parent par
 			of kind knd
 			of type SimpleSort(name)
 		imports Property, imported Property, Function, imported Function from Entity par
 		scopes Property, Function, ExtendedFunction, Variable
-		//imports Property, Function, ExtendedFunction from ExtendedEntity name
+		imports Property, Function, ExtendedFunction from ExtendedEntity fakename
 		//implicitly defines Variable "this" of type SimpleSort(name)
 		
-	ExtendEntity(knd, name, _):
+	ExtendEntity(knd, name, fakename, _):
+		defines non-unique ExtendedEntity fakename of kind knd
 		scopes Property, Function, ExtendedFunction, Variable
-		defines non-unique ExtendedEntity name of kind knd
 		imports Property, Function, ExtendedFunction from Entity name of kind knd
 
 	Property(name, knd, ty, annos):

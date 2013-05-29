@@ -16,6 +16,12 @@ imports
   
 	//name-warnings
 
+signature
+
+	constructors
+		
+		NoUnresolvedError : NoUnresolvedError
+
 rules // Extensions for error/warning/note reporting
   
   constraint-error:
@@ -32,6 +38,7 @@ rules // Name binding
   constraint-error:
     node -> (node, "Unresolved reference.")
     where
+    	where(has-annos; get-annos; not(collect-one(?NoUnresolvedError())));
       nabl-is-unresolved
       
   constraint-error:
