@@ -94,7 +94,26 @@ binding rules // function calls
 				in Type t
 			where e has type SimpleSort(t)
 			where args has type args-ty
-			
+		otherwise
+		// Temporary workaround for GenericSort types.
+		refers to best Function name 
+				of conformant signature args-ty 
+				in Entity t
+			where e has type GenericSort(t, _)
+			where args has type args-ty
+		otherwise
+ 		refers to best Function name 
+				of conformant signature args-ty 
+				in NativeClass t
+			where e has type GenericSort(t, _)
+			where args has type args-ty
+		otherwise
+ 		refers to best Function name 
+				of conformant signature args-ty 
+				in Type t
+			where e has type GenericSort(t, _)
+			where args has type args-ty
+						
 binding rules // expressions
 	
 	// sort reference (simple, generic, ref)
