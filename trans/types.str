@@ -49,6 +49,9 @@ rules // Custom type equality
 		(t1, t2) -> <id>
 		where <?Type()> type
 		where <?t1> t2
+	    
+  type-prop-eq:
+  	(t1, t2) -> <?t1> t2
 	    	
 	nabl-disambiguate(|prop*, namespace, name) : 
 		list -> result
