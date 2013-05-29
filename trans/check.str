@@ -56,7 +56,7 @@ rules // Name binding
       
   get-signature = nabl-get-property(|NablProp_signature())
   has-signature-property = ?NablNsFunction()
+  has-signature-property = ?NablNsExtendedFunction()
   has-signature-property = ?NablNsPage()
   has-signature-property = ?NablNsTemplate()
-  has-signature-property = ?ExtendedFunction()
   
