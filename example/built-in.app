@@ -702,7 +702,6 @@ native class java.lang.Double as Double {
     </td>
   }
 
-  /*
   define ignore-access-control list(){
     <ul all attributes>
       elements()
@@ -714,7 +713,6 @@ native class java.lang.Double as Double {
       elements()
     </li>
   }
-  */
 
   define ignore-access-control par(){
     <p all attributes>

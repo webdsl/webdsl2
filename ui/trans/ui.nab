@@ -23,6 +23,13 @@ binding rules
 		defines Page name
 				of signature fargs-ty
 			where fargs has type fargs-ty
+			
+	// TODO: service has its own namespace?
+	// TODO: service arguments?
+	ServiceFunction(name, _, _):
+		scopes Variable
+		defines Page name
+				of signature []
 
 	DefineTemplate(mods, name, fargs, targs, _):
 		scopes Variable, TemplateFunction

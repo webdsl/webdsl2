@@ -21,6 +21,7 @@ properties
 	
 binding rules
 
+/*
 	ApplicationDefs(name, _, _):
 		defines Module name
 		scopes
@@ -70,3 +71,20 @@ binding rules
 			Page,	imported Page, 
 			Template,	imported Template
 			from Module modname
+*/
+
+	ApplicationDefs(name, _, _):
+		defines Module name
+	
+	Application(name, _):
+		defines Module name
+	
+	ModuleDefs(name, _, _):
+		defines Module name
+	
+	Module(name, _):
+		defines Module name
+	
+	Imports(modname):
+		refers to Module modname
+		
