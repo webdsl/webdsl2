@@ -1,6 +1,6 @@
 module WebDSL-Completions
 
-imports WebDSL-Completions.generated
+//imports WebDSL-Completions.generated
 
 completions
                                                                    
