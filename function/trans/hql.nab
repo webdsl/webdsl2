@@ -17,7 +17,7 @@ properties
 binding rules
 	
 	HqlQuery(_):
-		scopes HqlVar
+		scopes HqlVar, Property
 
 	// fixme -- should use the imports syntax --
 	FromClass(Path([ent]), Some(AsAlias(Alias(alias))), _):
