@@ -19,6 +19,12 @@ binding rules
 	HqlQuery(_):
 		scopes HqlVar, Property
 
+  HqlQueryLimit(_, _):
+    scopes HqlVar, Property
+    
+  HqlQueryLimitOffset(_, _, _):
+    scopes HqlVar, Property
+
 	// fixme -- should use the imports syntax --
 	FromClass(Path([ent]), Some(AsAlias(Alias(alias))), _):
 		// imports Entity ent as HqlVar alias
