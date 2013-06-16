@@ -32,27 +32,26 @@ rules // Analysis
       <debug> $[[evaluated-count] task evaluated, [<length> unevaluated-task*] task unevaluated.]
       // TODO: Update markers for partitions that have had a task executed.
 
-  /*editor-analyze:
+  editor-analyze:
     path* -> result*
     where
       not(is-tuple)
     with
-    	debug(!"Bla ");
     	measure-time(
 	      full-path* := <map(\p -> $[[<project-path>]/[p]]\)> path*;
 	      result*    := <editor-analyze-multiple> full-path*,
 	      id | "webdsl-analyze-total"
 	    )
-  */
   
-  editor-analyze:
+  /*editor-analyze:
     path* -> None()
     where
       not(is-tuple)
     with
       map(\p -> $[[<project-path>]/[p]]\);
       editor-queue-analyze-multiple
-
+  */
+  
   editor-queue-analyze-multiple:
     path* -> None()
     with
