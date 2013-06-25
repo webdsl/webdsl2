@@ -25,9 +25,9 @@ rules // Analysis
   editor-analyze = analysis-default-editor
   
   analysis-single-default-interface = 
-  	analysis-single-default(desugar-all, try(pp-type-message)|<language>)
+  	analysis-single-default(desugar-all, id, try(pp-type-message)|<language>)
   analysis-multiple-default-interface = 
-  	analysis-multiple-default(parse-file; desugar-all <+ !(), try(pp-type-message)|<language>, <project-path>)
+  	analysis-multiple-default(parse-file <+ !(), desugar-all, id, try(pp-type-message)|<language>, <project-path>)
   
   
   editor-save = analysis-save-default(|<language>)
@@ -82,7 +82,10 @@ rules // NBL debugging
 
   debug-show-tasks =
   	analysis-debug-show-tasks(|<language>)
-
+  	
+	debug-show-tasks-selection =
+		analysis-debug-show-tasks-selection(|<language>)
+  	
   debug-reset-index =
     analysis-debug-reset-index(|<language>)
     
