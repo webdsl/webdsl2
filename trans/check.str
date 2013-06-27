@@ -35,7 +35,7 @@ rules // Extensions for error/warning/note reporting
   	 
 rules // Name binding
   
-  constraint-error:
+  /*constraint-error:
     node -> (node, "Unresolved reference.")
     where
     	where(has-annos; get-annos; not(collect-one(?NoUnresolvedError())));
@@ -52,7 +52,7 @@ rules // Name binding
         paramTypes  := <get-signature; insert-results> definition;
         paramTypes* := <map(get-signature); insert-results; collect-all(?paramTypes, conc)> duplicate*;
         <gt> (<length> paramTypes*, 1)
-      end
+      end*/
       
   get-signature = nabl-get-property(|NablProp_signature())
   has-signature-property = ?NablNsFunction()
