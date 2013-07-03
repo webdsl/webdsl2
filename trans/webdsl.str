@@ -29,8 +29,11 @@ rules // Analysis
   analysis-multiple-default-interface = 
   	analysis-multiple-default(parse-file <+ !(), desugar-all, id, try(pp-type-message)|<language>, <project-path>)
   
-  
   editor-save = analysis-save-default(|<language>)
+  
+  
+	analysis-default-debug-interface(msg) = debug(msg)
+	analysis-default-debug-interface = debug 
   
 rules // Editor services
 
