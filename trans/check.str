@@ -34,6 +34,8 @@ rules // Extensions for error/warning/note reporting
   	_ -> <fail>
   	 
 rules // Name binding
+ 
+ 	nabl-check-disable-unresolved = has-annotation(?NoUnresolvedError())
   
   /*constraint-error:
     node -> (node, "Unresolved reference.")
