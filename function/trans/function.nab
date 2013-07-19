@@ -190,7 +190,7 @@ binding rules // expressions
 		defines Variable name of type SimpleSort("Int") in block
 	
 	ForExp(sexpr, name, ty, expr, filter):
-		defines Variable name of type ty in sexpr, expr, filter
+		defines Variable name of type ty in /*sexpr,*/ expr, filter
 
 	FieldAccess(e, member):
 		refers to Property member in Entity e-ty
